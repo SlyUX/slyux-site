@@ -49,18 +49,18 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
       </header>
       <main id="main" className="flex-1">{children}</main>
-      <footer className="bg-ink text-ink-foreground px-4 py-10 sm:px-6">
+      <footer className="bg-footer text-footer-foreground px-4 py-10 sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 text-sm md:flex-row md:items-center md:justify-between">
-          <p className="text-ink-muted">{settings.footerLine ?? `© ${new Date().getFullYear()} ${settings.ownerName}`}</p>
+          <p className="text-footer-muted">{settings.footerLine ?? `© ${new Date().getFullYear()} ${settings.ownerName}`}</p>
           <ul className="flex gap-5">
             <li>
-              <a href={`mailto:${settings.contactEmail}`} className="hover:text-fox">
+              <a href={`mailto:${settings.contactEmail}`} className="decoration-fox underline-offset-4 hover:underline hover:decoration-2">
                 {settings.contactEmail}
               </a>
             </li>
             {linkedin && (
               <li>
-                <a href={linkedin} target="_blank" rel="noopener noreferrer" className="hover:text-fox">
+                <a href={linkedin} target="_blank" rel="noopener noreferrer" className="decoration-fox underline-offset-4 hover:underline hover:decoration-2">
                   LinkedIn
                 </a>
               </li>

@@ -22,8 +22,8 @@ export default async function HomePage() {
       />
 
       {!!s.proofStats?.length && (
-        <Section tone="surface" className="py-12 md:py-14" aria-label="Highlights">
-          <MetricStrip metrics={s.proofStats} />
+        <Section tone="brand" className="py-12 md:py-14" aria-label="Highlights">
+          <MetricStrip metrics={s.proofStats} tone="brand" />
         </Section>
       )}
 

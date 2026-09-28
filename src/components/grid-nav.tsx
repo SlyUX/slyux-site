@@ -265,7 +265,7 @@ export function GridNav({
   const pathname = usePathname()
   const topLevel = groupPortfolio(cells, portfolio.href)
   const current = cellForPath(pathname, cells)
-  // A landing page that parents cells (e.g. /portfolio → the top row) lights all of them, softer.
+  // A landing page that parents cells (e.g. /portfolio → the top row) lights all of them.
   const parentOf = new Set(
     current ? [] : cells.filter((c) => c.href !== '/' && c.href.startsWith(`${pathname}/`)).map((c) => c.cell),
   )
@@ -326,7 +326,7 @@ export function GridNav({
               aria-hidden
               className={cn(
                 'rounded-[2px] transition-colors',
-                i + 1 === current ? 'bg-fox' : parentOf.has(i + 1) ? 'bg-fox/60' : byCell.has(i + 1) ? 'bg-foreground/25' : 'bg-foreground/8',
+                i + 1 === current ? 'bg-fox' : parentOf.has(i + 1) ? 'bg-fox' : byCell.has(i + 1) ? 'bg-foreground/25' : 'bg-foreground/8',
               )}
             />
           ))}

@@ -1,32 +1,55 @@
 @import "tailwindcss";
 
 /*
-  Design tokens — PROVISIONAL (2026-09-27). Warm paper + fox orange, pending
-  Stephen's art direction. Components use these through Tailwind
-  (`bg-background`, `text-primary`), never raw hex or palette classes.
+  Design tokens (2026-09-28). Paper, blueprint blues, and one fox orange.
+  Components use these through Tailwind (`bg-background`, `text-primary`),
+  never raw hex or palette classes.
+
+  - Neutrals are cool, near-neutral grays (hue of the navy) to match the
+    logo's neutral "sly" gray — warm browns muddied next to the blues.
+  - --fox is the logo's exact orange (#F05325, sampled from the file).
+    --primary is that same hue, only as dark as AA text on paper requires.
+  - Headings are deep navy so they read as ink, leaving orange as the only
+    bright accent; #069 is kept for the one bold blue band (Highlights).
 
   Verified contrast (WCAG 2.x):
-    --foreground on --background ........ 16.50  (AAA)
-    --muted-foreground on --background ...  7.20  (AAA)
-    --primary on --background ............  5.30  (AA)
-    --primary on --surface ...............  4.86  (AA)
-    white on --primary ...................  5.62  (AA)
-    --fox on --background ................  2.97  FAILS — decorative / large graphics only
-    --fox on --ink .......................  5.55  (AA) — fine for text on dark bands
-    --background on --ink ................ 16.50  (AAA)
+    --foreground on --background ........ 16.12  (AAA)
+    --muted-foreground on --background ...  6.82  (AA)
+    --muted-foreground on --surface ......  6.24  (AA)
+    --heading on --background ............ 10.31  (AAA) — page titles
+    --primary on --background ............  4.67  (AA)
+    --primary on --surface ...............  4.27  large text only (≥3) — big numbers OK
+    white on --primary ...................  4.88  (AA)
+    --fox on --background ................  3.37  FAILS for text — decorative / large graphics only
+    --fox on --ink .......................  5.12  (AA) — icons/text on the dark hero
+    --ink-foreground on --ink ............ 17.24  (AAA)
+    --ink-muted on --ink .................  8.18  (AAA)
+    white on --brand .....................  6.25  (AA) — Highlights numbers
+    --brand-muted on --brand .............  4.77  (AA) — Highlights labels
+    --fox on --brand .....................  1.78  FAILS — never orange on the blue band
+    --footer-foreground on --footer ...... 11.04  (AAA)
+    --footer-muted on --footer ...........  7.90  (AAA)
+    --fox on --footer ....................  3.33  non-text only — the hover underline, never text
 */
 :root {
-  --background: #faf8f5;
-  --foreground: #1c1917;
-  --surface: #f2eee8;
-  --muted-foreground: #57534e;
-  --border: #e2dcd2;
-  --primary: #b93d0b;
+  --background: #fafaf9;
+  --foreground: #171e24;
+  --surface: #eef0f3;
+  --muted-foreground: #52595e;
+  --border: #dbdee2;
+  --primary: #cf3c09;
   --primary-foreground: #ffffff;
-  --fox: #f26522;
-  --ink: #1c1917;
-  --ink-foreground: #faf8f5;
-  --ink-muted: #a8a29e;
+  --fox: #f05325;
+  --ink: #091823;
+  --ink-foreground: #fafaf9;
+  --ink-muted: #a7b0b8;
+  --heading: #0b4163;
+  --brand: #006699;
+  --highlight: #ffffff;
+  --brand-muted: #d6e3eb;
+  --footer: #1a3b53; /* #26577A, 10% darker */
+  --footer-foreground: #faf8f5;
+  --footer-muted: #c9d6e0;
 }
 
 @theme inline {
@@ -41,6 +64,13 @@
   --color-ink: var(--ink);
   --color-ink-foreground: var(--ink-foreground);
   --color-ink-muted: var(--ink-muted);
+  --color-heading: var(--heading);
+  --color-brand: var(--brand);
+  --color-highlight: var(--highlight);
+  --color-brand-muted: var(--brand-muted);
+  --color-footer: var(--footer);
+  --color-footer-foreground: var(--footer-foreground);
+  --color-footer-muted: var(--footer-muted);
 
   --font-sans: var(--font-geist);
   --font-display: var(--font-fraunces);
@@ -187,6 +217,20 @@ html:active-view-transition-type(pan)::view-transition {
   ::view-transition-new(.blind-up) {
     animation: vt-fade-in 150ms ease-out both;
   }
+}
+
+/*
+  Blueprint grid — the site's motif (image placeholders). Tilted a few
+  degrees off-axis so it reads as placed by hand rather than generated.
+  Continuous angled stripes, not a tiled background: a rotated tile would
+  show seams at every tile edge.
+*/
+@utility blueprint-grid {
+  --grid-angle: -3deg;
+  --grid-size: 32px;
+  background-image:
+    repeating-linear-gradient(calc(90deg + var(--grid-angle)), var(--border) 0 1px, transparent 1px var(--grid-size)),
+    repeating-linear-gradient(calc(180deg + var(--grid-angle)), var(--border) 0 1px, transparent 1px var(--grid-size));
 }
 
 @layer base {

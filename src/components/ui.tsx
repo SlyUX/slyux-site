@@ -16,6 +16,7 @@ const sectionVariants = cva('px-4 py-14 sm:px-6 md:py-20', {
       default: '',
       surface: 'bg-surface',
       ink: 'bg-ink text-ink-foreground',
+      brand: 'bg-brand text-primary-foreground',
     },
   },
   defaultVariants: { tone: 'default' },
@@ -90,7 +91,7 @@ export function PageHeader({
         </PanLink>
       )}
       {eyebrow && <p className="text-primary mb-3 text-sm font-semibold tracking-wide uppercase">{eyebrow}</p>}
-      <h1 className="font-display text-4xl leading-tight font-semibold tracking-tight md:text-5xl">{title}</h1>
+      <h1 className="font-display text-heading text-4xl leading-tight font-semibold tracking-tight md:text-5xl">{title}</h1>
       {intro && <p className="text-muted-foreground mt-5 text-lg leading-relaxed">{intro}</p>}
     </header>
   )

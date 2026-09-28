@@ -14,17 +14,29 @@ export function MetricStrip({
   tone = 'default',
 }: {
   metrics: CmsMetric[] | null | undefined
-  tone?: 'default' | 'ink'
+  tone?: 'default' | 'ink' | 'brand'
 }) {
   if (!metrics?.length) return null
   return (
     <dl className="grid grid-cols-2 gap-x-6 gap-y-8 md:grid-cols-[repeat(auto-fit,minmax(10rem,1fr))]">
       {metrics.map((m) => (
-        <div key={`${m.value}-${m.label}`}>
-          <dt className={cn('text-sm leading-snug', tone === 'ink' ? 'text-ink-muted' : 'text-muted-foreground')}>
+        // The number reads first (order-first on <dd>); <dt> stays first in the DOM so
+        // assistive tech still announces label → value.
+        <div key={`${m.value}-${m.label}`} className="flex flex-col gap-1">
+          <dt
+            className={cn(
+              'text-sm leading-snug',
+              { default: 'text-muted-foreground', ink: 'text-ink-muted', brand: 'text-brand-muted' }[tone],
+            )}
+          >
             {m.label}
           </dt>
-          <dd className={cn('font-display order-first text-4xl font-semibold', tone === 'ink' ? 'text-fox' : 'text-primary')}>
+          <dd
+            className={cn(
+              'font-display order-first text-4xl font-semibold',
+              { default: 'text-primary', ink: 'text-fox', brand: 'text-highlight' }[tone],
+            )}
+          >
             {m.value}
           </dd>
         </div>
@@ -49,7 +61,11 @@ export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudy
             className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
           />
         ) : (
-          <div aria-hidden className="text-fox/30 font-display flex h-full items-center justify-center text-7xl">
+          // No image yet: a faint blueprint grid with the title's initial in navy.
+          <div
+            aria-hidden
+            className="text-heading/20 font-display flex h-full items-center justify-center blueprint-grid text-7xl"
+          >
             {study.title.charAt(0)}
           </div>
         )}
