@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { MetricStrip, RichText } from '@/components/content'
 import { Gallery } from '@/components/gallery'
+import { Personas } from '@/components/personas'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
 import { getSiteSettings } from '@/lib/site-settings'
 import { cn } from '@/lib/utils'
@@ -31,7 +32,7 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
   const facts = [study.organization, study.role, study.years].filter(Boolean)
   const heroBg = study.heroBackground?.asset ? urlFor(study.heroBackground).width(2400).quality(70).url() : undefined
 
-  // Page order: introduction → story (current state in a rail beside it) → new design.
+  // Page order: introduction → story (current state in a rail beside it) → personas → new design.
   const galleries = study.galleries ?? []
   const before = galleries.filter((g) => g.placement === 'before')
   const after = galleries.filter((g) => g.placement !== 'before')
@@ -116,6 +117,17 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
           )}
         </div>
       </Section>
+
+      {!!study.personas?.length && (
+        <Section className="pt-0 md:pt-0">
+          <Personas
+            personas={study.personas}
+            heading={s.personasHeading}
+            intro={study.personasIntro}
+            labels={{ opportunities: s.opportunitiesLabel, barriers: s.barriersLabel }}
+          />
+        </Section>
+      )}
 
       {after.length > 0 && (
         <Section className="pt-0 md:pt-0">

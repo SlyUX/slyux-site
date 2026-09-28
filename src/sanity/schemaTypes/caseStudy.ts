@@ -96,6 +96,22 @@ export default defineType({
       description: 'Suggested headings: The problem · My role · Process · What changed.',
     }),
     defineField({
+      name: 'personasIntro',
+      title: 'Personas intro',
+      type: 'text',
+      rows: 2,
+      group: 'story',
+      description: 'Optional line under the Personas heading.',
+    }),
+    defineField({
+      name: 'personas',
+      title: 'Personas',
+      type: 'array',
+      group: 'story',
+      description: 'Shown after the story, before the new-design galleries.',
+      of: [defineArrayMember({ type: 'persona' })],
+    }),
+    defineField({
       name: 'galleries',
       title: 'Galleries',
       type: 'array',

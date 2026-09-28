@@ -5,6 +5,7 @@ import page from './page'
 import experience from './experience'
 import imageWithAlt from './imageWithAlt'
 import galleryScreen from './galleryScreen'
+import persona from './persona'
 import { metric, link, richText } from './objects'
 
 export const schemaTypes = [
@@ -15,6 +16,7 @@ export const schemaTypes = [
   experience,
   imageWithAlt,
   galleryScreen,
+  persona,
   metric,
   link,
   richText,
