@@ -1,0 +1,207 @@
+@import "tailwindcss";
+
+/*
+  Design tokens — PROVISIONAL (2026-09-27). Warm paper + fox orange, pending
+  Stephen's art direction. Components use these through Tailwind
+  (`bg-background`, `text-primary`), never raw hex or palette classes.
+
+  Verified contrast (WCAG 2.x):
+    --foreground on --background ........ 16.50  (AAA)
+    --muted-foreground on --background ...  7.20  (AAA)
+    --primary on --background ............  5.30  (AA)
+    --primary on --surface ...............  4.86  (AA)
+    white on --primary ...................  5.62  (AA)
+    --fox on --background ................  2.97  FAILS — decorative / large graphics only
+    --fox on --ink .......................  5.55  (AA) — fine for text on dark bands
+    --background on --ink ................ 16.50  (AAA)
+*/
+:root {
+  --background: #faf8f5;
+  --foreground: #1c1917;
+  --surface: #f2eee8;
+  --muted-foreground: #57534e;
+  --border: #e2dcd2;
+  --primary: #b93d0b;
+  --primary-foreground: #ffffff;
+  --fox: #f26522;
+  --ink: #1c1917;
+  --ink-foreground: #faf8f5;
+  --ink-muted: #a8a29e;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-fox: var(--fox);
+  --color-ink: var(--ink);
+  --color-ink-foreground: var(--ink-foreground);
+  --color-ink-muted: var(--ink-muted);
+
+  --font-sans: var(--font-geist);
+  --font-display: var(--font-fraunces);
+
+  /* Fluid display sizes: body text stays fixed, headings scale 320px→1280px. */
+  --text-3xl: clamp(1.5rem, calc(1.25rem + 1.25vw), 2.25rem);
+  --text-4xl: clamp(1.875rem, calc(1.5rem + 1.875vw), 3rem);
+  --text-5xl: clamp(2.25rem, calc(1.75rem + 2.5vw), 3.75rem);
+}
+
+/*
+  3 × 3 map navigation (see src/components/grid-nav.tsx).
+
+  PanLink sets --pan-dx / --pan-dy (cells moved, −2…2) and --pan-duration on
+  <html> just before navigating. View-transition pseudo-elements inherit from
+  <html>, so one pair of keyframes covers all eight directions: the old page
+  travels away by whole viewports, the new one arrives from the far side, and
+  the blueprint grid behind them scrolls the same distance — so a two-cell
+  diagonal reads as crossing the map, not as a cut.
+*/
+:root {
+  --pan-dx: 0;
+  --pan-dy: 0;
+  --pan-duration: 500ms;
+  --pan-ease: cubic-bezier(0.65, 0, 0.35, 1);
+}
+
+@keyframes pan-out {
+  to {
+    translate: calc(var(--pan-dx) * -100vw) calc(var(--pan-dy) * -100vh);
+  }
+}
+@keyframes pan-in {
+  from {
+    translate: calc(var(--pan-dx) * 100vw) calc(var(--pan-dy) * 100vh);
+  }
+}
+@keyframes pan-grid {
+  to {
+    background-position: calc(var(--pan-dx) * -100vw) calc(var(--pan-dy) * -100vh);
+  }
+}
+@keyframes vt-fade-out {
+  to { opacity: 0; }
+}
+@keyframes vt-fade-in {
+  from { opacity: 0; }
+}
+
+::view-transition-old(.pan) {
+  animation: pan-out var(--pan-duration) var(--pan-ease) both;
+}
+::view-transition-new(.pan) {
+  animation: pan-in var(--pan-duration) var(--pan-ease) both;
+}
+html:active-view-transition-type(pan)::view-transition {
+  background-color: var(--ink);
+  background-image:
+    linear-gradient(to right, color-mix(in srgb, var(--ink-foreground) 12%, transparent) 1px, transparent 1px),
+    linear-gradient(to bottom, color-mix(in srgb, var(--ink-foreground) 12%, transparent) 1px, transparent 1px);
+  background-size: 64px 64px;
+  animation: pan-grid var(--pan-duration) var(--pan-ease) both;
+}
+
+::view-transition-old(.fade) {
+  animation: vt-fade-out 180ms ease-out both;
+}
+::view-transition-new(.fade) {
+  animation: vt-fade-in 220ms ease-out 80ms both;
+}
+
+/*
+  Blind: moving deeper within a section (Portfolio → Brand Development, Case
+  Studies → a case study). The child rolls down over the parent like a roller
+  blind; going back up, it rolls up to reveal the parent. Only the on-screen
+  part rolls — insets are measured from the scroll position at click time,
+  so a long page doesn't spend the animation off-screen.
+*/
+:root {
+  --scroll-y: 0px;
+  --blind-duration: 450ms;
+}
+@keyframes blind-roll-down {
+  from { clip-path: inset(0 0 100% 0); }
+  99.9% { clip-path: inset(0 0 max(0px, calc(100% - 100vh)) 0); }
+  to { clip-path: inset(0); }
+}
+@keyframes blind-roll-up {
+  from { clip-path: inset(0 0 max(0px, calc(100% - var(--scroll-y) - 100vh)) 0); }
+  to { clip-path: inset(0 0 calc(100% - var(--scroll-y)) 0); }
+}
+/* The page under the blind falls into shade as it closes, and brightens as it
+   opens, so the moving edge reads clearly even between similar pages. */
+@keyframes blind-shade-in {
+  to { filter: brightness(0.82); }
+}
+@keyframes blind-shade-out {
+  from { filter: brightness(0.82); }
+}
+::view-transition-new(.blind-down) {
+  animation: blind-roll-down var(--blind-duration) var(--pan-ease) both;
+  z-index: 1;
+}
+::view-transition-old(.blind-down) {
+  animation: blind-shade-in var(--blind-duration) var(--pan-ease) both;
+}
+::view-transition-old(.blind-up) {
+  animation: blind-roll-up var(--blind-duration) var(--pan-ease) both;
+  z-index: 1;
+}
+::view-transition-new(.blind-up) {
+  animation: blind-shade-out var(--blind-duration) var(--pan-ease) both;
+}
+
+/* The header is the fixed reference point: it never moves during a pan. */
+::view-transition-group(site-header) {
+  animation: none;
+  z-index: 100;
+}
+::view-transition-old(site-header) {
+  display: none;
+}
+::view-transition-new(site-header) {
+  animation: none;
+}
+
+/* Reduced motion: no travel, just a quick crossfade. */
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(.pan) {
+    animation: vt-fade-out 150ms ease-out both;
+  }
+  ::view-transition-new(.pan) {
+    animation: vt-fade-in 150ms ease-out both;
+  }
+  html:active-view-transition-type(pan)::view-transition {
+    animation: none;
+    background: none;
+  }
+  ::view-transition-old(.blind-down),
+  ::view-transition-old(.blind-up) {
+    animation: vt-fade-out 150ms ease-out both;
+  }
+  ::view-transition-new(.blind-down),
+  ::view-transition-new(.blind-up) {
+    animation: vt-fade-in 150ms ease-out both;
+  }
+}
+
+@layer base {
+  html {
+    background: var(--background);
+    color: var(--foreground);
+  }
+  :focus-visible {
+    outline: 2px solid var(--primary);
+    outline-offset: 3px;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      transition-duration: 0.01ms !important;
+      animation-duration: 0.01ms !important;
+    }
+  }
+}

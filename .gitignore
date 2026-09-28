@@ -1,0 +1,54 @@
+# See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
+
+# dependencies
+/node_modules
+/.pnp
+.pnp.*
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/versions
+
+# testing
+/coverage
+
+# next.js
+/.next/
+/out/
+
+# production
+/build
+
+# misc
+.DS_Store
+*.pem
+
+# debug
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+.pnpm-debug.log*
+
+# env files (can opt-in for committing if needed)
+.env*
+# ...except the example template — it holds only placeholders and documents
+# which vars the app needs (including the contact-form / Resend set).
+!.env.local.example
+
+# vercel
+.vercel
+
+# typescript
+*.tsbuildinfo
+next-env.d.ts
+
+# form exports — contain personal data.
+# Both lines are needed: /data/*.csv stops at one level, so an archive/
+# subfolder would not be covered by it. Exports carry email addresses, so
+# the cost of missing one is a permanent commit of personal data.
+/data/*.csv
+/data/**/*.csv
+
+# Claude Code local settings (machine-specific; incl. sync-conflict copies)
+.claude/

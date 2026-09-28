@@ -1,0 +1,78 @@
+import { defineQuery } from 'next-sanity'
+
+import { client } from '@/sanity/client'
+
+/**
+ * Every fetch goes through here with an explicit fallback. GROQ returns `null`
+ * — not `[]` — when nothing matches, and a missing project/network error
+ * should render an empty state rather than a 500.
+ */
+export async function safeFetch<T>(
+  query: string,
+  params: Record<string, unknown>,
+  fallback: T,
+): Promise<T> {
+  try {
+    const result = await client.fetch<T>(query, params)
+    return result ?? fallback
+  } catch {
+    return fallback
+  }
+}
+
+const CASE_STUDY_CARD = `_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics`
+
+export const SITE_SETTINGS_QUERY = defineQuery(`*[_type=="siteSettings" && _id=="siteSettings"][0]{
+  ...,
+  "resumePdfUrl": resumePdf.asset->url,
+  "heroVideoUrl": heroVideo.asset->url,
+  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},
+  "heroVideoType": heroVideo.asset->mimeType,
+  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}}
+}`)
+
+export const CASE_STUDIES_QUERY = defineQuery(
+  `*[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){${CASE_STUDY_CARD}}`,
+)
+
+export const CASE_STUDY_QUERY = defineQuery(`*[_type=="caseStudy" && slug.current==$slug][0]{
+  ${CASE_STUDY_CARD},body,links,seoDescription
+}`)
+
+export const CASE_STUDY_SLUGS_QUERY = defineQuery(
+  `*[_type=="caseStudy" && defined(slug.current)].slug.current`,
+)
+
+const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,client,year,credit,summary,externalUrl,mature,featured,
+  "hasStory": count(body) > 0,
+  "caseStudySlug": caseStudy->slug.current`
+
+/** All pieces in one portfolio section. `$kinds` comes from `kindsInSection()`. */
+export const PORTFOLIO_SECTION_QUERY = defineQuery(
+  `*[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){${PORTFOLIO_CARD}}`,
+)
+
+/** Featured, non-mature pieces for the /portfolio landing page. */
+export const PORTFOLIO_FEATURED_QUERY = defineQuery(
+  `*[_type=="creativeWork" && defined(slug.current) && featured == true && mature != true]|order(order asc, title asc){${PORTFOLIO_CARD}}`,
+)
+
+export const CREATIVE_WORK_QUERY = defineQuery(`*[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{
+  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,body,externalUrl,
+  "caseStudy": caseStudy->{title,"slug":slug.current}
+}`)
+
+export const CREATIVE_WORK_PATHS_QUERY = defineQuery(
+  `*[_type=="creativeWork" && defined(slug.current) && count(body) > 0 && mature != true]{kind,"slug":slug.current}`,
+)
+
+export const PAGE_QUERY = defineQuery(`*[_type=="page" && slug.current==$slug][0]{
+  _id,title,intro,image,body,cta,seoDescription
+}`)
+
+export const PAGE_SLUGS_QUERY = defineQuery(`*[_type=="page" && defined(slug.current)].slug.current`)
+
+export const EXPERIENCE_QUERY = defineQuery(`*[_type=="experience"]|order(start desc){
+  _id,role,organization,start,end,location,highlights,
+  "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}
+}`)
