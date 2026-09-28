@@ -54,11 +54,13 @@ export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudy
       <div className="bg-surface relative aspect-[4/3] overflow-hidden rounded-2xl">
         {study.heroImage?.asset ? (
           <Image
-            src={urlFor(study.heroImage).width(900).height(675).fit('crop').url()}
+            // Uncropped at the source; the frame crops from the top-left, where
+            // screenshots (most card images) start reading.
+            src={urlFor(study.heroImage).width(1100).url()}
             alt={study.heroImage.alt ?? ''}
             fill
             sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover transition-transform duration-500 group-hover:scale-[1.02]"
+            className="object-cover object-left-top transition-transform duration-500 group-hover:scale-[1.02]"
           />
         ) : (
           // No image yet: a faint blueprint grid with the title's initial in navy.

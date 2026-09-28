@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField, defineArrayMember } from 'sanity'
 
 import { slugField } from './slugField'
 
@@ -71,6 +71,15 @@ export default defineType({
       group: 'overview',
     }),
     defineField({
+      name: 'heroBackground',
+      title: 'Hero background',
+      type: 'image',
+      group: 'overview',
+      options: { hotspot: true },
+      description:
+        'Decorative wide image behind the title on the case study page (e.g. a faded collage, ~3000 × 750). The hero image above is used on cards.',
+    }),
+    defineField({
       name: 'metrics',
       title: 'Results',
       type: 'array',
@@ -85,6 +94,48 @@ export default defineType({
       type: 'richText',
       group: 'story',
       description: 'Suggested headings: The problem · My role · Process · What changed.',
+    }),
+    defineField({
+      name: 'galleries',
+      title: 'Galleries',
+      type: 'array',
+      group: 'story',
+      description: 'Titled image groups shown after the story — e.g. "Before", "Personas", "The app".',
+      of: [
+        defineArrayMember({
+          type: 'object',
+          name: 'gallery',
+          fields: [
+            defineField({ name: 'heading', title: 'Heading', type: 'string', validation: (rule) => rule.required() }),
+            defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 2 }),
+            defineField({
+              name: 'layout',
+              title: 'Layout',
+              type: 'string',
+              initialValue: 'wide',
+              options: {
+                list: [
+                  { title: 'Phone screens (grid)', value: 'phone' },
+                  { title: 'Wide / mixed (two columns)', value: 'wide' },
+                ],
+                layout: 'radio',
+              },
+            }),
+            defineField({
+              name: 'images',
+              title: 'Images',
+              type: 'array',
+              of: [{ type: 'imageWithAlt' }],
+              options: { layout: 'grid' },
+              validation: (rule) => rule.min(1),
+            }),
+          ],
+          preview: {
+            select: { title: 'heading', images: 'images', media: 'images.0' },
+            prepare: ({ title, images, media }) => ({ title, subtitle: `${images?.length ?? 0} images`, media }),
+          },
+        }),
+      ],
     }),
     defineField({
       name: 'links',

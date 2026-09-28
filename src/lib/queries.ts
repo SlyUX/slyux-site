@@ -36,7 +36,8 @@ export const CASE_STUDIES_QUERY = defineQuery(
 )
 
 export const CASE_STUDY_QUERY = defineQuery(`*[_type=="caseStudy" && slug.current==$slug][0]{
-  ${CASE_STUDY_CARD},body,links,seoDescription
+  ${CASE_STUDY_CARD},body,links,seoDescription,heroBackground,
+  galleries[]{_key,heading,intro,layout,images[]{...,"size": asset->metadata.dimensions{width,height}}}
 }`)
 
 export const CASE_STUDY_SLUGS_QUERY = defineQuery(
