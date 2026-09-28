@@ -48,7 +48,7 @@ export default async function PortfolioPage() {
                   {copy.title}
                 </PanLink>
               </h2>
-              {copy.intro && <p className="text-muted-foreground mt-2 max-w-2xl">{copy.intro}</p>}
+              {copy.intro && <p className="text-muted-foreground mt-2">{copy.intro}</p>}
             </div>
             <PanLink href={`/portfolio/${section}`} className="text-primary text-sm font-semibold underline underline-offset-4">
               {s.portfolioViewAll}

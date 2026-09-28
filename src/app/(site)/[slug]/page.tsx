@@ -29,7 +29,7 @@ export default async function CmsPage({ params }: PageProps<'/[slug]'>) {
   return (
     <Section>
       <div className="grid gap-12 lg:grid-cols-[1fr_20rem] lg:items-start">
-        <div className="max-w-3xl">
+        <div>
           <PageHeader title={page.title} intro={page.intro} />
           <div className="mt-10">
             <RichText value={page.body} />

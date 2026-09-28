@@ -54,7 +54,7 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
         {work.credit && <p className="text-muted-foreground mt-4 text-sm">{work.credit}</p>}
       </Section>
       <Section className="pt-0 md:pt-0">
-        <div className="mx-auto max-w-3xl">
+        <div>
           <RichText value={work.body} />
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
             {work.caseStudy?.slug && (

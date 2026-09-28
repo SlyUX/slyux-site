@@ -100,7 +100,7 @@ export default defineType({
       title: 'Galleries',
       type: 'array',
       group: 'story',
-      description: 'Titled image groups shown after the story — e.g. "Before", "Personas", "The app".',
+      description: 'Titled image groups — e.g. "The sites today" before the story, "The app" after it. Order within each placement follows this list.',
       of: [
         defineArrayMember({
           type: 'object',
@@ -108,6 +108,20 @@ export default defineType({
           fields: [
             defineField({ name: 'heading', title: 'Heading', type: 'string', validation: (rule) => rule.required() }),
             defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 2 }),
+            defineField({
+              name: 'placement',
+              title: 'Placement',
+              type: 'string',
+              initialValue: 'after',
+              description: 'Where the gallery sits relative to the story.',
+              options: {
+                list: [
+                  { title: 'Before the story — the current state', value: 'before' },
+                  { title: 'After the story — the new design', value: 'after' },
+                ],
+                layout: 'radio',
+              },
+            }),
             defineField({
               name: 'layout',
               title: 'Layout',
@@ -125,7 +139,8 @@ export default defineType({
               name: 'images',
               title: 'Images',
               type: 'array',
-              of: [{ type: 'imageWithAlt' }],
+              description: 'Use "Screen (with full page)" to attach a full-length capture that opens in an overlay.',
+              of: [{ type: 'imageWithAlt' }, { type: 'galleryScreen' }],
               options: { layout: 'grid' },
               validation: (rule) => rule.min(1),
             }),

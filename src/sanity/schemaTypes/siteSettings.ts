@@ -221,6 +221,11 @@ export default defineType({
     defineField({ name: 'workTitle', title: 'Title', type: 'string', group: 'work' }),
     defineField({ name: 'workIntro', title: 'Intro', type: 'text', rows: 2, group: 'work' }),
     defineField({ name: 'workEmpty', title: 'Empty state', type: 'string', group: 'work', description: 'Shown if no case studies are published.' }),
+    defineField({ name: 'fullPageLabel', title: '"View full page" button', type: 'string', group: 'work', description: 'On gallery screens that have a full-page version.' }),
+    defineField({ name: 'enlargeLabel', title: '"View larger" (screen reader)', type: 'string', group: 'work', description: 'Names gallery thumbnails that open a larger image, e.g. "View larger".' }),
+    defineField({ name: 'closeLabel', title: '"Close" button', type: 'string', group: 'work', description: 'Closes the gallery viewer.' }),
+    defineField({ name: 'previousLabel', title: '"Previous" button (screen reader)', type: 'string', group: 'work' }),
+    defineField({ name: 'nextLabel', title: '"Next" button (screen reader)', type: 'string', group: 'work' }),
 
     // Creative
     defineField({ name: 'creativeTitle', title: 'Title', type: 'string', group: 'creative' }),

@@ -58,6 +58,23 @@ export type SanityImageAssetReference = {
   [internalGroqTypeReferenceTo]?: "sanity.imageAsset";
 };
 
+export type GalleryScreen = {
+  _type: "galleryScreen";
+  asset?: SanityImageAssetReference;
+  media?: unknown;
+  hotspot?: SanityImageHotspot;
+  crop?: SanityImageCrop;
+  alt?: string;
+  caption?: string;
+  fullPage?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+};
+
 export type ImageWithAlt = {
   _type: "imageWithAlt";
   asset?: SanityImageAssetReference;
@@ -173,11 +190,15 @@ export type CaseStudy = {
   galleries?: Array<{
     heading: string;
     intro?: string;
+    placement?: "before" | "after";
     layout?: "phone" | "wide";
     images?: Array<
-      {
-        _key: string;
-      } & ImageWithAlt
+      | ({
+          _key: string;
+        } & ImageWithAlt)
+      | ({
+          _key: string;
+        } & GalleryScreen)
     >;
     _type: "gallery";
     _key: string;
@@ -282,6 +303,11 @@ export type SiteSettings = {
   workTitle?: string;
   workIntro?: string;
   workEmpty?: string;
+  fullPageLabel?: string;
+  enlargeLabel?: string;
+  closeLabel?: string;
+  previousLabel?: string;
+  nextLabel?: string;
   creativeTitle?: string;
   creativeIntro?: string;
   portfolioSections?: {
@@ -444,6 +470,7 @@ export type AllSanitySchemaTypes =
   | Link
   | Metric
   | SanityImageAssetReference
+  | GalleryScreen
   | ImageWithAlt
   | CaseStudyReference
   | Experience
@@ -546,6 +573,11 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   workTitle?: string;
   workIntro?: string;
   workEmpty?: string;
+  fullPageLabel?: string;
+  enlargeLabel?: string;
+  closeLabel?: string;
+  previousLabel?: string;
+  nextLabel?: string;
   creativeTitle?: string;
   creativeIntro?: string;
   portfolioSections?: {
@@ -635,7 +667,7 @@ export type CASE_STUDIES_QUERY_RESULT = Array<{
 
 // Source: src/lib/queries.ts
 // Variable: CASE_STUDY_QUERY
-// Query: *[_type=="caseStudy" && slug.current==$slug][0]{  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,  galleries[]{_key,heading,intro,layout,images[]{...,"size": asset->metadata.dimensions{width,height}}}}
+// Query: *[_type=="caseStudy" && slug.current==$slug][0]{  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}}
 export type CASE_STUDY_QUERY_RESULT = {
   _id: string;
   title: string;
@@ -670,20 +702,49 @@ export type CASE_STUDY_QUERY_RESULT = {
     heading: string;
     intro: string | null;
     layout: "phone" | "wide" | null;
-    images: Array<{
-      _key: string;
-      _type: "imageWithAlt";
-      asset?: SanityImageAssetReference;
-      media?: unknown;
-      hotspot?: SanityImageHotspot;
-      crop?: SanityImageCrop;
-      alt?: string;
-      caption?: string;
-      size: {
-        width: number;
-        height: number;
-      } | null;
-    }> | null;
+    placement: "after" | "before" | null;
+    images: Array<
+      | {
+          _key: string;
+          _type: "galleryScreen";
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          caption?: string;
+          fullPage?: {
+            asset?: SanityImageAssetReference;
+            media?: unknown;
+            hotspot?: SanityImageHotspot;
+            crop?: SanityImageCrop;
+            _type: "image";
+          };
+          size: {
+            width: number;
+            height: number;
+          } | null;
+          fullPageSize: {
+            width: number;
+            height: number;
+          } | null;
+        }
+      | {
+          _key: string;
+          _type: "imageWithAlt";
+          asset?: SanityImageAssetReference;
+          media?: unknown;
+          hotspot?: SanityImageHotspot;
+          crop?: SanityImageCrop;
+          alt?: string;
+          caption?: string;
+          size: {
+            width: number;
+            height: number;
+          } | null;
+          fullPageSize: null;
+        }
+    > | null;
   }> | null;
 } | null;
 
@@ -811,7 +872,7 @@ declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "resumePdfUrl": resumePdf.asset->url,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}\n}': SITE_SETTINGS_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}': CASE_STUDIES_QUERY_RESULT;
-    '*[_type=="caseStudy" && slug.current==$slug][0]{\n  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,\n  galleries[]{_key,heading,intro,layout,images[]{...,"size": asset->metadata.dimensions{width,height}}}\n}': CASE_STUDY_QUERY_RESULT;
+    '*[_type=="caseStudy" && slug.current==$slug][0]{\n  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,\n  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}\n}': CASE_STUDY_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)].slug.current': CASE_STUDY_SLUGS_QUERY_RESULT;
     '*[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){_id,title,"slug":slug.current,kind,image,client,year,credit,summary,externalUrl,mature,featured,\n  "hasStory": count(body) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_SECTION_QUERY_RESULT;
     '*[_type=="creativeWork" && defined(slug.current) && featured == true && mature != true]|order(order asc, title asc){_id,title,"slug":slug.current,kind,image,client,year,credit,summary,externalUrl,mature,featured,\n  "hasStory": count(body) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_FEATURED_QUERY_RESULT;

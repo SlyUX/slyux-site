@@ -83,7 +83,7 @@ export function PageHeader({
   back?: { label: string; href: string }
 }) {
   return (
-    <header className="max-w-3xl">
+    <header>
       {back && (
         <PanLink href={back.href} className="text-muted-foreground hover:text-primary mb-6 inline-flex items-center gap-1.5 text-sm font-medium">
           <span aria-hidden>←</span>

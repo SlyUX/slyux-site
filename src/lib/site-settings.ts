@@ -33,6 +33,11 @@ const DEFAULTS = {
   headline: 'Sly UX',
   workTitle: 'Case Studies',
   workEmpty: 'Case studies are on their way.',
+  fullPageLabel: 'View full page',
+  closeLabel: 'Close',
+  enlargeLabel: 'View larger',
+  previousLabel: 'Previous image',
+  nextLabel: 'Next image',
   creativeTitle: 'Portfolio',
   portfolioViewAll: 'See all',
   portfolioSections: {

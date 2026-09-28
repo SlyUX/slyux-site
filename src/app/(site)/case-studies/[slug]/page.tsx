@@ -7,6 +7,7 @@ import { MetricStrip, RichText } from '@/components/content'
 import { Gallery } from '@/components/gallery'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
 import { getSiteSettings } from '@/lib/site-settings'
+import { cn } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import type { CaseStudyDetail } from '@/lib/types'
 
@@ -29,6 +30,18 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
 
   const facts = [study.organization, study.role, study.years].filter(Boolean)
   const heroBg = study.heroBackground?.asset ? urlFor(study.heroBackground).width(2400).quality(70).url() : undefined
+
+  // Page order: introduction → story (current state in a rail beside it) → new design.
+  const galleries = study.galleries ?? []
+  const before = galleries.filter((g) => g.placement === 'before')
+  const after = galleries.filter((g) => g.placement !== 'before')
+  const labels = {
+    fullPage: s.fullPageLabel,
+    enlarge: s.enlargeLabel,
+    close: s.closeLabel,
+    previous: s.previousLabel,
+    next: s.nextLabel,
+  }
 
   return (
     <article>
@@ -76,21 +89,41 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
         </Section>
       )}
 
-      <Section className="pt-4 md:pt-6">
-        <div className="mx-auto max-w-3xl">
-          <RichText value={study.body} />
-          {!!study.links?.length && (
-            <div className="mt-10 flex flex-wrap gap-3">
-              {study.links.map((link) => (
-                <ButtonLink key={link._key} link={link} variant="secondary" />
+      {/*
+        The story, with the current state available in a rail beside it on
+        wide screens (and after it on phones — it's reference, not the lead).
+        The rail keeps story lines to a readable length without nesting a
+        max-width container.
+      */}
+      <Section>
+        <div className={cn(before.length > 0 && 'grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem] xl:gap-16')}>
+          <div>
+            <RichText value={study.body} />
+            {!!study.links?.length && (
+              <div className="mt-10 flex flex-wrap gap-3">
+                {study.links.map((link) => (
+                  <ButtonLink key={link._key} link={link} variant="secondary" />
+                ))}
+              </div>
+            )}
+          </div>
+          {before.length > 0 && (
+            <aside className="bg-surface self-start rounded-2xl p-5">
+              {before.map((gallery) => (
+                <Gallery key={gallery._key} gallery={gallery} id={`gallery-${gallery._key}`} labels={labels} rail />
               ))}
-            </div>
+            </aside>
           )}
         </div>
-        {study.galleries?.map((gallery) => (
-          <Gallery key={gallery._key} gallery={gallery} id={`gallery-${gallery._key}`} />
-        ))}
       </Section>
+
+      {after.length > 0 && (
+        <Section className="pt-0 md:pt-0">
+          {after.map((gallery) => (
+            <Gallery key={gallery._key} gallery={gallery} id={`gallery-${gallery._key}`} labels={labels} />
+          ))}
+        </Section>
+      )}
     </article>
   )
 }

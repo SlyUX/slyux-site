@@ -1,57 +1,102 @@
-import Image from 'next/image'
-
-import { cn } from '@/lib/utils'
+import { GalleryViewer, type GalleryItem, type GalleryLabels, type ViewSlice } from '@/components/gallery-viewer'
 import { urlFor } from '@/sanity/image'
 import type { CaseStudyDetail } from '@/lib/types'
 
 type GalleryData = NonNullable<CaseStudyDetail['galleries']>[number]
+type GalleryImage = NonNullable<GalleryData['images']>[number]
+type Size = { width: number; height: number }
+type Source = Parameters<typeof urlFor>[0]
+
+/** Tallest slice we request, in output pixels — comfortably under Sanity's 8192px cap. */
+const MAX_SLICE = 4000
+
+const hasSize = (s: { width?: number | null; height?: number | null } | null | undefined): s is Size =>
+  !!s?.width && !!s?.height
 
 /**
- * A titled group of images after a case study's story.
+ * Stacked WebP slices of an image for the viewer, plus the largest width it
+ * can display at without being stretched. Sanity crops each region (`rect`)
+ * at full resolution, then resizes it, so a 27,000px page capture stays sharp.
  *
- *  - `phone`: an even grid of app screens, framed like devices.
- *  - `wide`:  a two-column masonry for desktop captures, wireframes, personas —
- *             mixed aspect ratios stack without cropping anything.
- *
- * Intrinsic sizes come from the asset metadata so nothing shifts on load.
+ *  - Phone-width sources (≤1000px): served up to 780px. Retina captures
+ *    (≥700px) display at half size — true phone width — and 1× screens at
+ *    their native size, so nothing is scaled up.
+ *  - Wider sources: served up to 2304px (retina at the 1152px content width)
+ *    and displayed no wider than 1152px or their own width.
  */
-export function Gallery({ gallery, id }: { gallery: GalleryData; id: string }) {
-  const images = (gallery.images ?? []).filter((img) => img.asset && img.size?.width && img.size?.height)
-  if (!images.length) return null
+function slices(source: Source, size: Size): GalleryItem['view'] {
+  const narrow = size.width <= 1000
+  const outWidth = Math.min(narrow ? 780 : 2304, size.width)
+  const displayWidth = narrow
+    ? size.width >= 700 ? Math.round(outWidth / 2) : outWidth
+    : Math.min(1152, size.width >= 2000 ? Math.round(size.width / 2) : size.width)
+  const scale = outWidth / size.width
+  const step = Math.floor(MAX_SLICE / scale)
+  const out: ViewSlice[] = []
+  for (let y = 0; y < size.height; y += step) {
+    const h = Math.min(step, size.height - y)
+    out.push({
+      src: urlFor(source).rect(0, y, size.width, h).width(outWidth).format('webp').quality(75).url(),
+      width: outWidth,
+      height: Math.round(h * scale),
+    })
+  }
+  return { slices: out, narrow, displayWidth }
+}
+
+function toItem(img: GalleryImage, phone: boolean, rail: boolean, fallbackAlt: string): GalleryItem | undefined {
+  if (!img.asset || !hasSize(img.size)) return undefined
+  // Never ask for more pixels than the source has.
+  const thumbWidth = Math.min(rail ? 600 : phone ? 600 : 1400, img.size.width)
+  const full = 'fullPage' in img && img.fullPage?.asset && hasSize(img.fullPageSize) ? img.fullPage : undefined
+  return {
+    key: img._key,
+    alt: img.alt || fallbackAlt,
+    caption: img.caption,
+    fullPage: !!full,
+    thumb: {
+      src: urlFor(img).width(thumbWidth).url(),
+      width: thumbWidth,
+      height: Math.round((thumbWidth * img.size.height) / img.size.width),
+    },
+    view: full ? slices(full, img.fullPageSize as Size) : slices(img, img.size),
+  }
+}
+
+/**
+ * A titled group of images in a case study. The page decides placement:
+ *
+ *  - Full rows (the new design): `phone` is an even grid of app screens;
+ *    `wide` is a two-column grid (row order) for desktop captures, wireframes, personas.
+ *  - `rail` (the current state, beside the story): compact — desktop captures
+ *    stack in one column, phone screens sit two across.
+ *
+ * Every thumbnail opens the shared viewer, where ← / → or a swipe steps through
+ * the group.
+ */
+export function Gallery({
+  gallery,
+  id,
+  labels,
+  rail = false,
+}: {
+  gallery: GalleryData
+  id: string
+  labels: GalleryLabels
+  rail?: boolean
+}) {
   const phone = gallery.layout === 'phone'
+  const items = (gallery.images ?? []).flatMap((img) => toItem(img, phone, rail, gallery.heading) ?? [])
+  if (!items.length) return null
 
   return (
-    <section aria-labelledby={id} className="mt-16">
-      <h2 id={id} className="font-display text-heading text-3xl font-semibold">
+    <section aria-labelledby={id} className={rail ? 'mt-8 first:mt-0' : 'mt-16 first:mt-0'}>
+      <h2 id={id} className={rail ? 'text-heading text-lg font-semibold' : 'font-display text-heading text-3xl font-semibold'}>
         {gallery.heading}
       </h2>
-      {gallery.intro && <p className="text-muted-foreground mt-2 max-w-2xl">{gallery.intro}</p>}
-      <div
-        className={cn(
-          'mt-8',
-          phone ? 'grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5' : 'gap-6 space-y-6 md:columns-2',
-        )}
-      >
-        {images.map((img) => {
-          const width = phone ? 600 : 1400
-          const { width: w, height: h } = img.size as { width: number; height: number }
-          return (
-            <figure key={img._key} className={cn(!phone && 'break-inside-avoid')}>
-              <Image
-                src={urlFor(img).width(width).url()}
-                alt={img.alt ?? ''}
-                width={width}
-                height={Math.round((width * h) / w)}
-                sizes={phone ? '(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 20vw' : '(max-width: 768px) 100vw, 50vw'}
-                className={cn(
-                  'h-auto w-full',
-                  phone ? 'border-border rounded-[1.25rem] border shadow-sm' : 'border-border rounded-xl border',
-                )}
-              />
-              {img.caption && <figcaption className="text-muted-foreground mt-2 text-sm">{img.caption}</figcaption>}
-            </figure>
-          )
-        })}
+      {gallery.intro && <p className={rail ? 'text-muted-foreground mt-1 text-sm' : 'text-muted-foreground mt-2'}>{gallery.intro}</p>}
+      <div className={rail ? 'mt-4' : 'mt-8'}>
+        <GalleryViewer items={items} layout={phone ? 'phone' : 'wide'} rail={rail} labels={labels} />
       </div>
     </section>
   )
