@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 
-import { PanLink } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
 import { CreativeTile } from '@/components/content'
 import { PORTFOLIO_SECTION_QUERY, safeFetch } from '@/lib/queries'
@@ -45,16 +45,16 @@ export default async function PortfolioPage() {
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 id={`portfolio-${section}`} className="font-display text-3xl font-semibold">
-                <PanLink href={`/portfolio/${section}`} className="hover:text-primary">
+                <TransitionLink href={`/portfolio/${section}`} className="hover:text-primary">
                   {copy.title}
-                </PanLink>
+                </TransitionLink>
               </h2>
               {copy.intro && <p className="text-muted-foreground mt-2">{copy.intro}</p>}
             </div>
-            <PanLink href={`/portfolio/${section}`} className="text-primary text-sm font-semibold underline underline-offset-4">
+            <TransitionLink href={`/portfolio/${section}`} className="text-primary text-sm font-semibold underline underline-offset-4">
               {s.portfolioViewAll}
               <span className="sr-only"> {copy.title}</span>
-            </PanLink>
+            </TransitionLink>
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
             {items.map((work) => (

@@ -2,27 +2,24 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { createContext, useContext, useEffect, useId, useRef, useState } from 'react'
+import { useEffect, useId, useRef, useState } from 'react'
 
 import { ChevronDown } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
 /**
- * The 3 × 3 site map and its navigation motion. One rule, two motions:
+ * The site map (a 3 × 3 of the main pages, which is also the phone menu) and
+ * the site's one navigation motion: a blind, drawn over the page you're on.
  *
- *  - Across the map → PAN. The camera travels from one cell to another (old
- *    page slides out, new one slides in from the far side, blueprint grid
- *    scrolling behind). A landing page that isn't a cell but parents cells —
- *    /portfolio parents the top row — sits at the center of its children.
- *  - Within a section → BLIND. A child page rolls down over its parent and
- *    rolls back up on return; siblings (UX ↔ Illustration) roll down when
- *    moving later in reading order, up when moving earlier.
+ *  - Parent → child (Home → Case Studies, Case Studies → a case study): the
+ *    new page rises from the bottom.
+ *  - Child → parent: the reverse — the page you're leaving lowers away.
+ *  - Siblings, and any other move: the new page draws across from the right.
  *
- * Anything else fades. The direction is set as CSS variables on <html> just
- * before navigating; `globals.css` turns them into motion. Browser
- * back/forward carries no transition type, so it swaps instantly — the
- * documented Next.js behavior, and fine for a history jump.
+ * The motion is passed as a view-transition type; `globals.css` turns it into
+ * motion. Browser back/forward carries no transition type, so it swaps
+ * instantly — the documented Next.js behavior, and fine for a history jump.
  */
 
 export interface GridCell {
@@ -32,8 +29,7 @@ export interface GridCell {
   cell: number
 }
 
-type Motion = 'pan' | 'blind-down' | 'blind-up' | 'fade'
-type Position = { col: number; row: number }
+type Motion = 'blind-rise' | 'blind-lower' | 'blind-across' | 'none'
 
 /** The map cell a path belongs to: exact match, or the deepest section prefix. */
 export function cellForPath(pathname: string, cells: GridCell[]): number | undefined {
@@ -45,78 +41,31 @@ export function cellForPath(pathname: string, cells: GridCell[]): number | undef
   return best?.cell
 }
 
-const col = (cell: number) => (cell - 1) % 3
-const row = (cell: number) => Math.floor((cell - 1) / 3)
+/** Home parents every top-level page; otherwise it's the path prefix. */
+const isAncestor = (parent: string, child: string) =>
+  parent === '/' ? child !== '/' : child.startsWith(`${parent}/`)
 
-/** Where a path sits on the map: its cell, or the center of the cells it parents. */
-function positionForPath(pathname: string, cells: GridCell[]): Position | undefined {
-  const cell = cellForPath(pathname, cells)
-  if (cell) return { col: col(cell), row: row(cell) }
-  const children = cells.filter((c) => c.href !== '/' && c.href.startsWith(`${pathname}/`))
-  if (!children.length) return undefined
-  const avg = (f: (n: number) => number) => children.reduce((sum, c) => sum + f(c.cell), 0) / children.length
-  return { col: avg(col), row: avg(row) }
-}
-
-const isAncestor = (parent: string, child: string) => parent !== '/' && child.startsWith(`${parent}/`)
-
-/** First path segment: "/portfolio/ux" → "portfolio". Home has none. */
-const sectionOf = (path: string) => path.split('/')[1] || undefined
-
-function motionFor(from: string, to: string, cells: GridCell[]): { motion: Motion; a?: Position; b?: Position } {
-  if (from === to) return { motion: 'fade' }
-  if (isAncestor(from, to)) return { motion: 'blind-down' }
-  if (isAncestor(to, from)) return { motion: 'blind-up' }
-  const a = positionForPath(from, cells)
-  const b = positionForPath(to, cells)
-  // Siblings and cousins within one section (UX ↔ Illustration, one case study
-  // to the next) stay in the blind family: later in reading order rolls down,
-  // earlier rolls up. Only moves between sections pan.
-  const section = sectionOf(from)
-  if (section && section === sectionOf(to)) {
-    const order = (p?: Position) => (p ? p.row * 3 + p.col : 0)
-    return { motion: order(b) < order(a) ? 'blind-up' : 'blind-down' }
-  }
-  if (a && b && (a.col !== b.col || a.row !== b.row)) return { motion: 'pan', a, b }
-  return { motion: 'fade' }
-}
-
-/** Sets the pan vector for the next view transition. */
-function preparePan(a: Position, b: Position) {
-  const dx = b.col - a.col
-  const dy = b.row - a.row
-  const distance = Math.max(Math.abs(dx), Math.abs(dy))
-  const root = document.documentElement.style
-  root.setProperty('--pan-dx', String(dx))
-  root.setProperty('--pan-dy', String(dy))
-  // Longer trips take a little longer, so a diagonal across the map reads as travel.
-  root.setProperty('--pan-duration', `${Math.round(500 + (distance - 1) * 200)}ms`)
-}
-
-/** The map, shared with every link on the page so any link can pick its motion. */
-const SiteMapContext = createContext<GridCell[]>([])
-
-export function SiteMapProvider({ cells, children }: { cells: GridCell[]; children: React.ReactNode }) {
-  return <SiteMapContext.Provider value={cells}>{children}</SiteMapContext.Provider>
+function motionFor(from: string, to: string): Motion {
+  if (from === to) return 'none'
+  if (isAncestor(from, to)) return 'blind-rise'
+  if (isAncestor(to, from)) return 'blind-lower'
+  return 'blind-across'
 }
 
 /**
- * The site's internal link. Picks pan / blind / fade from where you are and
- * where it goes. `transitionTypes` must be known at render, so the motion is
- * computed from the current path; the pan vector is set on click.
+ * The site's internal link: picks the blind from where you are and where it
+ * goes. `transitionTypes` must be known at render, so the motion is computed
+ * from the current path.
  */
-export function PanLink({
+export function TransitionLink({
   href,
-  cells: cellsProp,
   className,
   children,
   onNavigate,
   ...rest
-}: Omit<React.ComponentProps<typeof Link>, 'href'> & { href: string; cells?: GridCell[] }) {
+}: Omit<React.ComponentProps<typeof Link>, 'href'> & { href: string }) {
   const pathname = usePathname()
-  const contextCells = useContext(SiteMapContext)
-  const cells = cellsProp ?? contextCells
-  const { motion, a, b } = motionFor(pathname, href.split(/[?#]/)[0], cells)
+  const motion = motionFor(pathname, href.split(/[?#]/)[0])
 
   return (
     <Link
@@ -124,8 +73,7 @@ export function PanLink({
       className={className}
       transitionTypes={[motion]}
       onNavigate={(event) => {
-        if (motion === 'pan' && a && b) preparePan(a, b)
-        // The blind rolls from the part of the page that's actually on screen.
+        // The blind covers the part of the page that's actually on screen.
         document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`)
         onNavigate?.(event)
       }}
@@ -164,13 +112,11 @@ function PortfolioNav({
   label,
   href,
   sections,
-  cells,
   current,
 }: {
   label: string
   href: string
   sections: GridCell[]
-  cells: GridCell[]
   current: number | undefined
 }) {
   const pathname = usePathname()
@@ -202,14 +148,13 @@ function PortfolioNav({
 
   return (
     <div ref={wrapRef} className="relative flex items-center gap-1.5">
-      <PanLink
+      <TransitionLink
         href={href}
-        cells={cells}
         aria-current={pathname === href ? 'page' : undefined}
         className={cn('hover:text-primary', inPortfolio && 'text-primary')}
       >
         {label}
-      </PanLink>
+      </TransitionLink>
       {/* Divider between the link and its menu button — decorative. */}
       <span aria-hidden className="bg-foreground/25 h-4 w-px" />
       <button
@@ -231,9 +176,8 @@ function PortfolioNav({
         >
           {sections.map((c) => (
             <li key={c._key}>
-              <PanLink
+              <TransitionLink
                 href={c.href}
-                cells={cells}
                 onNavigate={() => setOpen(false)}
                 aria-current={current === c.cell ? 'page' : undefined}
                 className={cn(
@@ -242,7 +186,7 @@ function PortfolioNav({
                 )}
               >
                 {c.label}
-              </PanLink>
+              </TransitionLink>
             </li>
           ))}
         </ul>
@@ -294,18 +238,17 @@ export function GridNav({
           {topLevel.map((item) =>
             item.kind === 'portfolio' ? (
               <li key="portfolio">
-                <PortfolioNav label={portfolio.label} href={portfolio.href} sections={item.cells} cells={cells} current={current} />
+                <PortfolioNav label={portfolio.label} href={portfolio.href} sections={item.cells} current={current} />
               </li>
             ) : (
               <li key={item.cell._key}>
-                <PanLink
+                <TransitionLink
                   href={item.cell.href}
-                  cells={cells}
                   aria-current={current === item.cell.cell ? 'page' : undefined}
                   className={cn('hover:text-primary', current === item.cell.cell && 'text-primary')}
                 >
                   {item.cell.label}
-                </PanLink>
+                </TransitionLink>
               </li>
             ),
           )}
@@ -345,9 +288,8 @@ export function GridNav({
               const here = current === c.cell
               return (
                 <li key={c._key}>
-                  <PanLink
+                  <TransitionLink
                     href={c.href}
-                    cells={cells}
                     onNavigate={() => setOpen(false)}
                     aria-current={here ? 'page' : undefined}
                     className={cn(
@@ -358,7 +300,7 @@ export function GridNav({
                     )}
                   >
                     {c.label}
-                  </PanLink>
+                  </TransitionLink>
                 </li>
               )
             })}

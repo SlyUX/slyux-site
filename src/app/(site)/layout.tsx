@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { draftMode } from 'next/headers'
 
-import { GridNav, PanLink, SiteMapProvider } from '@/components/grid-nav'
+import { GridNav, TransitionLink } from '@/components/grid-nav'
 import { PreviewTools } from '@/components/preview-tools'
 import { getSiteSettings } from '@/lib/site-settings'
 import { externalHref } from '@/lib/utils'
@@ -22,7 +22,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   // Footer sits on the bottom edge of short pages, and below the content on
   // tall ones: the wrapper is at least one (small) viewport tall and main grows.
   return (
-    <SiteMapProvider cells={settings.gridNav}>
+    <>
     <div className="flex min-h-svh flex-col">
       <a href="#main" className="bg-primary text-primary-foreground sr-only z-50 px-4 py-2 focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
         {/* a11y-only text; not CMS-managed. */}
@@ -30,7 +30,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       </a>
       <header className="border-border bg-background relative z-40 border-b px-4 sm:px-6" style={{ viewTransitionName: 'site-header' }}>
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-x-8 py-3">
-          <PanLink href="/" cells={settings.gridNav} className="font-display shrink-0 text-xl font-semibold">
+          <TransitionLink href="/" className="font-display shrink-0 text-xl font-semibold">
             {settings.headerLogo?.asset && settings.headerLogoSize ? (
               <Image
                 src={urlFor(settings.headerLogo).height(96).url()}
@@ -46,7 +46,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
                 <span className="text-fox">.</span>
               </>
             )}
-          </PanLink>
+          </TransitionLink>
           {/* aria-label is a11y-only text, not CMS copy. */}
           <GridNav cells={settings.gridNav} label="Site map" portfolio={{ label: settings.creativeTitle, href: '/portfolio' }} />
         </div>
@@ -73,6 +73,6 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       </footer>
     </div>
     {preview && <PreviewTools />}
-    </SiteMapProvider>
+    </>
   )
 }

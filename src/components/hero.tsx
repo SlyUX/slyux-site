@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { PanLink, type GridCell } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/grid-nav'
 import { Briefcase, FileText, LayoutGrid, MessageCircle, Palette, User, type LucideIcon } from 'lucide-react'
 
 import { urlFor } from '@/sanity/image'
@@ -31,7 +31,6 @@ interface HeroProps {
   poster?: { asset?: { _ref: string } } | null
   actions?: QuickAction[] | null
   /** The site map, so quick actions pan like the main navigation. */
-  cells: GridCell[]
 }
 
 /**
@@ -42,7 +41,7 @@ interface HeroProps {
  * hidden by CSS and the poster still shows instead — no client JS needed.
  * A dark scrim keeps white text above AA contrast whatever frame is showing.
  */
-export function Hero({ eyebrow, headline, intro, brandmark, videoUrl, videoType, poster, actions, cells }: HeroProps) {
+export function Hero({ eyebrow, headline, intro, brandmark, videoUrl, videoType, poster, actions }: HeroProps) {
   const posterUrl = poster?.asset ? urlFor(poster).width(1920).quality(70).url() : undefined
 
   return (
@@ -110,7 +109,7 @@ export function Hero({ eyebrow, headline, intro, brandmark, videoUrl, videoType,
                     {external ? (
                       <a href={action.href} className={cls}>{inner}</a>
                     ) : (
-                      <PanLink href={action.href} cells={cells} className={cls}>{inner}</PanLink>
+                      <TransitionLink href={action.href} className={cls}>{inner}</TransitionLink>
                     )}
                   </li>
                 )

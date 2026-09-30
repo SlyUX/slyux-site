@@ -18,7 +18,6 @@ export default async function HomePage() {
         videoType={s.heroVideoType}
         poster={s.heroPoster}
         actions={s.quickActions}
-        cells={s.gridNav}
       />
 
       {!!s.proofStats?.length && (

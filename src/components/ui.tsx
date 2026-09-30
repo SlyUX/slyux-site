@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
-import { PanLink } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/grid-nav'
 import { cn } from '@/lib/utils'
 import type { CmsLink } from '@/lib/types'
 
@@ -63,9 +63,9 @@ export function ButtonLink({
       {link.label}
     </a>
   ) : (
-    <PanLink href={link.href} className={cls}>
+    <TransitionLink href={link.href} className={cls}>
       {link.label}
-    </PanLink>
+    </TransitionLink>
   )
 }
 
@@ -85,10 +85,10 @@ export function PageHeader({
   return (
     <header>
       {back && (
-        <PanLink href={back.href} className="text-muted-foreground hover:text-primary mb-6 inline-flex items-center gap-1.5 text-sm font-medium">
+        <TransitionLink href={back.href} className="text-muted-foreground hover:text-primary mb-6 inline-flex items-center gap-1.5 text-sm font-medium">
           <span aria-hidden>←</span>
           {back.label}
-        </PanLink>
+        </TransitionLink>
       )}
       {eyebrow && <p className="text-primary mb-3 text-sm font-semibold tracking-wide uppercase">{eyebrow}</p>}
       <h1 className="font-display text-heading text-4xl leading-tight font-semibold tracking-tight md:text-5xl">{title}</h1>

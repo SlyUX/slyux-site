@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 
-import { PanLink } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
 import { EXPERIENCE_QUERY, safeFetch } from '@/lib/queries'
 import { getSiteSettings } from '@/lib/site-settings'
@@ -77,9 +77,9 @@ export default async function ResumePage() {
                             {role.caseStudies.map(
                               (cs) =>
                                 cs.slug && (
-                                  <PanLink key={cs.slug} href={`/case-studies/${cs.slug}`} className="text-primary underline underline-offset-4">
+                                  <TransitionLink key={cs.slug} href={`/case-studies/${cs.slug}`} className="text-primary underline underline-offset-4">
                                     {cs.title}
-                                  </PanLink>
+                                  </TransitionLink>
                                 ),
                             )}
                           </p>

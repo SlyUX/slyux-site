@@ -12,6 +12,7 @@ Stephen Fox's portfolio. Primary audience: hiring managers for director/lead UX/
 - Next.js 16.2.10 (App Router, Turbopack, `src/`, alias `@/*`), React 19.2, TypeScript, Tailwind v4 (CSS-first tokens in `src/app/globals.css`)
 - Sanity v6, embedded Studio at `/studio`. Same setup as the sibling `../NDRiot` repo — check it before inventing a pattern.
 - Vercel deploy, DNS on Cloudflare. **Pushing `main` deploys to slyux.com** — commit freely, push deliberately.
+- **Merge into `main` with a merge commit** (`git merge --no-ff`; this repo's git config makes it the default for `main`). Vercel won't make a production build for a commit it already built as a branch preview, so fast-forwarding `main` to a pushed branch leaves slyux.com unchanged. If it happens anyway, push an empty commit to `main`.
 
 ## Content model (`src/sanity/schemaTypes`)
 - `siteSettings` (singleton): all chrome copy, home page, section headings, résumé skills, contact inquiry options

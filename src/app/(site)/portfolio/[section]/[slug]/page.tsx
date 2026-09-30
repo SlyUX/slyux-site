@@ -3,7 +3,7 @@ import { stegaClean } from 'next-sanity'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
-import { PanLink } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
 import { RichText } from '@/components/content'
 import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib/queries'
@@ -59,9 +59,9 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
           <RichText value={work.body} />
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2">
             {work.caseStudy?.slug && (
-              <PanLink href={`/case-studies/${work.caseStudy.slug}`} className="text-primary font-semibold underline underline-offset-4">
+              <TransitionLink href={`/case-studies/${work.caseStudy.slug}`} className="text-primary font-semibold underline underline-offset-4">
                 {work.caseStudy.title}
-              </PanLink>
+              </TransitionLink>
             )}
             {outbound && (
               <a href={outbound} target="_blank" rel="noopener noreferrer" className="text-primary font-semibold underline underline-offset-4">

@@ -2,7 +2,7 @@ import Image from 'next/image'
 import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { TypedObject } from '@portabletext/types'
 
-import { PanLink } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/grid-nav'
 import { cn, externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import { sectionOfKind } from '@/sanity/portfolio'
@@ -77,9 +77,9 @@ export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudy
           <p className="text-muted-foreground text-sm">{[study.organization, study.years].filter(Boolean).join(' · ')}</p>
         )}
         <Heading className="font-display text-2xl font-semibold">
-          <PanLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
+          <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
             {study.title}
-          </PanLink>
+          </TransitionLink>
         </Heading>
         <p className="text-muted-foreground leading-relaxed">{study.summary}</p>
         {lead && (
@@ -152,7 +152,7 @@ export function CreativeTile({
       <Heading className="mt-3 font-semibold">
         {href ? (
           href.startsWith('/') ? (
-            <PanLink href={href} className="after:absolute after:inset-0 group-hover:text-primary">{work.title}</PanLink>
+            <TransitionLink href={href} className="after:absolute after:inset-0 group-hover:text-primary">{work.title}</TransitionLink>
           ) : (
             <a href={href} target="_blank" rel="noopener noreferrer" className="after:absolute after:inset-0 group-hover:text-primary">{work.title}</a>
           )
