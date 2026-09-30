@@ -26,13 +26,13 @@ export const resolve: PresentationPluginOptions['resolve'] = {
       }),
     }),
     creativeWork: defineLocations({
-      select: { title: 'title', slug: 'slug.current', kind: 'kind', body: 'body' },
+      select: { title: 'title', slug: 'slug.current', kind: 'kind', body: 'body', documents: 'documents' },
       resolve: (doc) => {
         const section = sectionOfKind(doc?.kind)
         if (!section) return { locations: [{ title: 'Portfolio', href: '/portfolio' }] }
         return {
           locations: [
-            ...(doc?.slug && doc?.body?.length ? [{ title: doc.title || 'Untitled', href: `/portfolio/${section}/${doc.slug}` }] : []),
+            ...(doc?.slug && (doc?.body?.length || doc?.documents?.length) ? [{ title: doc.title || 'Untitled', href: `/portfolio/${section}/${doc.slug}` }] : []),
             { title: 'Portfolio section', href: `/portfolio/${section}` },
             { title: 'Portfolio', href: '/portfolio' },
           ],

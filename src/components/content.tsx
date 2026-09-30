@@ -2,10 +2,7 @@ import Image from 'next/image'
 import { PortableText, type PortableTextComponents } from '@portabletext/react'
 import type { TypedObject } from '@portabletext/types'
 
-import { DocumentViewer } from '@/components/document-viewer'
-import { PdfBadge, toDocument } from '@/components/documents'
 import { TransitionLink } from '@/components/grid-nav'
-import type { DocumentSettings } from '@/lib/site-settings'
 import { cn, externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import { sectionOfKind } from '@/sanity/portfolio'
@@ -102,31 +99,25 @@ export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudy
 export function CreativeTile({
   work,
   matureLabel,
-  docs,
   large = false,
   headingLevel: Heading = 'h3',
 }: {
   work: CreativeWorkCard
   matureLabel: string
-  /** PDF badge and reader labels; lets a piece with only a document open it. */
-  docs?: DocumentSettings
   large?: boolean
   headingLevel?: 'h2' | 'h3'
 }) {
   const outbound = externalHref(work.externalUrl)
-  // Where the tile goes: its own story page, else its case study, else off-site.
+  // Where the tile goes: its own page (a story or PDFs), else its case study, else off-site.
   const section = sectionOfKind(work.kind)
   const href = work.mature
     ? outbound
-    : work.hasStory && section
+    : work.hasPage && section
       ? `/portfolio/${section}/${work.slug}`
       : work.caseStudySlug
         ? `/case-studies/${work.caseStudySlug}`
         : outbound
   const meta = [work.client, work.year].filter(Boolean).join(' · ')
-  // Nowhere else to go but a PDF: the tile shows its cover and opens the reader.
-  const doc = !href && work.document && docs ? toDocument(work.document, docs.badge) : undefined
-  const pdf = doc?.pages.length && doc.cover?.asset ? doc : undefined
 
   if (work.mature) {
     return (
@@ -142,12 +133,10 @@ export function CreativeTile({
     )
   }
 
-  const cover = pdf?.cover ?? work.image
-  const image = cover?.asset ? (
+  const image = work.image?.asset ? (
     <Image
-      src={urlFor(cover).width(large ? 1400 : 700).url()}
-      // The cover page is decorative next to the title; a piece's own image has alt text.
-      alt={pdf ? '' : (work.image?.alt ?? '')}
+      src={urlFor(work.image).width(large ? 1400 : 700).url()}
+      alt={work.image.alt ?? ''}
       width={large ? 1400 : 700}
       height={large ? 1050 : 525}
       sizes={large ? '(max-width: 768px) 100vw, 66vw' : '(max-width: 768px) 50vw, 33vw'}
@@ -157,9 +146,8 @@ export function CreativeTile({
 
   return (
     <article className="group relative flex flex-col">
-      <div className={cn('bg-surface relative flex items-center justify-center overflow-hidden rounded-2xl', large ? 'aspect-[4/3]' : 'aspect-square')}>
+      <div className={cn('bg-surface flex items-center justify-center overflow-hidden rounded-2xl', large ? 'aspect-[4/3]' : 'aspect-square')}>
         {image}
-        {pdf && <PdfBadge text={pdf.badge} />}
       </div>
       <Heading className="mt-3 font-semibold">
         {href ? (
@@ -168,17 +156,6 @@ export function CreativeTile({
           ) : (
             <a href={href} target="_blank" rel="noopener noreferrer" className="after:absolute after:inset-0 group-hover:text-primary">{work.title}</a>
           )
-        ) : pdf && docs ? (
-          <DocumentViewer
-            title={pdf.title}
-            pages={pdf.pages}
-            downloadHref={pdf.downloadHref}
-            labels={docs.labels}
-            triggerLabel={`${work.title}: ${pdf.title} (${pdf.badge})`}
-            className="text-left after:absolute after:inset-0 group-hover:text-primary"
-          >
-            {work.title}
-          </DocumentViewer>
         ) : (
           work.title
         )}
