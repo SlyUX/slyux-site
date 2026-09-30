@@ -6,6 +6,7 @@ import experience from './experience'
 import imageWithAlt from './imageWithAlt'
 import galleryScreen from './galleryScreen'
 import persona from './persona'
+import pdfDocument from './pdfDocument'
 import { metric, link, richText } from './objects'
 
 export const schemaTypes = [
@@ -17,6 +18,7 @@ export const schemaTypes = [
   imageWithAlt,
   galleryScreen,
   persona,
+  pdfDocument,
   metric,
   link,
   richText,

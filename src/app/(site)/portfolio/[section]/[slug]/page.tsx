@@ -6,8 +6,9 @@ import { notFound } from 'next/navigation'
 import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
 import { RichText } from '@/components/content'
+import { DocumentGrid } from '@/components/documents'
 import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib/queries'
-import { getSiteSettings } from '@/lib/site-settings'
+import { documentSettings, getSiteSettings } from '@/lib/site-settings'
 import { externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import { isPortfolioSection, kindsInSection, sectionOfKind } from '@/sanity/portfolio'
@@ -39,6 +40,7 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
   if (!work || !isPortfolioSection(section)) notFound()
 
   const outbound = externalHref(work.externalUrl)
+  const docs = documentSettings(s)
   const images = [work.image, ...(work.gallery ?? [])].flatMap((img) =>
     img?.asset ? [{ ...img, ref: img.asset._ref }] : [],
   )
@@ -70,7 +72,12 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
             )}
           </div>
         </div>
-        {images.length > 0 && (
+        {work.documents?.length ? (
+          // PDFs, when there are any, stand in for the images.
+          <div className="mt-12">
+            <DocumentGrid documents={work.documents} badgeTemplate={docs.badge} labels={docs.labels} />
+          </div>
+        ) : images.length > 0 && (
           <div className="mt-12 grid gap-6 md:grid-cols-2">
             {images.map((img, i) => (
               <Image

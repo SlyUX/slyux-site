@@ -1,7 +1,7 @@
 import { CreativeTile } from '@/components/content'
 import { PORTFOLIO_KINDS } from '@/sanity/portfolio'
 import type { CreativeWorkCard } from '@/lib/types'
-import type { SiteSettings } from '@/lib/site-settings'
+import type { DocumentSettings, SiteSettings } from '@/lib/site-settings'
 
 /**
  * A portfolio section's pieces, grouped by kind (e.g. Brand → brand systems,
@@ -13,10 +13,12 @@ export function PortfolioGrid({
   works,
   headings,
   matureLabel,
+  docs,
 }: {
   works: CreativeWorkCard[]
   headings: SiteSettings['creativeSections']
   matureLabel: string
+  docs: DocumentSettings
 }) {
   const groups = PORTFOLIO_KINDS.map((kind) => ({
     kind: kind.value,
@@ -40,12 +42,12 @@ export function PortfolioGrid({
             )}
             {hasLead && (
               <div className="mb-10">
-                <CreativeTile work={lead} matureLabel={matureLabel} large headingLevel={showHeadings ? 'h3' : 'h2'} />
+                <CreativeTile work={lead} matureLabel={matureLabel} docs={docs} large headingLevel={showHeadings ? 'h3' : 'h2'} />
               </div>
             )}
             <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
               {(hasLead ? rest : group.items).map((work) => (
-                <CreativeTile key={work._id} work={work} matureLabel={matureLabel} headingLevel={showHeadings ? 'h3' : 'h2'} />
+                <CreativeTile key={work._id} work={work} matureLabel={matureLabel} docs={docs} headingLevel={showHeadings ? 'h3' : 'h2'} />
               ))}
             </div>
           </section>
