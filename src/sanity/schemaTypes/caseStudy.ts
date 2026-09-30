@@ -3,6 +3,15 @@ import { defineType, defineField, defineArrayMember } from 'sanity'
 import { slugField } from './slugField'
 
 /**
+ * Drafting notes ("TODO:" and "TODO (review):", as the ux-case-study skill
+ * writes them) are fine in a draft but public the moment it's published.
+ * Warn rather than block, so a partly finished page can still go live on
+ * purpose.
+ */
+const todoCheck = (value: unknown) =>
+  JSON.stringify(value ?? '').includes('TODO') ? 'Still has TODO notes. They will be public when you publish.' : true
+
+/**
  * A UX / product case study — the core of the portfolio. Which ones appear on
  * the home page is chosen in Site settings, not here, so featuring is one
  * decision in one place.
@@ -32,7 +41,7 @@ export default defineType({
       rows: 3,
       group: 'overview',
       description: 'One or two sentences for cards and the top of the page: the problem and what changed.',
-      validation: (rule) => rule.required().max(280),
+      validation: (rule) => [rule.required().max(280), rule.custom(todoCheck).warning()],
     }),
     defineField({
       name: 'organization',
@@ -40,6 +49,7 @@ export default defineType({
       type: 'string',
       group: 'overview',
       description: 'Who the work was for, e.g. "United Methodist Communications".',
+      validation: (rule) => rule.custom(todoCheck).warning(),
     }),
     defineField({
       name: 'role',
@@ -47,6 +57,7 @@ export default defineType({
       type: 'string',
       group: 'overview',
       description: 'e.g. "UX/CX Director — strategy, IA, coded prototypes".',
+      validation: (rule) => rule.custom(todoCheck).warning(),
     }),
     defineField({
       name: 'years',
@@ -54,6 +65,7 @@ export default defineType({
       type: 'string',
       group: 'overview',
       description: 'As it should read, e.g. "2018" or "2024–2026".',
+      validation: (rule) => rule.custom(todoCheck).warning(),
     }),
     defineField({
       name: 'skills',
@@ -86,7 +98,7 @@ export default defineType({
       of: [{ type: 'metric' }],
       group: 'overview',
       description: 'Up to four headline numbers. Leave empty rather than inventing one.',
-      validation: (rule) => rule.max(4),
+      validation: (rule) => [rule.max(4), rule.custom(todoCheck).warning()],
     }),
     defineField({
       name: 'body',
@@ -94,6 +106,7 @@ export default defineType({
       type: 'richText',
       group: 'story',
       description: 'Suggested headings: The problem · My role · Process · What changed.',
+      validation: (rule) => rule.custom(todoCheck).warning(),
     }),
     defineField({
       name: 'personasIntro',
@@ -102,6 +115,7 @@ export default defineType({
       rows: 2,
       group: 'story',
       description: 'Optional line under the Personas heading.',
+      validation: (rule) => rule.custom(todoCheck).warning(),
     }),
     defineField({
       name: 'personas',
@@ -109,6 +123,7 @@ export default defineType({
       type: 'array',
       group: 'story',
       description: 'Shown after the story, before the new-design galleries.',
+      validation: (rule) => rule.custom(todoCheck).warning(),
       of: [defineArrayMember({ type: 'persona' })],
     }),
     defineField({
@@ -117,6 +132,7 @@ export default defineType({
       type: 'array',
       group: 'story',
       description: 'Titled image groups — e.g. "The sites today" before the story, "The app" after it. Order within each placement follows this list.',
+      validation: (rule) => rule.custom(todoCheck).warning(),
       of: [
         defineArrayMember({
           type: 'object',
@@ -155,7 +171,8 @@ export default defineType({
               name: 'images',
               title: 'Images',
               type: 'array',
-              description: 'Use "Screen (with full page)" to attach a full-length capture that opens in an overlay.',
+              description:
+                'Give each image a short caption, e.g. "UMC.org · Home". Tall page captures show their first screen, and the whole page opens in the viewer; use "Screen (with full page)" to pair a separate first-screen image with a full-length capture.',
               of: [{ type: 'imageWithAlt' }, { type: 'galleryScreen' }],
               options: { layout: 'grid' },
               validation: (rule) => rule.min(1),
@@ -191,7 +208,7 @@ export default defineType({
       rows: 2,
       group: 'seo',
       description: 'Falls back to the summary when empty.',
-      validation: (rule) => rule.max(160).warning('Search engines cut off around 160 characters.'),
+      validation: (rule) => [rule.max(160).warning('Search engines cut off around 160 characters.'), rule.custom(todoCheck).warning()],
     }),
   ],
   orderings: [{ title: 'Work page order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],

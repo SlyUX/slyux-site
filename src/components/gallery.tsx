@@ -10,6 +10,15 @@ type Source = Parameters<typeof urlFor>[0]
 /** Tallest slice we request, in output pixels — comfortably under Sanity's 8192px cap. */
 const MAX_SLICE = 4000
 
+/**
+ * Tall page captures get the same treatment as a "Screen (with full page)":
+ * the thumbnail is the first screen, and the viewer shows the whole page.
+ * First screens match the capture script's windows (1440 × 900 desktop,
+ * 390 × 844 phone); anything no taller than TALL shows whole.
+ */
+const FIRST_SCREEN = { wide: 900 / 1440, phone: 844 / 390 }
+const TALL = { wide: 1, phone: 2.4 }
+
 const hasSize = (s: { width?: number | null; height?: number | null } | null | undefined): s is Size =>
   !!s?.width && !!s?.height
 
@@ -49,15 +58,21 @@ function toItem(img: GalleryImage, phone: boolean, rail: boolean, fallbackAlt: s
   // Never ask for more pixels than the source has.
   const thumbWidth = Math.min(rail ? 600 : phone ? 600 : 1400, img.size.width)
   const full = 'fullPage' in img && img.fullPage?.asset && hasSize(img.fullPageSize) ? img.fullPage : undefined
+  const shape = phone ? 'phone' : 'wide'
+  const foldHeight =
+    !full && img.size.height / img.size.width > TALL[shape]
+      ? Math.round(img.size.width * FIRST_SCREEN[shape])
+      : undefined
+  const thumbSource = foldHeight ? urlFor(img).rect(0, 0, img.size.width, foldHeight) : urlFor(img)
   return {
     key: img._key,
     alt: img.alt || fallbackAlt,
     caption: img.caption,
-    fullPage: !!full,
+    fullPage: !!full || !!foldHeight,
     thumb: {
-      src: urlFor(img).width(thumbWidth).url(),
+      src: thumbSource.width(thumbWidth).url(),
       width: thumbWidth,
-      height: Math.round((thumbWidth * img.size.height) / img.size.width),
+      height: Math.round((thumbWidth * (foldHeight ?? img.size.height)) / img.size.width),
     },
     view: full ? slices(full, img.fullPageSize as Size) : slices(img, img.size),
   }
