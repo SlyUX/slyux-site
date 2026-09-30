@@ -3,6 +3,8 @@
 import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 
+import { cn } from '@/lib/utils'
+
 export interface GalleryLabels {
   fullPage: string
   enlarge: string
@@ -173,5 +175,48 @@ export function ViewerDialog({
       {isOpen && children}
       </div>
     </dialog>
+  )
+}
+
+/**
+ * Shows the current item and steps between items with a blind: the new one
+ * draws over the old from the right when moving forward, from the left when
+ * moving back — the site's sibling-page motion. The old item stays underneath,
+ * shaded, until the blind finishes. Reduced motion: an instant swap.
+ */
+export function ViewerStage({
+  index,
+  render,
+  className,
+}: {
+  index: number
+  /** Renders item `i`; `leaving` is true for the one being covered. */
+  render: (i: number, leaving: boolean) => React.ReactNode
+  className?: string
+}) {
+  const [shown, setShown] = useState(index)
+  const [leaving, setLeaving] = useState<number | null>(null)
+  // Derived from the previous render, per React's guidance for "state from props".
+  if (index !== shown) {
+    setLeaving(shown)
+    setShown(index)
+  }
+  const direction = leaving === null ? undefined : index > leaving ? 'next' : 'prev'
+
+  return (
+    <div className={cn('grid justify-items-center', className)}>
+      {leaving !== null && (
+        <div key={`out-${leaving}`} aria-hidden className="viewer-leaving [grid-area:1/1]">
+          {render(leaving, true)}
+        </div>
+      )}
+      <div
+        key={`in-${index}`}
+        onAnimationEnd={(e) => e.target === e.currentTarget && setLeaving(null)}
+        className={cn('relative [grid-area:1/1]', direction && `viewer-blind-${direction}`)}
+      >
+        {render(index, false)}
+      </div>
+    </div>
   )
 }

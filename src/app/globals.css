@@ -155,6 +155,33 @@
   animation: blind-shade-out var(--blind-duration) var(--blind-ease) both;
 }
 
+/*
+  Stepping between gallery images and PDF pages (ViewerStage in viewer.tsx):
+  the same blind at a quicker pace for flipping. Forward draws in from the
+  right, back from the left; the item underneath shades. Fill mode is
+  `backwards` so the clip lets go when it ends and shadows aren't cut off.
+*/
+:root {
+  --viewer-blind-duration: 350ms;
+}
+@keyframes viewer-blind-next {
+  from { clip-path: inset(0 0 0 100%); }
+  to { clip-path: inset(0); }
+}
+@keyframes viewer-blind-prev {
+  from { clip-path: inset(0 100% 0 0); }
+  to { clip-path: inset(0); }
+}
+.viewer-blind-next {
+  animation: viewer-blind-next var(--viewer-blind-duration) var(--blind-ease) backwards;
+}
+.viewer-blind-prev {
+  animation: viewer-blind-prev var(--viewer-blind-duration) var(--blind-ease) backwards;
+}
+.viewer-leaving {
+  animation: blind-shade-in var(--viewer-blind-duration) var(--blind-ease) both;
+}
+
 /* The header is the fixed reference point: it never moves during a blind. */
 ::view-transition-group(site-header) {
   animation: none;
@@ -169,6 +196,13 @@
 
 /* Reduced motion: no travel, just a quick crossfade. */
 @media (prefers-reduced-motion: reduce) {
+  .viewer-blind-next,
+  .viewer-blind-prev {
+    animation: none;
+  }
+  .viewer-leaving {
+    display: none;
+  }
   ::view-transition-old(.blind-rise-out),
   ::view-transition-old(.blind-lower-out),
   ::view-transition-old(.blind-across-out) {

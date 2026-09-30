@@ -3,7 +3,7 @@
 import { useRef, useSyncExternalStore } from 'react'
 import { Download, Maximize, Minimize } from 'lucide-react'
 
-import { useViewer, ViewerDialog, type GalleryLabels } from '@/components/viewer'
+import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
 export interface DocumentPage {
   key: string
@@ -59,7 +59,8 @@ export function DocumentViewer({
   const { index, openAt, frameRef } = viewer
   const page = pages[index]
   const next = pages[index + 1]
-  const counter = labels.counter.replace('{page}', String(index + 1)).replace('{pages}', String(pages.length))
+  const counterFor = (i: number) => labels.counter.replace('{page}', String(i + 1)).replace('{pages}', String(pages.length))
+  const counter = counterFor(index)
 
   const canFullscreen = useSyncExternalStore(noSubscribe, () => document.fullscreenEnabled, () => false)
   const isFullscreen = useSyncExternalStore(onFullscreenChange, () => !!document.fullscreenElement, () => false)
@@ -115,17 +116,21 @@ export function DocumentViewer({
             onClick={(e) => e.target === e.currentTarget && viewer.close()}
             className="flex min-h-[calc(100svh-4.5rem)] items-center justify-center px-4 pb-6 sm:px-6"
           >
-            {/* Plain <img>: page images are pre-sized by Sanity; fitted to the screen, not the width. */}
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              key={page.key}
-              onClick={(e) => e.stopPropagation()}
-              src={page.src}
-              alt={`${title}, ${counter}`}
-              width={page.width}
-              height={page.height}
-              decoding="async"
-              className="h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-lg bg-white shadow-2xl"
+            <ViewerStage
+              index={index}
+              render={(i, leaving) => (
+                // Plain <img>: page images are pre-sized by Sanity; fitted to the screen, not the width.
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  onClick={(e) => e.stopPropagation()}
+                  src={pages[i].src}
+                  alt={leaving ? '' : `${title}, ${counterFor(i)}`}
+                  width={pages[i].width}
+                  height={pages[i].height}
+                  decoding="async"
+                  className="h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-lg bg-white shadow-2xl"
+                />
+              )}
             />
             {/* Fetch the next page ahead so turning to it is instant. */}
             {/* eslint-disable-next-line @next/next/no-img-element */}
