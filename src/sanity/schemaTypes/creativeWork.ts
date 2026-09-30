@@ -83,13 +83,13 @@ export default defineType({
       type: 'array',
       of: [defineArrayMember({ type: 'pdfDocument' })],
       description:
-        'Thumbnails with a PDF badge that open a page-by-page reader, shown instead of the images above. On a piece with no story, the tile opens the first document.',
+        'Thumbnails with a PDF badge that open a page-by-page reader, shown on the piece\'s page instead of the images above. Adding one gives the piece its own page.',
     }),
     defineField({
       name: 'body',
       title: 'Story',
       type: 'richText',
-      description: 'Optional. Filling this in gives the piece its own page.',
+      description: 'Optional. Filling this in, or adding PDF documents, gives the piece its own page.',
     }),
     defineField({
       name: 'caseStudy',

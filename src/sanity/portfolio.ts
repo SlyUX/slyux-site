@@ -21,6 +21,12 @@ export const PORTFOLIO_KINDS = [
 
 export type PortfolioKind = (typeof PORTFOLIO_KINDS)[number]['value']
 
+/**
+ * Kinds shown as projects: every piece a half-width tile linking to its own
+ * page, rather than a full-width featured lead above a grid of small tiles.
+ */
+export const PROJECT_KINDS: readonly PortfolioKind[] = ['brand']
+
 export const kindsInSection = (section: PortfolioSection): PortfolioKind[] =>
   PORTFOLIO_KINDS.filter((k) => k.section === section).map((k) => k.value)
 

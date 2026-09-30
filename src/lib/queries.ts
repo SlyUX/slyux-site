@@ -52,9 +52,8 @@ const PDF_DOCUMENT = `_key,title,"file": file.asset->{url,originalFilename},
   pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}`
 
 const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,client,year,credit,summary,externalUrl,mature,featured,
-  "hasStory": count(body) > 0,
-  "caseStudySlug": caseStudy->slug.current,
-  "document": documents[0]{${PDF_DOCUMENT}}`
+  "hasPage": count(body) > 0 || count(documents) > 0,
+  "caseStudySlug": caseStudy->slug.current`
 
 /** All pieces in one portfolio section. `$kinds` comes from `kindsInSection()`. */
 export const PORTFOLIO_SECTION_QUERY = defineQuery(
@@ -73,7 +72,7 @@ export const CREATIVE_WORK_QUERY = defineQuery(`*[_type=="creativeWork" && slug.
 }`)
 
 export const CREATIVE_WORK_PATHS_QUERY = defineQuery(
-  `*[_type=="creativeWork" && defined(slug.current) && count(body) > 0 && mature != true]{kind,"slug":slug.current}`,
+  `*[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0) && mature != true]{kind,"slug":slug.current}`,
 )
 
 export const PAGE_QUERY = defineQuery(`*[_type=="page" && slug.current==$slug][0]{
