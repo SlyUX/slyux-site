@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 
 import { PageHeader, Section } from '@/components/ui'
 import { getSiteSettings } from '@/lib/site-settings'
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSiteSettings()
-  return { title: s.contactTitle, description: s.contactIntro ?? undefined }
+  return stegaClean({ title: s.contactTitle, description: s.contactIntro ?? undefined })
 }
 
 /**

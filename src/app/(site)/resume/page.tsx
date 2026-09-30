@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 
 import { PanLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
@@ -8,7 +9,7 @@ import type { ExperienceEntry } from '@/lib/types'
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSiteSettings()
-  return { title: s.resumeTitle, description: s.resumeIntro ?? undefined }
+  return stegaClean({ title: s.resumeTitle, description: s.resumeIntro ?? undefined })
 }
 
 const monthYear = new Intl.DateTimeFormat('en-US', { month: 'short', year: 'numeric', timeZone: 'UTC' })

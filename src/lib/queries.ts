@@ -1,11 +1,12 @@
 import { defineQuery } from 'next-sanity'
 
-import { client } from '@/sanity/client'
+import { requestClient } from '@/sanity/preview'
 
 /**
  * Every fetch goes through here with an explicit fallback. GROQ returns `null`
  * — not `[]` — when nothing matches, and a missing project/network error
- * should render an empty state rather than a 500.
+ * should render an empty state rather than a 500. In draft mode it reads drafts
+ * for the Studio's Presentation tool (see `@/sanity/preview`).
  */
 export async function safeFetch<T>(
   query: string,
@@ -13,7 +14,8 @@ export async function safeFetch<T>(
   fallback: T,
 ): Promise<T> {
   try {
-    const result = await client.fetch<T>(query, params)
+    const { client, options } = await requestClient()
+    const result = await client.fetch<T>(query, params, options)
     return result ?? fallback
   } catch {
     return fallback

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 
 import { PageHeader, Section } from '@/components/ui'
 import { CaseStudyCard } from '@/components/content'
@@ -8,7 +9,7 @@ import type { CaseStudyCard as CaseStudyCardData } from '@/lib/types'
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSiteSettings()
-  return { title: s.workTitle, description: s.workIntro ?? undefined }
+  return stegaClean({ title: s.workTitle, description: s.workIntro ?? undefined })
 }
 
 export default async function WorkPage() {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -29,7 +30,7 @@ export async function generateMetadata({ params }: PageProps<'/portfolio/[sectio
   const { section, slug } = await params
   const work = await getWork(section, slug)
   if (!work) return {}
-  return { title: work.title, description: work.summary ?? undefined }
+  return stegaClean({ title: work.title, description: work.summary ?? undefined })
 }
 
 export default async function PortfolioPiecePage({ params }: PageProps<'/portfolio/[section]/[slug]'>) {

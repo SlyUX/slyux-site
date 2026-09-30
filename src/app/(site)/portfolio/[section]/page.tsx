@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 import { notFound } from 'next/navigation'
 
 import { PageHeader, Section } from '@/components/ui'
@@ -20,7 +21,7 @@ export async function generateMetadata({ params }: PageProps<'/portfolio/[sectio
   if (!isPortfolioSection(section)) return {}
   const s = await getSiteSettings()
   const copy = s.portfolioSections[section]
-  return { title: copy.title, description: copy.intro }
+  return stegaClean({ title: copy.title, description: copy.intro })
 }
 
 export default async function PortfolioSectionPage({ params }: PageProps<'/portfolio/[section]'>) {

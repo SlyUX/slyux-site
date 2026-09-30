@@ -1,6 +1,8 @@
 import Image from 'next/image'
+import { draftMode } from 'next/headers'
 
 import { GridNav, PanLink, SiteMapProvider } from '@/components/grid-nav'
+import { PreviewTools } from '@/components/preview-tools'
 import { getSiteSettings } from '@/lib/site-settings'
 import { externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
@@ -14,6 +16,7 @@ export const revalidate = 60
 /** Site chrome: header, main, footer. Kept off the full-screen Studio. */
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings()
+  const { isEnabled: preview } = await draftMode()
   const linkedin = externalHref(settings.linkedinUrl)
 
   // Footer sits on the bottom edge of short pages, and below the content on
@@ -69,6 +72,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
       </footer>
     </div>
+    {preview && <PreviewTools />}
     </SiteMapProvider>
   )
 }

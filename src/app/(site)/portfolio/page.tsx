@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 
 import { PanLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
@@ -10,7 +11,7 @@ import type { CreativeWorkCard } from '@/lib/types'
 
 export async function generateMetadata(): Promise<Metadata> {
   const s = await getSiteSettings()
-  return { title: s.creativeTitle, description: s.creativeIntro ?? undefined }
+  return stegaClean({ title: s.creativeTitle, description: s.creativeIntro ?? undefined })
 }
 
 /** How many pieces each section previews on the landing page. */

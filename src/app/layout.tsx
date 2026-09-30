@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 import { Analytics } from '@vercel/analytics/next'
 import { Fraunces, Geist } from 'next/font/google'
 
@@ -17,7 +18,8 @@ const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces' })
  */
 export async function generateMetadata(): Promise<Metadata> {
   const settings = await getSiteSettings()
-  return {
+  // Draft-mode edit markers don't belong in <title> or meta tags.
+  return stegaClean({
     metadataBase: new URL(SITE_URL),
     title: { default: settings.siteTitle, template: `%s · ${settings.siteTitle}` },
     description: settings.siteDescription,
@@ -28,7 +30,7 @@ export async function generateMetadata(): Promise<Metadata> {
       url: SITE_URL,
       type: 'website',
     },
-  }
+  })
 }
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

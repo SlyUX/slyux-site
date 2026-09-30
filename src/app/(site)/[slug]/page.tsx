@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -19,7 +20,7 @@ const getPage = (slug: string) => safeFetch<PageDetail | null>(PAGE_QUERY, { slu
 export async function generateMetadata({ params }: PageProps<'/[slug]'>): Promise<Metadata> {
   const page = await getPage((await params).slug)
   if (!page) return {}
-  return { title: page.title, description: page.seoDescription ?? page.intro ?? undefined }
+  return stegaClean({ title: page.title, description: page.seoDescription ?? page.intro ?? undefined })
 }
 
 export default async function CmsPage({ params }: PageProps<'/[slug]'>) {

@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import { stegaClean } from 'next-sanity'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
@@ -22,7 +23,7 @@ const getStudy = (slug: string) => safeFetch<CaseStudyDetail | null>(CASE_STUDY_
 export async function generateMetadata({ params }: PageProps<'/case-studies/[slug]'>): Promise<Metadata> {
   const study = await getStudy((await params).slug)
   if (!study) return {}
-  return { title: study.title, description: study.seoDescription ?? study.summary }
+  return stegaClean({ title: study.title, description: study.seoDescription ?? study.summary })
 }
 
 export default async function CaseStudyPage({ params }: PageProps<'/case-studies/[slug]'>) {
