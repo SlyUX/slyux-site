@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { FileText } from 'lucide-react'
+import { BookOpenText } from 'lucide-react'
 
 import { DocumentViewer, type DocumentLabels, type DocumentPage } from '@/components/document-viewer'
 import { urlFor } from '@/sanity/image'
@@ -29,11 +29,11 @@ export function toDocument(doc: PdfDocumentData, badgeTemplate: string) {
   return { title: doc.title ?? '', pages, cover, badge, downloadHref }
 }
 
-/** The red PDF chip over a document thumbnail. */
+/** The red "Look inside" chip over a document thumbnail. */
 export function PdfBadge({ text }: { text: string }) {
   return (
     <span className="bg-pdf text-pdf-foreground absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold shadow-md">
-      <FileText aria-hidden className="size-3.5" strokeWidth={2} />
+      <BookOpenText aria-hidden className="size-3.5" strokeWidth={2} />
       {text}
     </span>
   )
@@ -61,7 +61,7 @@ export function DocumentGrid({
             pages={doc.pages}
             downloadHref={doc.downloadHref}
             labels={labels}
-            triggerLabel={`${doc.title} (${doc.badge})`}
+            triggerLabel={`${doc.title}: ${doc.badge}`}
             className="group block w-full text-left"
           >
             <span className="border-border group-hover:border-primary relative block overflow-hidden rounded-xl border bg-white transition-colors">

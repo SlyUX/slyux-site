@@ -41,7 +41,7 @@ const DEFAULTS = {
   enlargeLabel: 'View larger',
   previousLabel: 'Previous image',
   nextLabel: 'Next image',
-  pdfBadge: 'PDF · {pages} pages',
+  pdfBadge: 'Look inside',
   pdfPageCounter: 'Page {page} of {pages}',
   pdfDownloadLabel: 'Download PDF',
   fullscreenLabel: 'Fullscreen',

@@ -5,7 +5,7 @@ import { useRef } from 'react'
 import { Maximize2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
-import { useViewer, ViewerDialog, type GalleryLabels } from '@/components/viewer'
+import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
 export type { GalleryLabels }
 
@@ -129,31 +129,37 @@ export function GalleryViewer({
         labels={labels}
         onClosed={(i) => thumbRefs.current[i]?.focus()}
       >
-        {item && (
-          <div
-            onClick={(e) => e.stopPropagation()}
-            // Never wider than the image's real resolution allows, nor the content width.
-            style={{ width: item.view.displayWidth }}
-            className="mx-auto mb-10 box-content max-w-[calc(100%-2rem)] px-4 sm:max-w-[calc(100%-3rem)] sm:px-6 lg:max-w-6xl"
-          >
-            <div className="overflow-hidden rounded-xl shadow-2xl">
-              {item.view.slices.map((slice, i) => (
-                // Plain <img>: slices are pre-sized by Sanity and must stack with no gaps.
-                // A tall page is one image split for delivery, so only the first carries alt text.
-                // eslint-disable-next-line @next/next/no-img-element
-                <img
-                  key={slice.src}
-                  src={slice.src}
-                  alt={i === 0 ? item.alt : ''}
-                  width={slice.width}
-                  height={slice.height}
-                  decoding="async"
-                  className="block h-auto w-full"
-                />
-              ))}
-            </div>
-          </div>
-        )}
+        <ViewerStage
+          index={index}
+          render={(i, leaving) => {
+            const it = items[i]
+            return (
+              <div
+                onClick={(e) => e.stopPropagation()}
+                // Never wider than the image's real resolution allows, nor the content width.
+                style={{ width: it.view.displayWidth }}
+                className="mx-auto mb-10 box-content max-w-[calc(100%-2rem)] px-4 sm:max-w-[calc(100%-3rem)] sm:px-6 lg:max-w-6xl"
+              >
+                <div className="overflow-hidden rounded-xl shadow-2xl">
+                  {it.view.slices.map((slice, si) => (
+                    // Plain <img>: slices are pre-sized by Sanity and must stack with no gaps.
+                    // A tall page is one image split for delivery, so only the first carries alt text.
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      key={slice.src}
+                      src={slice.src}
+                      alt={si === 0 && !leaving ? it.alt : ''}
+                      width={slice.width}
+                      height={slice.height}
+                      decoding="async"
+                      className="block h-auto w-full"
+                    />
+                  ))}
+                </div>
+              </div>
+            )
+          }}
+        />
       </ViewerDialog>
     </>
   )
