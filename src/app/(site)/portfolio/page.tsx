@@ -5,7 +5,7 @@ import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
 import { CreativeTile } from '@/components/content'
 import { PORTFOLIO_SECTION_QUERY, safeFetch } from '@/lib/queries'
-import { getSiteSettings } from '@/lib/site-settings'
+import { documentSettings, getSiteSettings } from '@/lib/site-settings'
 import { PORTFOLIO_KINDS, PORTFOLIO_SECTIONS, sectionOfKind } from '@/sanity/portfolio'
 import type { CreativeWorkCard } from '@/lib/types'
 
@@ -58,7 +58,7 @@ export default async function PortfolioPage() {
           </div>
           <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
             {items.map((work) => (
-              <CreativeTile key={work._id} work={work} matureLabel={s.matureLabel} headingLevel="h3" />
+              <CreativeTile key={work._id} work={work} matureLabel={s.matureLabel} docs={documentSettings(s)} headingLevel="h3" />
             ))}
           </div>
         </Section>

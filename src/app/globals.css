@@ -29,6 +29,7 @@
     --fox on --brand .....................  1.78  FAILS — never orange on the blue band
     --footer-foreground on --footer ...... 11.04  (AAA)
     --footer-muted on --footer ...........  7.90  (AAA)
+    --pdf-foreground on --pdf ............  5.19  (AA) — the PDF badge (Acrobat-style red)
     --fox on --footer ....................  3.33  non-text only — the hover underline, never text
 */
 :root {
@@ -50,6 +51,8 @@
   --footer: #1a3b53; /* #26577A, 10% darker */
   --footer-foreground: #faf8f5;
   --footer-muted: #c9d6e0;
+  --pdf: #d7191f;
+  --pdf-foreground: #ffffff;
 }
 
 @theme inline {
@@ -71,6 +74,8 @@
   --color-footer: var(--footer);
   --color-footer-foreground: var(--footer-foreground);
   --color-footer-muted: var(--footer-muted);
+  --color-pdf: var(--pdf);
+  --color-pdf-foreground: var(--pdf-foreground);
 
   --font-sans: var(--font-geist);
   --font-display: var(--font-fraunces);

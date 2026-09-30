@@ -1,10 +1,13 @@
 'use client'
 
 import Image from 'next/image'
-import { useEffect, useRef, useState } from 'react'
-import { ChevronLeft, ChevronRight, Maximize2, X } from 'lucide-react'
+import { useRef } from 'react'
+import { Maximize2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { useViewer, ViewerDialog, type GalleryLabels } from '@/components/viewer'
+
+export type { GalleryLabels }
 
 export interface ViewSlice {
   src: string
@@ -23,25 +26,9 @@ export interface GalleryItem {
   view: { slices: ViewSlice[]; narrow: boolean; displayWidth: number }
 }
 
-export interface GalleryLabels {
-  fullPage: string
-  enlarge: string
-  close: string
-  previous: string
-  next: string
-}
-
-/** Minimum horizontal travel, in px, for a swipe to count. */
-const SWIPE = 60
-
 /**
- * A gallery's thumbnails plus one viewer for all of them.
- *
- * The viewer is a native <dialog> (showModal): Escape closes it, focus moves
- * in, and the page behind is inert. The dialog is the scroll container — one
- * scroll, never a scroll inside a scroll. Within it, ← / → (or a horizontal
- * swipe, or the buttons) step through the gallery; vertical scrolling is left
- * alone. Only the current item's image is loaded.
+ * A gallery's thumbnails plus one viewer for all of them (see ViewerDialog:
+ * ← / →, swipe, Escape; only the current item's image loads).
  */
 export function GalleryViewer({
   items,
@@ -55,47 +42,11 @@ export function GalleryViewer({
   rail?: boolean
   labels: GalleryLabels
 }) {
-  const dialogRef = useRef<HTMLDialogElement>(null)
   const thumbRefs = useRef<(HTMLButtonElement | null)[]>([])
-  const touch = useRef<{ x: number; y: number } | null>(null)
-  const prevRef = useRef<HTMLButtonElement>(null)
-  const nextRef = useRef<HTMLButtonElement>(null)
-  const [index, setIndex] = useState(0)
-  const [isOpen, setIsOpen] = useState(false)
+  const viewer = useViewer(items.length)
+  const { index, openAt } = viewer
   const phone = layout === 'phone'
   const item = items[index]
-
-  const openAt = (i: number) => {
-    setIndex(i)
-    setIsOpen(true)
-    dialogRef.current?.showModal()
-    dialogRef.current?.scrollTo({ top: 0 })
-  }
-  const go = (delta: number) => {
-    const next = index + delta
-    if (next < 0 || next >= items.length) return
-    // Reaching an end disables that button; if it had focus, focus would fall
-    // to <body>. Hand it to the opposite button instead.
-    const active = document.activeElement
-    if (next === items.length - 1 && active === nextRef.current) prevRef.current?.focus()
-    if (next === 0 && active === prevRef.current) nextRef.current?.focus()
-    setIndex(next)
-    dialogRef.current?.scrollTo({ top: 0 })
-  }
-
-  // ← / → while the viewer is open, wherever focus sits inside it.
-  useEffect(() => {
-    if (!isOpen) return
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === 'ArrowRight') go(1)
-      if (e.key === 'ArrowLeft') go(-1)
-    }
-    document.addEventListener('keydown', onKey)
-    return () => document.removeEventListener('keydown', onKey)
-    // Re-bound per image so the listener always steps from the current one.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [isOpen, index])
-  const close = () => dialogRef.current?.close()
 
   return (
     <>
@@ -165,70 +116,20 @@ export function GalleryViewer({
         ))}
       </div>
 
-      <dialog
-        ref={dialogRef}
-        aria-label={item?.alt}
-        onClose={() => {
-          setIsOpen(false)
-          thumbRefs.current[index]?.focus()
-        }}
-        onTouchStart={(e) => {
-          touch.current = { x: e.touches[0].clientX, y: e.touches[0].clientY }
-        }}
-        onTouchEnd={(e) => {
-          if (!touch.current) return
-          const dx = e.changedTouches[0].clientX - touch.current.x
-          const dy = e.changedTouches[0].clientY - touch.current.y
-          touch.current = null
-          // Horizontal and deliberate only — vertical drags are the page scrolling.
-          if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1)
-        }}
-        // Clicking the dim area around the image closes; clicks on the image don't.
-        onClick={(e) => e.target === e.currentTarget && close()}
-        className="backdrop:bg-ink/85 m-0 h-full max-h-none w-full max-w-none overflow-y-auto overscroll-contain bg-transparent p-0"
-      >
-        <div className="sticky top-0 z-10 flex items-center justify-between gap-3 p-3 sm:p-4">
-          <p aria-live="polite" className="bg-background text-foreground rounded-full px-4 py-2 text-sm font-semibold tabular-nums shadow-lg">
+      <ViewerDialog
+        viewer={viewer}
+        label={item?.alt ?? ''}
+        counter={
+          <>
             {index + 1} / {items.length}
             {item?.caption && <span aria-hidden> · {item.caption}</span>}
-            <span className="sr-only">: {item?.caption ? `${item.caption} — ` : ''}{item?.alt}</span>
-          </p>
-          <div className="flex gap-2">
-            {items.length > 1 && (
-              <>
-                <button
-                  ref={prevRef}
-                  type="button"
-                  onClick={() => go(-1)}
-                  disabled={index === 0}
-                  aria-label={labels.previous}
-                  className="bg-background text-foreground hover:text-primary flex size-10 items-center justify-center rounded-full shadow-lg disabled:opacity-40"
-                >
-                  <ChevronLeft aria-hidden className="size-5" />
-                </button>
-                <button
-                  ref={nextRef}
-                  type="button"
-                  onClick={() => go(1)}
-                  disabled={index === items.length - 1}
-                  aria-label={labels.next}
-                  className="bg-background text-foreground hover:text-primary flex size-10 items-center justify-center rounded-full shadow-lg disabled:opacity-40"
-                >
-                  <ChevronRight aria-hidden className="size-5" />
-                </button>
-              </>
-            )}
-            <button
-              type="button"
-              onClick={close}
-              className="bg-background text-foreground hover:text-primary inline-flex items-center gap-1.5 rounded-full px-4 py-2 text-sm font-semibold shadow-lg"
-            >
-              <X aria-hidden className="size-4" />
-              {labels.close}
-            </button>
-          </div>
-        </div>
-        {isOpen && item && (
+          </>
+        }
+        srText={`${item?.caption ? `${item.caption} — ` : ''}${item?.alt ?? ''}`}
+        labels={labels}
+        onClosed={(i) => thumbRefs.current[i]?.focus()}
+      >
+        {item && (
           <div
             onClick={(e) => e.stopPropagation()}
             // Never wider than the image's real resolution allows, nor the content width.
@@ -253,7 +154,7 @@ export function GalleryViewer({
             </div>
           </div>
         )}
-      </dialog>
+      </ViewerDialog>
     </>
   )
 }

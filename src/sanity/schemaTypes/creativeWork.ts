@@ -1,4 +1,4 @@
-import { defineType, defineField } from 'sanity'
+import { defineType, defineField, defineArrayMember } from 'sanity'
 
 import { slugField } from './slugField'
 import { PORTFOLIO_KINDS } from '../portfolio'
@@ -76,6 +76,14 @@ export default defineType({
       type: 'array',
       of: [{ type: 'imageWithAlt' }],
       options: { layout: 'grid' },
+    }),
+    defineField({
+      name: 'documents',
+      title: 'PDF documents',
+      type: 'array',
+      of: [defineArrayMember({ type: 'pdfDocument' })],
+      description:
+        'Thumbnails with a PDF badge that open a page-by-page reader, shown instead of the images above. On a piece with no story, the tile opens the first document.',
     }),
     defineField({
       name: 'body',

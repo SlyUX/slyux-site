@@ -47,9 +47,14 @@ export const CASE_STUDY_SLUGS_QUERY = defineQuery(
   `*[_type=="caseStudy" && defined(slug.current)].slug.current`,
 )
 
+/** A PDF shown as page images (see schemaTypes/pdfDocument.ts). */
+const PDF_DOCUMENT = `_key,title,"file": file.asset->{url,originalFilename},
+  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}`
+
 const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,client,year,credit,summary,externalUrl,mature,featured,
   "hasStory": count(body) > 0,
-  "caseStudySlug": caseStudy->slug.current`
+  "caseStudySlug": caseStudy->slug.current,
+  "document": documents[0]{${PDF_DOCUMENT}}`
 
 /** All pieces in one portfolio section. `$kinds` comes from `kindsInSection()`. */
 export const PORTFOLIO_SECTION_QUERY = defineQuery(
@@ -63,6 +68,7 @@ export const PORTFOLIO_FEATURED_QUERY = defineQuery(
 
 export const CREATIVE_WORK_QUERY = defineQuery(`*[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{
   _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,body,externalUrl,
+  documents[]{${PDF_DOCUMENT}},
   "caseStudy": caseStudy->{title,"slug":slug.current}
 }`)
 

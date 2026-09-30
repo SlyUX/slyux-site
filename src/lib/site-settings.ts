@@ -41,6 +41,11 @@ const DEFAULTS = {
   enlargeLabel: 'View larger',
   previousLabel: 'Previous image',
   nextLabel: 'Next image',
+  pdfBadge: 'PDF · {pages} pages',
+  pdfPageCounter: 'Page {page} of {pages}',
+  pdfDownloadLabel: 'Download PDF',
+  fullscreenLabel: 'Fullscreen',
+  exitFullscreenLabel: 'Exit fullscreen',
   creativeTitle: 'Portfolio',
   portfolioViewAll: 'See all',
   portfolioSections: {
@@ -92,3 +97,18 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   )
   return merged as SiteSettings
 })
+
+/** The PDF badge template and reader labels, from Site settings. */
+export const documentSettings = (s: SiteSettings) => ({
+  badge: s.pdfBadge,
+  labels: {
+    counter: s.pdfPageCounter,
+    download: s.pdfDownloadLabel,
+    fullscreen: s.fullscreenLabel,
+    exitFullscreen: s.exitFullscreenLabel,
+    close: s.closeLabel,
+    previous: s.previousLabel,
+    next: s.nextLabel,
+  },
+})
+export type DocumentSettings = ReturnType<typeof documentSettings>

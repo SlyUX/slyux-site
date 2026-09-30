@@ -229,6 +229,11 @@ export default defineType({
     defineField({ name: 'closeLabel', title: '"Close" button', type: 'string', group: 'work', description: 'Closes the gallery viewer.' }),
     defineField({ name: 'previousLabel', title: '"Previous" button (screen reader)', type: 'string', group: 'work' }),
     defineField({ name: 'nextLabel', title: '"Next" button (screen reader)', type: 'string', group: 'work' }),
+    defineField({ name: 'pdfBadge', title: 'PDF badge', type: 'string', group: 'work', description: 'On document thumbnails. {pages} becomes the page count, e.g. "PDF · {pages} pages".' }),
+    defineField({ name: 'pdfPageCounter', title: 'PDF reader page counter', type: 'string', group: 'work', description: '{page} and {pages} are filled in, e.g. "Page {page} of {pages}".' }),
+    defineField({ name: 'pdfDownloadLabel', title: '"Download PDF" button', type: 'string', group: 'work' }),
+    defineField({ name: 'fullscreenLabel', title: '"Fullscreen" button', type: 'string', group: 'work', description: 'In the PDF reader, where the browser supports it.' }),
+    defineField({ name: 'exitFullscreenLabel', title: '"Exit fullscreen" button', type: 'string', group: 'work' }),
 
     // Creative
     defineField({ name: 'creativeTitle', title: 'Title', type: 'string', group: 'creative' }),
