@@ -1,6 +1,7 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
 import { TransitionLink } from '@/components/grid-nav'
+import { TrackedText } from '@/components/tracked-text'
 import { cn } from '@/lib/utils'
 import type { CmsLink } from '@/lib/types'
 
@@ -90,7 +91,7 @@ export function PageHeader({
           {back.label}
         </TransitionLink>
       )}
-      {eyebrow && <p className="text-primary mb-3 text-sm font-semibold tracking-wide uppercase">{eyebrow}</p>}
+      {eyebrow && <p className="text-primary mb-3 text-sm font-semibold tracking-wide uppercase"><TrackedText>{eyebrow}</TrackedText></p>}
       <h1 className="font-display text-heading text-4xl leading-tight font-semibold tracking-tight md:text-5xl">{title}</h1>
       {intro && <p className="text-muted-foreground mt-5 text-lg leading-relaxed">{intro}</p>}
     </header>

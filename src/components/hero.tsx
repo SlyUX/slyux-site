@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { TransitionLink } from '@/components/grid-nav'
+import { TrackedText } from '@/components/tracked-text'
 import { Briefcase, FileText, LayoutGrid, MessageCircle, Palette, User, type LucideIcon } from 'lucide-react'
 
 import { urlFor } from '@/sanity/image'
@@ -82,7 +83,7 @@ export function Hero({ eyebrow, headline, intro, brandmark, videoUrl, videoType,
           </h1>
         ) : (
           <>
-            {eyebrow && <p className="text-fox mb-4 text-sm font-semibold tracking-wide uppercase">{eyebrow}</p>}
+            {eyebrow && <p className="text-fox mb-4 text-sm font-semibold tracking-wide uppercase"><TrackedText>{eyebrow}</TrackedText></p>}
             <h1 className="font-display max-w-4xl text-4xl leading-[1.1] font-semibold tracking-tight md:text-5xl">
               {headline}
             </h1>
@@ -99,7 +100,7 @@ export function Hero({ eyebrow, headline, intro, brandmark, videoUrl, videoType,
                 const inner = (
                   <>
                     <Icon aria-hidden className="text-fox size-7 transition-transform group-hover:-translate-y-0.5" strokeWidth={1.5} />
-                    <span className="text-sm font-semibold tracking-wide uppercase">{action.label}</span>
+                    <span className="text-sm font-semibold tracking-wide uppercase"><TrackedText>{action.label}</TrackedText></span>
                   </>
                 )
                 const cls =
