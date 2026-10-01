@@ -1,8 +1,9 @@
 import Image from 'next/image'
-import { PortableText, type PortableTextComponents } from '@portabletext/react'
-import type { TypedObject } from '@portabletext/types'
+import { PortableText, toPlainText, type PortableTextComponents } from '@portabletext/react'
+import type { PortableTextBlock, TypedObject } from '@portabletext/types'
 
 import { TransitionLink } from '@/components/grid-nav'
+import { Section } from '@/components/ui'
 import { cn, externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import { sectionOfKind } from '@/sanity/portfolio'
@@ -214,6 +215,55 @@ const richTextComponents: PortableTextComponents = {
       )
     },
   },
+}
+
+/**
+ * A story split at its H2s, for wide pages without a side rail. Each section
+ * is a band: heading on the left (pinned while its section scrolls), text on
+ * the right at a readable measure; stacked on phones. Bands alternate tones so
+ * sections read as distinct when skimming. Text before the first heading leads
+ * without one; `after` closes the page as one more band in the next tone.
+ */
+export function StorySections({ value, after }: { value: TypedObject[] | null | undefined; after?: React.ReactNode }) {
+  const sections: { key: string; heading?: string; blocks: TypedObject[] }[] = []
+  for (const [i, block] of (value ?? []).entries()) {
+    if (block._type === 'block' && (block as { style?: string }).style === 'h2') {
+      sections.push({ key: block._key ?? `s${i}`, heading: toPlainText([block as PortableTextBlock]), blocks: [] })
+    } else {
+      if (!sections.length) sections.push({ key: 'intro', blocks: [] })
+      sections[sections.length - 1].blocks.push(block)
+    }
+  }
+  const tone = (i: number) => (i % 2 === 0 ? 'surface' : 'default')
+
+  return (
+    <>
+      {sections.map((section, i) => (
+        <Section
+          key={section.key}
+          tone={tone(i)}
+          aria-labelledby={section.heading ? `story-${section.key}` : undefined}
+          className="py-10 md:py-14"
+        >
+          <div className="grid gap-x-12 gap-y-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
+            {section.heading && (
+              <h2 id={`story-${section.key}`} className="font-display text-3xl font-semibold text-balance lg:sticky lg:top-6 lg:self-start">
+                {section.heading}
+              </h2>
+            )}
+            <div className="lg:col-start-2">
+              <RichText value={section.blocks} />
+            </div>
+          </div>
+        </Section>
+      ))}
+      {after && (
+        <Section tone={tone(sections.length)} className="py-10 md:py-14">
+          {after}
+        </Section>
+      )}
+    </>
+  )
 }
 
 /** Body copy for case studies, creative stories, and pages. */
