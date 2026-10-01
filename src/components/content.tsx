@@ -193,14 +193,20 @@ const richTextComponents: PortableTextComponents = {
   types: {
     imageWithAlt: ({ value }: { value: SanityImage }) => {
       if (!value?.asset) return null
+      // Asset IDs carry the source size ("image-<hash>-431x81-jpg"). Never
+      // request or display more pixels than that, so small images (an old
+      // logo) stay crisp instead of being stretched to the column width.
+      const [w, h] = (value.asset._ref?.match(/-(\d+)x(\d+)-/)?.slice(1) ?? ['1600', '1000']).map(Number)
+      const width = Math.min(1600, w)
       return (
         <figure className="my-4">
           <Image
-            src={urlFor(value).width(1600).url()}
+            src={urlFor(value).width(width).url()}
             alt={value.alt ?? ''}
-            width={1600}
-            height={1000}
-            sizes="(max-width: 768px) 100vw, 768px"
+            width={width}
+            height={Math.round((width * h) / w)}
+            sizes={`(max-width: 768px) 100vw, ${Math.min(768, w)}px`}
+            style={{ maxWidth: w }}
             className="h-auto w-full rounded-xl"
           />
           {value.caption && <figcaption className="text-muted-foreground mt-2 text-sm">{value.caption}</figcaption>}
