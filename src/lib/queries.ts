@@ -66,7 +66,7 @@ export const PORTFOLIO_FEATURED_QUERY = defineQuery(
 )
 
 export const CREATIVE_WORK_QUERY = defineQuery(`*[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{
-  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,body,externalUrl,
+  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,externalUrl,
   documents[]{${PDF_DOCUMENT}},
   "caseStudy": caseStudy->{title,"slug":slug.current}
 }`)

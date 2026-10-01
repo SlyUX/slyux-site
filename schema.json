@@ -1114,6 +1114,14 @@
         },
         "optional": true
       },
+      "howItStarted": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "inline",
+          "name": "richText"
+        },
+        "optional": true
+      },
       "body": {
         "type": "objectAttribute",
         "value": {
@@ -2110,6 +2118,13 @@
         "optional": true
       },
       "fullPageLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "howItStartedHeading": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

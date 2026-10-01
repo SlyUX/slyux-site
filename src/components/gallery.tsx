@@ -94,21 +94,34 @@ export function Gallery({
   id,
   labels,
   rail = false,
+  headingAs = 'h2',
 }: {
   gallery: GalleryData
   id: string
   labels: GalleryLabels
   rail?: boolean
+  /** Inside the "How it started…" rail: a subheading, or none when it's the rail's only gallery. */
+  headingAs?: 'h2' | 'h3' | 'none'
 }) {
   const phone = gallery.layout === 'phone'
   const items = (gallery.images ?? []).flatMap((img) => toItem(img, phone, rail, gallery.heading) ?? [])
   if (!items.length) return null
 
   return (
-    <section aria-labelledby={id} className={rail ? 'mt-8 first:mt-0' : 'mt-16 first:mt-0'}>
-      <h2 id={id} className={rail ? 'text-heading text-lg font-semibold' : 'font-display text-heading text-3xl font-semibold'}>
-        {gallery.heading}
-      </h2>
+    <section
+      aria-labelledby={headingAs === 'none' ? undefined : id}
+      aria-label={headingAs === 'none' ? gallery.heading : undefined}
+      className={rail ? 'mt-8 first:mt-0' : 'mt-16 first:mt-0'}
+    >
+      {headingAs === 'h3' ? (
+        <h3 id={id} className="text-foreground text-sm font-semibold">
+          {gallery.heading}
+        </h3>
+      ) : headingAs === 'h2' ? (
+        <h2 id={id} className={rail ? 'text-heading text-lg font-semibold' : 'font-display text-heading text-3xl font-semibold'}>
+          {gallery.heading}
+        </h2>
+      ) : null}
       {gallery.intro && <p className={rail ? 'text-muted-foreground mt-1 text-sm' : 'text-muted-foreground mt-2'}>{gallery.intro}</p>}
       <div className={rail ? 'mt-4' : 'mt-8'}>
         <GalleryViewer items={items} layout={phone ? 'phone' : 'wide'} rail={rail} labels={labels} />

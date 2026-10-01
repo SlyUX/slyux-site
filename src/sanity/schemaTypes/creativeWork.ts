@@ -86,6 +86,13 @@ export default defineType({
         'Thumbnails with a PDF badge that open a page-by-page reader, shown on the piece\'s page instead of the images above. Adding one gives the piece its own page.',
     }),
     defineField({
+      name: 'howItStarted',
+      title: 'How it started',
+      type: 'richText',
+      description:
+        'Optional context before the work — the old logo, the problem — shown in a rail beside the story (after it on phones), so the page leads with the work itself.',
+    }),
+    defineField({
       name: 'body',
       title: 'Story',
       type: 'richText',

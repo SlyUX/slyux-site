@@ -4,12 +4,11 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
 import { ButtonLink, PageHeader, Section } from '@/components/ui'
-import { MetricStrip, RichText } from '@/components/content'
+import { MetricStrip, WorkStory } from '@/components/content'
 import { Gallery } from '@/components/gallery'
 import { Personas } from '@/components/personas'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
 import { getSiteSettings } from '@/lib/site-settings'
-import { cn } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import type { CaseStudyDetail } from '@/lib/types'
 
@@ -91,32 +90,34 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
         </Section>
       )}
 
-      {/*
-        The story, with the current state available in a rail beside it on
-        wide screens (and after it on phones — it's reference, not the lead).
-        The rail keeps story lines to a readable length without nesting a
-        max-width container.
-      */}
+      {/* The story, with the current state in the "How it started…" rail (see WorkStory). */}
       <Section>
-        <div className={cn(before.length > 0 && 'grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem] xl:gap-16')}>
-          <div>
-            <RichText value={study.body} />
-            {!!study.links?.length && (
-              <div className="mt-10 flex flex-wrap gap-3">
-                {study.links.map((link) => (
-                  <ButtonLink key={link._key} link={link} variant="secondary" />
-                ))}
-              </div>
-            )}
-          </div>
-          {before.length > 0 && (
-            <aside className="bg-surface self-start rounded-2xl p-5">
-              {before.map((gallery) => (
-                <Gallery key={gallery._key} gallery={gallery} id={`gallery-${gallery._key}`} labels={labels} rail />
+        <WorkStory
+          body={study.body}
+          railHeading={s.howItStartedHeading}
+          rail={
+            before.length > 0
+              ? before.map((gallery) => (
+                  <Gallery
+                    key={gallery._key}
+                    gallery={gallery}
+                    id={`gallery-${gallery._key}`}
+                    labels={labels}
+                    rail
+                    headingAs={before.length > 1 ? 'h3' : 'none'}
+                  />
+                ))
+              : undefined
+          }
+        >
+          {!!study.links?.length && (
+            <div className="mt-10 flex flex-wrap gap-3">
+              {study.links.map((link) => (
+                <ButtonLink key={link._key} link={link} variant="secondary" />
               ))}
-            </aside>
+            </div>
           )}
-        </div>
+        </WorkStory>
       </Section>
 
       {!!study.personas?.length && (

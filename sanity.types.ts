@@ -198,6 +198,7 @@ export type CreativeWork = {
       _key: string;
     } & PdfDocument
   >;
+  howItStarted?: RichText;
   body?: RichText;
   caseStudy?: CaseStudyReference;
   externalUrl?: string;
@@ -349,6 +350,7 @@ export type SiteSettings = {
   workIntro?: string;
   workEmpty?: string;
   fullPageLabel?: string;
+  howItStartedHeading?: string;
   personasHeading?: string;
   opportunitiesLabel?: string;
   barriersLabel?: string;
@@ -629,6 +631,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   workIntro?: string;
   workEmpty?: string;
   fullPageLabel?: string;
+  howItStartedHeading?: string;
   personasHeading?: string;
   opportunitiesLabel?: string;
   barriersLabel?: string;
@@ -880,7 +883,7 @@ export type PORTFOLIO_FEATURED_QUERY_RESULT = Array<{
 
 // Source: src/lib/queries.ts
 // Variable: CREATIVE_WORK_QUERY
-// Query: *[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,body,externalUrl,  documents[]{_key,title,"file": file.asset->{url,originalFilename},  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},  "caseStudy": caseStudy->{title,"slug":slug.current}}
+// Query: *[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,externalUrl,  documents[]{_key,title,"file": file.asset->{url,originalFilename},  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},  "caseStudy": caseStudy->{title,"slug":slug.current}}
 export type CREATIVE_WORK_QUERY_RESULT = {
   _id: string;
   title: string;
@@ -897,6 +900,7 @@ export type CREATIVE_WORK_QUERY_RESULT = {
       _key: string;
     } & ImageWithAlt
   > | null;
+  howItStarted: RichText | null;
   body: RichText | null;
   externalUrl: string | null;
   documents: Array<{
@@ -975,7 +979,7 @@ declare module "@sanity/client" {
     '*[_type=="caseStudy" && defined(slug.current)].slug.current': CASE_STUDY_SLUGS_QUERY_RESULT;
     '*[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){_id,title,"slug":slug.current,kind,image,client,year,credit,summary,externalUrl,mature,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_SECTION_QUERY_RESULT;
     '*[_type=="creativeWork" && defined(slug.current) && featured == true && mature != true]|order(order asc, title asc){_id,title,"slug":slug.current,kind,image,client,year,credit,summary,externalUrl,mature,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_FEATURED_QUERY_RESULT;
-    '*[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{\n  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,body,externalUrl,\n  documents[]{_key,title,"file": file.asset->{url,originalFilename},\n  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},\n  "caseStudy": caseStudy->{title,"slug":slug.current}\n}': CREATIVE_WORK_QUERY_RESULT;
+    '*[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{\n  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,externalUrl,\n  documents[]{_key,title,"file": file.asset->{url,originalFilename},\n  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},\n  "caseStudy": caseStudy->{title,"slug":slug.current}\n}': CREATIVE_WORK_QUERY_RESULT;
     '*[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0) && mature != true]{kind,"slug":slug.current}': CREATIVE_WORK_PATHS_QUERY_RESULT;
     '*[_type=="page" && slug.current==$slug][0]{\n  _id,title,intro,image,body,cta,seoDescription\n}': PAGE_QUERY_RESULT;
     '*[_type=="page" && defined(slug.current)].slug.current': PAGE_SLUGS_QUERY_RESULT;

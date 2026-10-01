@@ -35,6 +35,7 @@ const DEFAULTS = {
   workEmpty: 'Case studies are on their way.',
   fullPageLabel: 'View full page',
   closeLabel: 'Close',
+  howItStartedHeading: 'How it started…',
   personasHeading: 'Personas',
   opportunitiesLabel: 'Opportunities to engage',
   barriersLabel: 'Barriers to adoption',
