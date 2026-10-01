@@ -223,6 +223,7 @@ export default defineType({
     defineField({ name: 'workEmpty', title: 'Empty state', type: 'string', group: 'work', description: 'Shown if no case studies are published.' }),
     defineField({ name: 'fullPageLabel', title: '"View full page" button', type: 'string', group: 'work', description: 'On gallery screens that have a full-page version.' }),
     defineField({ name: 'howItStartedHeading', title: '"How it started" rail title', type: 'string', group: 'work', description: 'Titles the right-hand rail of before-the-work context on case studies and portfolio pages.' }),
+    defineField({ name: 'documentsHeading', title: 'Documents heading', type: 'string', group: 'work', description: 'Heads the PDF documents, the last section of the story on portfolio pages.' }),
     defineField({ name: 'personasHeading', title: 'Personas heading', type: 'string', group: 'work', description: 'Section heading on case studies that have personas.' }),
     defineField({ name: 'opportunitiesLabel', title: '"Opportunities to engage" label', type: 'string', group: 'work' }),
     defineField({ name: 'barriersLabel', title: '"Barriers to adoption" label', type: 'string', group: 'work' }),

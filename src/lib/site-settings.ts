@@ -36,6 +36,7 @@ const DEFAULTS = {
   fullPageLabel: 'View full page',
   closeLabel: 'Close',
   howItStartedHeading: 'How it started…',
+  documentsHeading: 'Documents',
   personasHeading: 'Personas',
   opportunitiesLabel: 'Opportunities to engage',
   barriersLabel: 'Barriers to adoption',

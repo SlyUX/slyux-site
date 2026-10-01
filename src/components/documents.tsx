@@ -2,6 +2,7 @@ import Image from 'next/image'
 import { BookOpenText } from 'lucide-react'
 
 import { DocumentViewer, type DocumentLabels, type DocumentPage } from '@/components/document-viewer'
+import { cn } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import type { CreativeWorkDetail } from '@/lib/types'
 
@@ -39,21 +40,20 @@ export function PdfBadge({ text }: { text: string }) {
   )
 }
 
-/** PDFs as badged thumbnails; each opens the page-at-a-time reader. */
-export function DocumentGrid({
-  documents,
-  badgeTemplate,
-  labels,
-}: {
-  documents: PdfDocumentData[]
-  badgeTemplate: string
-  labels: DocumentLabels
-}) {
-  const docs = documents.map((d) => toDocument(d, badgeTemplate)).filter((d) => d.pages.length && d.cover?.asset)
+/** The documents that have pages to show, ready for DocumentGrid. */
+export const readableDocuments = (documents: PdfDocumentData[] | null | undefined, badgeTemplate: string) =>
+  (documents ?? []).map((d) => toDocument(d, badgeTemplate)).filter((d) => d.pages.length && d.cover?.asset)
+
+/**
+ * PDFs as badged thumbnails; each opens the page-at-a-time reader. One
+ * document fills its column, like the story's images; more sit two across.
+ */
+export function DocumentGrid({ docs, labels }: { docs: ReturnType<typeof readableDocuments>; labels: DocumentLabels }) {
   if (!docs.length) return null
+  const single = docs.length === 1
 
   return (
-    <ul className="grid gap-x-6 gap-y-8 sm:grid-cols-2">
+    <ul className={cn('grid gap-x-6 gap-y-8', !single && 'sm:grid-cols-2')}>
       {docs.map((doc) => (
         <li key={doc.cover!._key}>
           <DocumentViewer
@@ -70,7 +70,7 @@ export function DocumentGrid({
                 alt=""
                 width={1100}
                 height={Math.round((1100 * (doc.cover!.size?.height ?? 850)) / (doc.cover!.size?.width ?? 1100))}
-                sizes="(max-width: 640px) 100vw, 50vw"
+                sizes={single ? '(max-width: 1024px) 100vw, 768px' : '(max-width: 640px) 100vw, 400px'}
                 className="h-auto w-full"
               />
               <PdfBadge text={doc.badge} />

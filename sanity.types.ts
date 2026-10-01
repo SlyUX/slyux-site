@@ -351,6 +351,7 @@ export type SiteSettings = {
   workEmpty?: string;
   fullPageLabel?: string;
   howItStartedHeading?: string;
+  documentsHeading?: string;
   personasHeading?: string;
   opportunitiesLabel?: string;
   barriersLabel?: string;
@@ -632,6 +633,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   workEmpty?: string;
   fullPageLabel?: string;
   howItStartedHeading?: string;
+  documentsHeading?: string;
   personasHeading?: string;
   opportunitiesLabel?: string;
   barriersLabel?: string;

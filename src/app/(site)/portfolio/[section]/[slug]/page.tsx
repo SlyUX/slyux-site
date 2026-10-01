@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
 import { RichText, WorkStory } from '@/components/content'
-import { DocumentGrid } from '@/components/documents'
+import { DocumentGrid, readableDocuments } from '@/components/documents'
 import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib/queries'
 import { documentSettings, getSiteSettings } from '@/lib/site-settings'
 import { externalHref } from '@/lib/utils'
@@ -40,7 +40,8 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
   if (!work || !isPortfolioSection(section)) notFound()
 
   const outbound = externalHref(work.externalUrl)
-  const docs = documentSettings(s)
+  const docSettings = documentSettings(s)
+  const docs = readableDocuments(work.documents, docSettings.badge)
   const images = [work.image, ...(work.gallery ?? [])].flatMap((img) =>
     img?.asset ? [{ ...img, ref: img.asset._ref }] : [],
   )
@@ -60,6 +61,11 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
       <Section className="pt-0 md:pt-0">
         <WorkStory
           body={work.body}
+          extra={
+            docs.length
+              ? [{ key: 'documents', heading: s.documentsHeading, content: <DocumentGrid docs={docs} labels={docSettings.labels} /> }]
+              : undefined
+          }
           railHeading={s.howItStartedHeading}
           rail={work.howItStarted?.length ? <RichText value={work.howItStarted} compact /> : undefined}
         >
@@ -78,28 +84,22 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
             </div>
           )}
         </WorkStory>
-        {work.documents?.length ? (
-          // PDFs, when there are any, stand in for the images.
-          <div className="mt-16">
-            <DocumentGrid documents={work.documents} badgeTemplate={docs.badge} labels={docs.labels} />
+        {/* PDFs, when there are any, stand in for the images. */}
+        {!docs.length && images.length > 0 && (
+          <div className="mt-16 grid gap-6 md:grid-cols-2">
+            {images.map((img, i) => (
+              <Image
+                key={img.ref}
+                src={urlFor(img).width(1400).url()}
+                alt={img.alt ?? ''}
+                width={1400}
+                height={1050}
+                priority={i === 0}
+                sizes="(max-width: 768px) 100vw, 50vw"
+                className="bg-surface h-auto w-full rounded-2xl"
+              />
+            ))}
           </div>
-        ) : (
-          images.length > 0 && (
-            <div className="mt-16 grid gap-6 md:grid-cols-2">
-              {images.map((img, i) => (
-                <Image
-                  key={img.ref}
-                  src={urlFor(img).width(1400).url()}
-                  alt={img.alt ?? ''}
-                  width={1400}
-                  height={1050}
-                  priority={i === 0}
-                  sizes="(max-width: 768px) 100vw, 50vw"
-                  className="bg-surface h-auto w-full rounded-2xl"
-                />
-              ))}
-            </div>
-          )
         )}
       </Section>
     </article>
