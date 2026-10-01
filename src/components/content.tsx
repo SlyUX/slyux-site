@@ -3,6 +3,7 @@ import { PortableText, toPlainText, type PortableTextComponents } from '@portabl
 import type { PortableTextBlock, TypedObject } from '@portabletext/types'
 
 import { TransitionLink } from '@/components/grid-nav'
+import { Rail } from '@/components/rail'
 import { cn, externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import { sectionOfKind } from '@/sanity/portfolio'
@@ -216,22 +217,42 @@ const richTextComponents: PortableTextComponents = {
   },
 }
 
+/** A section a page adds after the written story, e.g. its documents. */
+export interface ExtraSection {
+  key: string
+  heading: string
+  content: React.ReactNode
+}
+
 /**
  * A story split at its H2s: each section is heading | copy (heading on the
  * left, pinned while its section scrolls), with a hairline between sections.
  * Beside a rail there's less room, so the split waits for wider screens.
- * Text before the first heading leads without one.
+ * Text before the first heading leads without one. `extra` sections follow
+ * in the same layout.
  */
-export function StorySections({ value, beside = false }: { value: TypedObject[] | null | undefined; beside?: boolean }) {
-  const sections: { key: string; heading?: string; blocks: TypedObject[] }[] = []
+export function StorySections({
+  value,
+  extra = [],
+  beside = false,
+}: {
+  value: TypedObject[] | null | undefined
+  extra?: ExtraSection[]
+  beside?: boolean
+}) {
+  const written: { key: string; heading?: string; blocks: TypedObject[] }[] = []
   for (const [i, block] of (value ?? []).entries()) {
     if (block._type === 'block' && (block as { style?: string }).style === 'h2') {
-      sections.push({ key: block._key ?? `s${i}`, heading: toPlainText([block as PortableTextBlock]), blocks: [] })
+      written.push({ key: block._key ?? `s${i}`, heading: toPlainText([block as PortableTextBlock]), blocks: [] })
     } else {
-      if (!sections.length) sections.push({ key: 'intro', blocks: [] })
-      sections[sections.length - 1].blocks.push(block)
+      if (!written.length) written.push({ key: 'intro', blocks: [] })
+      written[written.length - 1].blocks.push(block)
     }
   }
+  const sections: { key: string; heading?: string; content: React.ReactNode }[] = [
+    ...written.map(({ key, heading, blocks }) => ({ key, heading, content: <RichText value={blocks} /> })),
+    ...extra,
+  ]
   if (!sections.length) return null
 
   return (
@@ -256,9 +277,7 @@ export function StorySections({ value, beside = false }: { value: TypedObject[] 
               {section.heading}
             </h2>
           )}
-          <div className={beside ? 'xl:col-start-2' : 'lg:col-start-2'}>
-            <RichText value={section.blocks} />
-          </div>
+          <div className={beside ? 'xl:col-start-2' : 'lg:col-start-2'}>{section.content}</div>
         </section>
       ))}
     </div>
@@ -268,17 +287,19 @@ export function StorySections({ value, beside = false }: { value: TypedObject[] 
 /**
  * The story of a piece of work, shared by case studies and portfolio pages:
  * heading | copy sections, and — when there is one — the "How it started…"
- * rail beside it on wide screens (after it on phones: it's context, not the
- * lead), on its own card so it reads as reference. Not pinned: a rail of
- * screenshots can be taller than the screen.
+ * rail beside it (see Rail), on its own card so it reads as reference. Not
+ * pinned: a rail of screenshots can be taller than the screen.
  */
 export function WorkStory({
   body,
+  extra,
   rail,
   railHeading,
   children,
 }: {
   body: TypedObject[] | null | undefined
+  /** Sections after the written story, e.g. documents. */
+  extra?: ExtraSection[]
   /** Rail content; omit for no rail. */
   rail?: React.ReactNode
   railHeading: string
@@ -288,17 +309,10 @@ export function WorkStory({
   return (
     <div className={cn(rail && 'grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem] xl:gap-16')}>
       <div>
-        <StorySections value={body} beside={!!rail} />
+        <StorySections value={body} extra={extra} beside={!!rail} />
         {children}
       </div>
-      {rail && (
-        <aside aria-labelledby="how-it-started" className="bg-surface self-start rounded-2xl p-5">
-          <h2 id="how-it-started" className="font-display text-heading text-xl font-semibold">
-            {railHeading}
-          </h2>
-          <div className="mt-4">{rail}</div>
-        </aside>
-      )}
+      {rail && <Rail heading={railHeading}>{rail}</Rail>}
     </div>
   )
 }
