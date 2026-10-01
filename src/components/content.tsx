@@ -3,7 +3,6 @@ import { PortableText, toPlainText, type PortableTextComponents } from '@portabl
 import type { PortableTextBlock, TypedObject } from '@portabletext/types'
 
 import { TransitionLink } from '@/components/grid-nav'
-import { Section } from '@/components/ui'
 import { cn, externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import { sectionOfKind } from '@/sanity/portfolio'
@@ -218,13 +217,12 @@ const richTextComponents: PortableTextComponents = {
 }
 
 /**
- * A story split at its H2s, for wide pages without a side rail. Each section
- * is a band: heading on the left (pinned while its section scrolls), text on
- * the right at a readable measure; stacked on phones. Bands alternate tones so
- * sections read as distinct when skimming. Text before the first heading leads
- * without one; `after` closes the page as one more band in the next tone.
+ * A story split at its H2s: each section is heading | copy (heading on the
+ * left, pinned while its section scrolls), with a hairline between sections.
+ * Beside a rail there's less room, so the split waits for wider screens.
+ * Text before the first heading leads without one.
  */
-export function StorySections({ value, after }: { value: TypedObject[] | null | undefined; after?: React.ReactNode }) {
+export function StorySections({ value, beside = false }: { value: TypedObject[] | null | undefined; beside?: boolean }) {
   const sections: { key: string; heading?: string; blocks: TypedObject[] }[] = []
   for (const [i, block] of (value ?? []).entries()) {
     if (block._type === 'block' && (block as { style?: string }).style === 'h2') {
@@ -234,43 +232,82 @@ export function StorySections({ value, after }: { value: TypedObject[] | null | 
       sections[sections.length - 1].blocks.push(block)
     }
   }
-  const tone = (i: number) => (i % 2 === 0 ? 'surface' : 'default')
+  if (!sections.length) return null
 
   return (
-    <>
-      {sections.map((section, i) => (
-        <Section
+    <div className="divide-border divide-y">
+      {sections.map((section) => (
+        <section
           key={section.key}
-          tone={tone(i)}
           aria-labelledby={section.heading ? `story-${section.key}` : undefined}
-          className="py-10 md:py-14"
+          className={cn(
+            'grid gap-x-10 gap-y-4 py-10 first:pt-0 last:pb-0',
+            beside ? 'xl:grid-cols-[13rem_minmax(0,1fr)]' : 'lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]',
+          )}
         >
-          <div className="grid gap-x-12 gap-y-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)]">
-            {section.heading && (
-              <h2 id={`story-${section.key}`} className="font-display text-3xl font-semibold text-balance lg:sticky lg:top-6 lg:self-start">
-                {section.heading}
-              </h2>
-            )}
-            <div className="lg:col-start-2">
-              <RichText value={section.blocks} />
-            </div>
+          {section.heading && (
+            <h2
+              id={`story-${section.key}`}
+              className={cn(
+                'font-display text-3xl font-semibold text-balance',
+                beside ? 'xl:sticky xl:top-6 xl:self-start xl:text-2xl' : 'lg:sticky lg:top-6 lg:self-start',
+              )}
+            >
+              {section.heading}
+            </h2>
+          )}
+          <div className={beside ? 'xl:col-start-2' : 'lg:col-start-2'}>
+            <RichText value={section.blocks} />
           </div>
-        </Section>
+        </section>
       ))}
-      {after && (
-        <Section tone={tone(sections.length)} className="py-10 md:py-14">
-          {after}
-        </Section>
+    </div>
+  )
+}
+
+/**
+ * The story of a piece of work, shared by case studies and portfolio pages:
+ * heading | copy sections, and — when there is one — the "How it started…"
+ * rail beside it on wide screens (after it on phones: it's context, not the
+ * lead), on its own card so it reads as reference. Not pinned: a rail of
+ * screenshots can be taller than the screen.
+ */
+export function WorkStory({
+  body,
+  rail,
+  railHeading,
+  children,
+}: {
+  body: TypedObject[] | null | undefined
+  /** Rail content; omit for no rail. */
+  rail?: React.ReactNode
+  railHeading: string
+  /** After the story in the same column, e.g. links. */
+  children?: React.ReactNode
+}) {
+  return (
+    <div className={cn(rail && 'grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem] xl:gap-16')}>
+      <div>
+        <StorySections value={body} beside={!!rail} />
+        {children}
+      </div>
+      {rail && (
+        <aside aria-labelledby="how-it-started" className="bg-surface self-start rounded-2xl p-5">
+          <h2 id="how-it-started" className="font-display text-heading text-xl font-semibold">
+            {railHeading}
+          </h2>
+          <div className="mt-4">{rail}</div>
+        </aside>
       )}
-    </>
+    </div>
   )
 }
 
 /** Body copy for case studies, creative stories, and pages. */
-export function RichText({ value }: { value: TypedObject[] | null | undefined }) {
+export function RichText({ value, compact = false }: { value: TypedObject[] | null | undefined; compact?: boolean }) {
   if (!value?.length) return null
   return (
-    <div className="space-y-5 text-lg leading-relaxed">
+    <div className={compact ? 'space-y-3 text-sm leading-relaxed' : 'space-y-5 text-lg leading-relaxed'}>
       <PortableText value={value} components={richTextComponents} />
     </div>
   )

@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
-import { StorySections } from '@/components/content'
+import { RichText, WorkStory } from '@/components/content'
 import { DocumentGrid } from '@/components/documents'
 import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib/queries'
 import { documentSettings, getSiteSettings } from '@/lib/site-settings'
@@ -45,7 +45,6 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
     img?.asset ? [{ ...img, ref: img.asset._ref }] : [],
   )
   const hasLinks = !!(work.caseStudy?.slug || outbound)
-  const hasMedia = !!work.documents?.length || images.length > 0
 
   return (
     <article>
@@ -58,50 +57,51 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
         />
         {work.credit && <p className="text-muted-foreground mt-4 text-sm">{work.credit}</p>}
       </Section>
-      <StorySections
-        value={work.body}
-        after={
-          hasLinks || hasMedia ? (
-            <>
-              {hasLinks && (
-                <div className="mb-10 flex flex-wrap gap-x-6 gap-y-2">
-                  {work.caseStudy?.slug && (
-                    <TransitionLink href={`/case-studies/${work.caseStudy.slug}`} className="text-primary font-semibold underline underline-offset-4">
-                      {work.caseStudy.title}
-                    </TransitionLink>
-                  )}
-                  {outbound && (
-                    <a href={outbound} target="_blank" rel="noopener noreferrer" className="text-primary font-semibold underline underline-offset-4">
-                      {outbound.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
-                    </a>
-                  )}
-                </div>
+      <Section className="pt-0 md:pt-0">
+        <WorkStory
+          body={work.body}
+          railHeading={s.howItStartedHeading}
+          rail={work.howItStarted?.length ? <RichText value={work.howItStarted} compact /> : undefined}
+        >
+          {hasLinks && (
+            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2">
+              {work.caseStudy?.slug && (
+                <TransitionLink href={`/case-studies/${work.caseStudy.slug}`} className="text-primary font-semibold underline underline-offset-4">
+                  {work.caseStudy.title}
+                </TransitionLink>
               )}
-              {work.documents?.length ? (
-                // PDFs, when there are any, stand in for the images.
-                <DocumentGrid documents={work.documents} badgeTemplate={docs.badge} labels={docs.labels} />
-              ) : (
-                images.length > 0 && (
-                  <div className="grid gap-6 md:grid-cols-2">
-                    {images.map((img, i) => (
-                      <Image
-                        key={img.ref}
-                        src={urlFor(img).width(1400).url()}
-                        alt={img.alt ?? ''}
-                        width={1400}
-                        height={1050}
-                        priority={i === 0}
-                        sizes="(max-width: 768px) 100vw, 50vw"
-                        className="bg-surface h-auto w-full rounded-2xl"
-                      />
-                    ))}
-                  </div>
-                )
+              {outbound && (
+                <a href={outbound} target="_blank" rel="noopener noreferrer" className="text-primary font-semibold underline underline-offset-4">
+                  {outbound.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
+                </a>
               )}
-            </>
-          ) : undefined
-        }
-      />
+            </div>
+          )}
+        </WorkStory>
+        {work.documents?.length ? (
+          // PDFs, when there are any, stand in for the images.
+          <div className="mt-16">
+            <DocumentGrid documents={work.documents} badgeTemplate={docs.badge} labels={docs.labels} />
+          </div>
+        ) : (
+          images.length > 0 && (
+            <div className="mt-16 grid gap-6 md:grid-cols-2">
+              {images.map((img, i) => (
+                <Image
+                  key={img.ref}
+                  src={urlFor(img).width(1400).url()}
+                  alt={img.alt ?? ''}
+                  width={1400}
+                  height={1050}
+                  priority={i === 0}
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="bg-surface h-auto w-full rounded-2xl"
+                />
+              ))}
+            </div>
+          )
+        )}
+      </Section>
     </article>
   )
 }
