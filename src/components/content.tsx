@@ -224,22 +224,13 @@ export interface ExtraSection {
   content: React.ReactNode
 }
 
+type StorySection = { key: string; heading?: string; content: React.ReactNode }
+
 /**
- * A story split at its H2s: each section is heading | copy (heading on the
- * left, pinned while its section scrolls), with a hairline between sections.
- * Beside a rail there's less room, so the split waits for wider screens.
- * Text before the first heading leads without one. `extra` sections follow
- * in the same layout.
+ * A story split at its H2s, then any `extra` sections. Text before the first
+ * heading leads as a section without one.
  */
-export function StorySections({
-  value,
-  extra = [],
-  beside = false,
-}: {
-  value: TypedObject[] | null | undefined
-  extra?: ExtraSection[]
-  beside?: boolean
-}) {
+function splitStory(value: TypedObject[] | null | undefined, extra: ExtraSection[] = []): StorySection[] {
   const written: { key: string; heading?: string; blocks: TypedObject[] }[] = []
   for (const [i, block] of (value ?? []).entries()) {
     if (block._type === 'block' && (block as { style?: string }).style === 'h2') {
@@ -249,12 +240,16 @@ export function StorySections({
       written[written.length - 1].blocks.push(block)
     }
   }
-  const sections: { key: string; heading?: string; content: React.ReactNode }[] = [
-    ...written.map(({ key, heading, blocks }) => ({ key, heading, content: <RichText value={blocks} /> })),
-    ...extra,
-  ]
-  if (!sections.length) return null
+  return [...written.map(({ key, heading, blocks }) => ({ key, heading, content: <RichText value={blocks} /> })), ...extra]
+}
 
+/**
+ * Story sections as heading | copy (heading on the left, pinned while its
+ * section scrolls), with a hairline between them. Beside a rail there's less
+ * room, so the split waits for wider screens.
+ */
+function StorySections({ sections, beside = false }: { sections: StorySection[]; beside?: boolean }) {
+  if (!sections.length) return null
   return (
     <div className="divide-border divide-y">
       {sections.map((section) => (
@@ -287,8 +282,10 @@ export function StorySections({
 /**
  * The story of a piece of work, shared by case studies and portfolio pages:
  * heading | copy sections, and — when there is one — the "How it started…"
- * rail beside it (see Rail), on its own card so it reads as reference. Not
- * pinned: a rail of screenshots can be taller than the screen.
+ * rail (see Rail), on its own card so it reads as reference. It follows the
+ * first section (At a glance) in reading order: folded there on phones,
+ * moved to the right-hand column from lg. Not pinned: a rail of screenshots
+ * can be taller than the screen.
  */
 export function WorkStory({
   body,
@@ -306,13 +303,31 @@ export function WorkStory({
   /** After the story in the same column, e.g. links. */
   children?: React.ReactNode
 }) {
-  return (
-    <div className={cn(rail && 'grid gap-12 lg:grid-cols-[minmax(0,1fr)_19rem] xl:gap-16')}>
+  const sections = splitStory(body, extra)
+  if (!rail) {
+    return (
       <div>
-        <StorySections value={body} extra={extra} beside={!!rail} />
+        <StorySections sections={sections} />
         {children}
       </div>
-      {rail && <Rail heading={railHeading}>{rail}</Rail>}
+    )
+  }
+
+  const [first, ...rest] = sections
+  return (
+    <div className="grid lg:grid-cols-[minmax(0,1fr)_19rem] lg:gap-x-12 xl:gap-x-16">
+      {first && (
+        <div className="lg:col-start-1 lg:row-start-1">
+          <StorySections sections={[first]} beside />
+        </div>
+      )}
+      <Rail heading={railHeading} className="mt-10 lg:col-start-2 lg:row-[1/span_2] lg:mt-0">
+        {rail}
+      </Rail>
+      <div className={cn('lg:col-start-1 lg:row-start-2', rest.length > 0 && 'border-border mt-10 border-t pt-10')}>
+        <StorySections sections={rest} beside />
+        {children}
+      </div>
     </div>
   )
 }
