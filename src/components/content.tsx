@@ -156,7 +156,7 @@ function KindChip({ label, deep, className }: { label: string; deep: boolean; cl
     <span
       className={cn(
         'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold',
-        deep ? 'bg-fox text-ink' : 'bg-surface text-muted-foreground',
+        deep ? 'bg-project text-project-foreground' : 'bg-surface text-muted-foreground',
         className,
       )}
     >
@@ -170,7 +170,7 @@ function KindChip({ label, deep, className }: { label: string; deep: boolean; cl
  * focal point. It shows whole, on white, for brand and logo work (logos are
  * never cropped), transparent images, and pieces set to "Show the whole
  * image". A chip names the kind of piece; cards with a full page behind them
- * get it in the logo orange under a navy top edge. Mature pieces show no artwork:
+ * get it in burnt orange under a navy top edge. Mature pieces show no artwork:
  * just the title and an outbound link, so the visitor chooses to go further.
  * Cards that don't link anywhere open their artwork larger (see Lightbox).
  */

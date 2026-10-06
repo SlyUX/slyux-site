@@ -22,8 +22,8 @@
     --primary on --surface ...............  4.27  large text only (≥3) — big numbers OK
     white on --primary ...................  4.88  (AA)
     --fox on --background ................  3.37  FAILS for text — decorative / large graphics only
-    --fox on --ink .......................  5.12  (AA) — icons/text on the dark hero;
-                                                 also --ink on --fox: project chips on cards
+    --fox on --ink .......................  5.12  (AA) — icons/text on the dark hero
+    white on --project ...................  5.50  (AA) — project chips on cards (burnt orange)
     --ink-foreground on --ink ............ 17.24  (AAA)
     --ink-muted on --ink .................  8.18  (AAA)
     white on --brand .....................  6.25  (AA) — Highlights numbers
@@ -55,6 +55,8 @@
   --footer-foreground: #faf8f5;
   --footer-muted: #c9d6e0;
   --pdf: #d7191f;
+  --project: #a8500f; /* burnt orange: warmer and darker than --primary, which reads as red */
+  --project-foreground: #ffffff;
   --pdf-foreground: #ffffff;
 }
 
@@ -80,6 +82,8 @@
   --color-footer-muted: var(--footer-muted);
   --color-pdf: var(--pdf);
   --color-pdf-foreground: var(--pdf-foreground);
+  --color-project: var(--project);
+  --color-project-foreground: var(--project-foreground);
 
   --font-sans: var(--font-geist);
   --font-display: var(--font-fraunces);
