@@ -45,11 +45,12 @@ export default async function PortfolioPage() {
 
   return (
     <>
-      <Section className="pb-4 md:pb-6">
+      <Section className="pb-10 md:pb-12">
         <PageHeader title={s.creativeTitle} intro={s.creativeIntro} />
       </Section>
-      {sections.map(({ section, copy, items }) => (
-        <Section key={section} aria-labelledby={`portfolio-${section}`} className="py-10 md:py-12">
+      {/* Each section a full-width band, alternating from the surface tone, like the subpages. */}
+      {sections.map(({ section, copy, items }, i) => (
+        <Section key={section} aria-labelledby={`portfolio-${section}`} tone={i % 2 === 0 ? 'surface' : 'default'}>
           <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
             <div>
               <h2 id={`portfolio-${section}`} className="font-display text-3xl font-semibold">
