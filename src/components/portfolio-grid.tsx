@@ -16,12 +16,15 @@ export function PortfolioGrid({
   matureLabel,
   kindLabels,
   labels,
+  lead,
 }: {
   works: CreativeWorkCard[]
   headings: SiteSettings['creativeSections']
   matureLabel: string
   kindLabels: SiteSettings['kindLabels']
   labels: ReturnType<typeof galleryLabels>
+  /** A row before the kinds, e.g. the UX page's case studies. */
+  lead?: { key: string; heading: string; content: React.ReactNode }
 }) {
   const groups = PORTFOLIO_KINDS.map((kind) => ({
     kind: kind.value,
@@ -29,12 +32,22 @@ export function PortfolioGrid({
     items: works.filter((w) => w.kind === kind.value),
   })).filter((g) => g.items.length > 0)
 
-  const showHeadings = groups.length > 1
+  const showHeadings = groups.length + (lead ? 1 : 0) > 1
 
   // One lightbox for the page: cards that don't link anywhere step through it together.
   return (
     <Lightbox items={lightboxItems(groups.flatMap((g) => g.items))} labels={labels}>
       <div className="space-y-16">
+        {lead && (
+          <section aria-labelledby={showHeadings ? `group-${lead.key}` : undefined}>
+            {showHeadings && (
+              <h2 id={`group-${lead.key}`} className="font-display mb-8 text-3xl font-semibold">
+                {lead.heading}
+              </h2>
+            )}
+            {lead.content}
+          </section>
+        )}
         {groups.map((group) => {
           const [lead, ...rest] = group.items
           const headingLevel = showHeadings ? 'h3' : 'h2'

@@ -301,6 +301,20 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'caseStudiesRowHeading',
+      title: 'Case studies row heading',
+      type: 'string',
+      group: 'creative',
+      description: 'Heads the row of case studies at the top of the UX portfolio page.',
+    }),
+    defineField({
+      name: 'caseStudyLabel',
+      title: '"Case study" card label',
+      type: 'string',
+      group: 'creative',
+      description: 'The chip on case study cards in that row.',
+    }),
+    defineField({
       name: 'matureLabel',
       title: 'Mature content label',
       type: 'string',

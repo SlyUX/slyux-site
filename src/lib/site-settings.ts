@@ -82,6 +82,8 @@ const DEFAULTS = {
     illustration: 'Illustration',
     book: 'Book',
   },
+  caseStudiesRowHeading: 'Case studies',
+  caseStudyLabel: 'Case study',
   matureLabel: 'Mature content — view off-site',
   resumeTitle: 'Résumé',
   resumeDownloadLabel: 'Download PDF',

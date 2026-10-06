@@ -147,6 +147,47 @@ export function lightboxItems(works: CreativeWorkCard[]): LightboxItem[] {
   })
 }
 
+/**
+ * A case study as a compact card among portfolio pieces (the UX page's top
+ * row): wide image, a "Case study" chip under the navy edge, title, and
+ * organization. The full card, with summary and metric, is CaseStudyCard.
+ */
+export function CaseStudyTile({
+  study,
+  label,
+  headingLevel: Heading = 'h3',
+}: {
+  study: CaseStudyCardData
+  label: string
+  headingLevel?: 'h2' | 'h3'
+}) {
+  const meta = [study.organization, study.years].filter(Boolean).join(' · ')
+  return (
+    <article className="group relative flex flex-col">
+      <div className="border-border bg-paper group-hover:border-primary relative aspect-[3/2] overflow-hidden rounded-2xl border transition-colors">
+        {study.heroImage?.asset && (
+          <Image
+            // Uncropped at the source; the frame crops from the top-left, where screenshots start reading.
+            src={urlFor(study.heroImage).width(1100).url()}
+            alt={study.heroImage.alt ?? ''}
+            fill
+            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover object-left-top"
+          />
+        )}
+        <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />
+        <KindChip label={label} deep className="absolute top-3 left-3 shadow-sm" />
+      </div>
+      <Heading className="mt-3 font-semibold">
+        <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
+          {study.title}
+        </TransitionLink>
+      </Heading>
+      {meta && <p className="text-muted-foreground text-sm">{meta}</p>}
+    </article>
+  )
+}
+
 /** Cards with a full page behind them: a project page or a case study. */
 export const isDeepCard = (work: CreativeWorkCard) => !!cardHref(work)?.startsWith('/')
 
