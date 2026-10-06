@@ -301,6 +301,15 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'uxCaseStudies',
+      title: 'UX page: case studies',
+      type: 'array',
+      of: [defineArrayMember({ type: 'reference', to: [{ type: 'caseStudy' }] })],
+      group: 'creative',
+      description: 'The three case studies in the top row of the UX portfolio page, beside a link to all of them. Empty shows the first three in Case Studies order.',
+      validation: (rule) => rule.max(3).unique(),
+    }),
+    defineField({
       name: 'caseStudiesRowHeading',
       title: 'Case studies row heading',
       type: 'string',

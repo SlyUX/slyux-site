@@ -422,6 +422,11 @@ export type SiteSettings = {
     illustration?: string;
     book?: string;
   };
+  uxCaseStudies?: Array<
+    {
+      _key: string;
+    } & CaseStudyReference
+  >;
   caseStudiesRowHeading?: string;
   caseStudyLabel?: string;
   matureLabel?: string;
@@ -581,7 +586,7 @@ export type AllSanitySchemaTypes =
 
 // Source: src/lib/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_type=="siteSettings" && _id=="siteSettings"][0]{  ...,  "resumePdfUrl": resumePdf.asset->url,  "heroVideoUrl": heroVideo.asset->url,  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},  "heroVideoType": heroVideo.asset->mimeType,  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}}
+// Query: *[_type=="siteSettings" && _id=="siteSettings"][0]{  ...,  "resumePdfUrl": resumePdf.asset->url,  "heroVideoUrl": heroVideo.asset->url,  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},  "heroVideoType": heroVideo.asset->mimeType,  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}}
 export type SITE_SETTINGS_QUERY_RESULT = {
   _id: "siteSettings";
   _type: "siteSettings";
@@ -723,6 +728,22 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     illustration?: string;
     book?: string;
   };
+  uxCaseStudies: Array<{
+    _id: string;
+    title: string;
+    slug: string;
+    summary: string;
+    organization: string | null;
+    role: string | null;
+    years: string | null;
+    skills: Array<string> | null;
+    heroImage: ImageWithAlt | null;
+    metrics: Array<
+      {
+        _key: string;
+      } & Metric
+    > | null;
+  }> | null;
   caseStudiesRowHeading?: string;
   caseStudyLabel?: string;
   matureLabel?: string;
@@ -1078,7 +1099,7 @@ export type EXPERIENCE_QUERY_RESULT = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "resumePdfUrl": resumePdf.asset->url,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}\n}': SITE_SETTINGS_QUERY_RESULT;
+    '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "resumePdfUrl": resumePdf.asset->url,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}\n}': SITE_SETTINGS_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}': CASE_STUDIES_QUERY_RESULT;
     '*[_type=="caseStudy" && slug.current==$slug][0]{\n  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,personasIntro,\n  personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},\n  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}\n}': CASE_STUDY_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)].slug.current': CASE_STUDY_SLUGS_QUERY_RESULT;

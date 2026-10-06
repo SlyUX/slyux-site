@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 import { notFound } from 'next/navigation'
 
-import { PageHeader, Section } from '@/components/ui'
+import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { CaseStudyTile } from '@/components/content'
 import { PortfolioGrid } from '@/components/portfolio-grid'
 import { CASE_STUDIES_QUERY, PORTFOLIO_SECTION_QUERY, safeFetch } from '@/lib/queries'
@@ -34,17 +34,25 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
   ])
   const copy = s.portfolioSections[section]
 
-  // The UX page leads with the case studies, then the evidence behind them by discipline.
-  const studies = section === 'ux' ? await safeFetch<CaseStudyCardData[]>(CASE_STUDIES_QUERY, {}, []) : []
+  // The UX page leads with one row of case studies (picked in Site settings, else
+  // the first three in order) beside a link to all of them, then the evidence
+  // behind them by discipline.
+  const studies =
+    section === 'ux'
+      ? s.uxCaseStudies?.length
+        ? s.uxCaseStudies
+        : (await safeFetch<CaseStudyCardData[]>(CASE_STUDIES_QUERY, {}, [])).slice(0, 3)
+      : []
   const lead = studies.length
     ? {
         key: 'case-studies',
         heading: s.caseStudiesRowHeading,
+        action: <ButtonLink link={{ _type: 'link', label: s.portfolioViewAll, href: '/case-studies' }} variant="secondary" />,
         content: (
           <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {studies.map((study) => (
               // Under the row heading when artifact rows follow; the row heading hides when it's alone.
-              <CaseStudyTile key={study._id} study={study} label={s.caseStudyLabel} headingLevel={works.length > 0 ? 'h3' : 'h2'} />
+              <CaseStudyTile key={study._id} study={study} headingLevel={works.length > 0 ? 'h3' : 'h2'} />
             ))}
           </div>
         ),
@@ -52,22 +60,17 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
     : undefined
 
   return (
-    <Section>
-      <PageHeader title={copy.title} intro={copy.intro} back={{ label: s.creativeTitle, href: '/portfolio' }} />
-      <div className="mt-14">
-        {works.length > 0 || lead ? (
-          <PortfolioGrid
-            works={works}
-            headings={s.creativeSections}
-            matureLabel={s.matureLabel}
-            kindLabels={s.kindLabels}
-            labels={galleryLabels(s)}
-            lead={lead}
-          />
-        ) : (
+    <>
+      <Section className="pb-10 md:pb-12">
+        <PageHeader title={copy.title} intro={copy.intro} back={{ label: s.creativeTitle, href: '/portfolio' }} />
+      </Section>
+      {works.length > 0 || lead ? (
+        <PortfolioGrid works={works} headings={s.creativeSections} matureLabel={s.matureLabel} labels={galleryLabels(s)} lead={lead} />
+      ) : (
+        <Section className="pt-0 md:pt-0">
           <p className="text-muted-foreground">{s.workEmpty}</p>
-        )}
-      </div>
-    </Section>
+        </Section>
+      )}
+    </>
   )
 }

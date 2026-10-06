@@ -30,7 +30,8 @@ export const SITE_SETTINGS_QUERY = defineQuery(`*[_type=="siteSettings" && _id==
   "heroVideoUrl": heroVideo.asset->url,
   "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},
   "heroVideoType": heroVideo.asset->mimeType,
-  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}}
+  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}},
+  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}}
 }`)
 
 export const CASE_STUDIES_QUERY = defineQuery(

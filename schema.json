@@ -2549,6 +2549,28 @@
         },
         "optional": true
       },
+      "uxCaseStudies": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "object",
+            "attributes": {
+              "_key": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "string"
+                }
+              }
+            },
+            "rest": {
+              "type": "inline",
+              "name": "caseStudy.reference"
+            }
+          }
+        },
+        "optional": true
+      },
       "caseStudiesRowHeading": {
         "type": "objectAttribute",
         "value": {
