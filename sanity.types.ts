@@ -182,7 +182,18 @@ export type CreativeWork = {
   title: string;
   slug: Slug;
   kind:
-    "ux" | "brand" | "logo" | "campaign" | "graphic" | "illustration" | "book";
+    | "audit"
+    | "data"
+    | "strategy"
+    | "research"
+    | "designSystem"
+    | "ux"
+    | "brand"
+    | "logo"
+    | "campaign"
+    | "graphic"
+    | "illustration"
+    | "book";
   image?: ImageWithAlt;
   cardFit?: "fill" | "whole";
   client?: string;
@@ -387,6 +398,11 @@ export type SiteSettings = {
   };
   portfolioViewAll?: string;
   creativeSections?: {
+    audit?: string;
+    data?: string;
+    strategy?: string;
+    research?: string;
+    designSystem?: string;
     ux?: string;
     brand?: string;
     illustration?: string;
@@ -396,6 +412,11 @@ export type SiteSettings = {
     logo?: string;
   };
   kindLabels?: {
+    audit?: string;
+    data?: string;
+    strategy?: string;
+    research?: string;
+    designSystem?: string;
     ux?: string;
     brand?: string;
     logo?: string;
@@ -678,6 +699,11 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   };
   portfolioViewAll?: string;
   creativeSections?: {
+    audit?: string;
+    data?: string;
+    strategy?: string;
+    research?: string;
+    designSystem?: string;
     ux?: string;
     brand?: string;
     illustration?: string;
@@ -687,6 +713,11 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     logo?: string;
   };
   kindLabels?: {
+    audit?: string;
+    data?: string;
+    strategy?: string;
+    research?: string;
+    designSystem?: string;
     ux?: string;
     brand?: string;
     logo?: string;
@@ -868,7 +899,18 @@ export type PORTFOLIO_SECTION_QUERY_RESULT = Array<{
   title: string;
   slug: string;
   kind:
-    "book" | "brand" | "campaign" | "graphic" | "illustration" | "logo" | "ux";
+    | "audit"
+    | "book"
+    | "brand"
+    | "campaign"
+    | "data"
+    | "designSystem"
+    | "graphic"
+    | "illustration"
+    | "logo"
+    | "research"
+    | "strategy"
+    | "ux";
   image: ImageWithAlt | null;
   cardFit: "fill" | "whole" | null;
   opaque: boolean | null;
@@ -896,7 +938,18 @@ export type PORTFOLIO_FEATURED_QUERY_RESULT = Array<{
   title: string;
   slug: string;
   kind:
-    "book" | "brand" | "campaign" | "graphic" | "illustration" | "logo" | "ux";
+    | "audit"
+    | "book"
+    | "brand"
+    | "campaign"
+    | "data"
+    | "designSystem"
+    | "graphic"
+    | "illustration"
+    | "logo"
+    | "research"
+    | "strategy"
+    | "ux";
   image: ImageWithAlt | null;
   cardFit: "fill" | "whole" | null;
   opaque: boolean | null;
@@ -924,7 +977,18 @@ export type CREATIVE_WORK_QUERY_RESULT = {
   title: string;
   slug: string;
   kind:
-    "book" | "brand" | "campaign" | "graphic" | "illustration" | "logo" | "ux";
+    | "audit"
+    | "book"
+    | "brand"
+    | "campaign"
+    | "data"
+    | "designSystem"
+    | "graphic"
+    | "illustration"
+    | "logo"
+    | "research"
+    | "strategy"
+    | "ux";
   image: ImageWithAlt | null;
   client: string | null;
   year: string | null;
@@ -965,7 +1029,18 @@ export type CREATIVE_WORK_QUERY_RESULT = {
 // Query: *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0) && mature != true]{kind,"slug":slug.current}
 export type CREATIVE_WORK_PATHS_QUERY_RESULT = Array<{
   kind:
-    "book" | "brand" | "campaign" | "graphic" | "illustration" | "logo" | "ux";
+    | "audit"
+    | "book"
+    | "brand"
+    | "campaign"
+    | "data"
+    | "designSystem"
+    | "graphic"
+    | "illustration"
+    | "logo"
+    | "research"
+    | "strategy"
+    | "ux";
   slug: string;
 }>;
 
