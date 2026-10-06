@@ -42,7 +42,10 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
   const outbound = externalHref(work.externalUrl)
   const docSettings = documentSettings(s)
   const docs = readableDocuments(work.documents, docSettings.badge)
-  const images = [work.image, ...(work.gallery ?? [])].flatMap((img) =>
+  // A UX piece's main image is the cover on its card (a document cover or a
+  // typographic card); its page carries its own figures, so only "More images" show.
+  const cover = section === 'ux' ? [] : [work.image]
+  const images = [...cover, ...(work.gallery ?? [])].flatMap((img) =>
     img?.asset ? [{ ...img, ref: img.asset._ref }] : [],
   )
   const hasLinks = !!(work.caseStudy?.slug || outbound)
