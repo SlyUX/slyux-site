@@ -149,8 +149,9 @@ export function lightboxItems(works: CreativeWorkCard[]): LightboxItem[] {
 
 /**
  * A case study as a compact card among portfolio pieces (the UX page's top
- * row): wide image, a "Case study" chip under the navy edge, title, and
- * organization. The full card, with summary and metric, is CaseStudyCard.
+ * row): wide image under the navy edge, title, and organization, with an
+ * optional "Case study" chip. The full card, with summary and metric, is
+ * CaseStudyCard.
  */
 export function CaseStudyTile({
   study,
@@ -158,7 +159,8 @@ export function CaseStudyTile({
   headingLevel: Heading = 'h3',
 }: {
   study: CaseStudyCardData
-  label: string
+  /** The chip text; omit where a heading already says "Case studies". */
+  label?: string
   headingLevel?: 'h2' | 'h3'
 }) {
   const meta = [study.organization, study.years].filter(Boolean).join(' · ')
@@ -176,7 +178,7 @@ export function CaseStudyTile({
           />
         )}
         <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />
-        <KindChip label={label} deep className="absolute top-3 left-3 shadow-sm" />
+        {label && <KindChip label={label} deep className="absolute top-3 left-3 shadow-sm" />}
       </div>
       <Heading className="mt-3 font-semibold">
         <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
@@ -227,15 +229,15 @@ export function CreativeTile({
   matureLabel: string
   /** Names the lightbox button, e.g. "View larger". */
   enlargeLabel: string
-  /** Chip text per kind, from Site settings. */
-  kindLabels: Record<string, string>
+  /** Chip text per kind, from Site settings. Omit where a heading already names the kind. */
+  kindLabels?: Record<string, string>
   large?: boolean
   headingLevel?: 'h2' | 'h3'
 }) {
   const outbound = externalHref(work.externalUrl)
   const href = cardHref(work)
   const deep = !!href?.startsWith('/')
-  const kindLabel = work.kind ? kindLabels[work.kind] : undefined
+  const kindLabel = work.kind ? kindLabels?.[work.kind] : undefined
   const meta = [work.client, work.year].filter(Boolean).join(' · ')
 
   if (work.mature) {
