@@ -70,8 +70,9 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
         are in the galleries below.
       */}
       {study.heroImage?.asset && (
-        <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <div className="border-border relative aspect-[16/9] overflow-hidden rounded-2xl border">
+        // Gutter outside, width inside — the same frame as Section, so the preview lines up with the text.
+        <div className="px-4 sm:px-6">
+          <div className="border-border relative mx-auto aspect-[16/9] max-w-6xl overflow-hidden rounded-2xl border">
             <Image
               src={urlFor(study.heroImage).width(2304).url()}
               alt={study.heroImage.alt ?? ''}
