@@ -9,15 +9,24 @@
 export const PORTFOLIO_SECTIONS = ['ux', 'brand', 'design', 'illustration'] as const
 export type PortfolioSection = (typeof PORTFOLIO_SECTIONS)[number]
 
+/** Studio labels for each section, matching the site's default page titles. */
+export const PORTFOLIO_SECTION_TITLES: Record<PortfolioSection, string> = {
+  ux: 'UX',
+  brand: 'Brand Development',
+  design: 'Design',
+  illustration: 'Illustration',
+}
+
+/** `title` labels the Kind field; `list` names the kind's list in the Studio sidebar. */
 export const PORTFOLIO_KINDS = [
-  { title: 'UX — screens & prototypes', value: 'ux', section: 'ux' },
-  { title: 'Brand — brand system', value: 'brand', section: 'brand' },
-  { title: 'Brand — logo', value: 'logo', section: 'brand' },
-  { title: 'Design — campaign', value: 'campaign', section: 'design' },
-  { title: 'Design — graphic / print / web', value: 'graphic', section: 'design' },
-  { title: 'Illustration', value: 'illustration', section: 'illustration' },
-  { title: 'Illustration — book / comic', value: 'book', section: 'illustration' },
-] as const satisfies readonly { title: string; value: string; section: PortfolioSection }[]
+  { title: 'UX — screens & prototypes', list: 'Screens & prototypes', value: 'ux', section: 'ux' },
+  { title: 'Brand — brand system', list: 'Brand systems', value: 'brand', section: 'brand' },
+  { title: 'Brand — logo', list: 'Logos', value: 'logo', section: 'brand' },
+  { title: 'Design — campaign', list: 'Campaigns', value: 'campaign', section: 'design' },
+  { title: 'Design — graphic / print / web', list: 'Graphic design', value: 'graphic', section: 'design' },
+  { title: 'Illustration', list: 'Illustration', value: 'illustration', section: 'illustration' },
+  { title: 'Illustration — book / comic', list: 'Books & comics', value: 'book', section: 'illustration' },
+] as const satisfies readonly { title: string; list: string; value: string; section: PortfolioSection }[]
 
 export type PortfolioKind = (typeof PORTFOLIO_KINDS)[number]['value']
 

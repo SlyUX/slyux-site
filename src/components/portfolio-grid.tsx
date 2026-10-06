@@ -1,7 +1,8 @@
-import { CreativeTile } from '@/components/content'
+import { CreativeTile, lightboxItems } from '@/components/content'
+import { Lightbox } from '@/components/lightbox'
 import { PORTFOLIO_KINDS, PROJECT_KINDS } from '@/sanity/portfolio'
 import type { CreativeWorkCard } from '@/lib/types'
-import type { SiteSettings } from '@/lib/site-settings'
+import type { galleryLabels, SiteSettings } from '@/lib/site-settings'
 
 /**
  * A portfolio section's pieces, grouped by kind (e.g. Brand → brand systems,
@@ -13,10 +14,12 @@ export function PortfolioGrid({
   works,
   headings,
   matureLabel,
+  labels,
 }: {
   works: CreativeWorkCard[]
   headings: SiteSettings['creativeSections']
   matureLabel: string
+  labels: ReturnType<typeof galleryLabels>
 }) {
   const groups = PORTFOLIO_KINDS.map((kind) => ({
     kind: kind.value,
@@ -26,13 +29,31 @@ export function PortfolioGrid({
 
   const showHeadings = groups.length > 1
 
+  // One lightbox for the page: cards that don't link anywhere step through it together.
   return (
-    <div className="space-y-16">
-      {groups.map((group) => {
-        const [lead, ...rest] = group.items
-        const headingLevel = showHeadings ? 'h3' : 'h2'
-        // Projects (brand systems) sit side by side as equals, featured or not.
-        if (PROJECT_KINDS.includes(group.kind)) {
+    <Lightbox items={lightboxItems(groups.flatMap((g) => g.items))} labels={labels}>
+      <div className="space-y-16">
+        {groups.map((group) => {
+          const [lead, ...rest] = group.items
+          const headingLevel = showHeadings ? 'h3' : 'h2'
+          // Projects (brand systems) sit side by side as equals, featured or not.
+          if (PROJECT_KINDS.includes(group.kind)) {
+            return (
+              <section key={group.kind} aria-labelledby={showHeadings ? `group-${group.kind}` : undefined}>
+                {showHeadings && (
+                  <h2 id={`group-${group.kind}`} className="font-display mb-8 text-3xl font-semibold">
+                    {group.heading}
+                  </h2>
+                )}
+                <div className="grid gap-x-6 gap-y-10 md:grid-cols-2">
+                  {group.items.map((work) => (
+                    <CreativeTile key={work._id} work={work} matureLabel={matureLabel} enlargeLabel={labels.enlarge} large headingLevel={headingLevel} />
+                  ))}
+                </div>
+              </section>
+            )
+          }
+          const hasLead = lead.featured && !lead.mature
           return (
             <section key={group.kind} aria-labelledby={showHeadings ? `group-${group.kind}` : undefined}>
               {showHeadings && (
@@ -40,35 +61,20 @@ export function PortfolioGrid({
                   {group.heading}
                 </h2>
               )}
-              <div className="grid gap-x-6 gap-y-10 md:grid-cols-2">
-                {group.items.map((work) => (
-                  <CreativeTile key={work._id} work={work} matureLabel={matureLabel} large headingLevel={headingLevel} />
+              {hasLead && (
+                <div className="mb-10">
+                  <CreativeTile work={lead} matureLabel={matureLabel} enlargeLabel={labels.enlarge} large headingLevel={headingLevel} />
+                </div>
+              )}
+              <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+                {(hasLead ? rest : group.items).map((work) => (
+                  <CreativeTile key={work._id} work={work} matureLabel={matureLabel} enlargeLabel={labels.enlarge} headingLevel={headingLevel} />
                 ))}
               </div>
             </section>
           )
-        }
-        const hasLead = lead.featured && !lead.mature
-        return (
-          <section key={group.kind} aria-labelledby={showHeadings ? `group-${group.kind}` : undefined}>
-            {showHeadings && (
-              <h2 id={`group-${group.kind}`} className="font-display mb-8 text-3xl font-semibold">
-                {group.heading}
-              </h2>
-            )}
-            {hasLead && (
-              <div className="mb-10">
-                <CreativeTile work={lead} matureLabel={matureLabel} large headingLevel={headingLevel} />
-              </div>
-            )}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-              {(hasLead ? rest : group.items).map((work) => (
-                <CreativeTile key={work._id} work={work} matureLabel={matureLabel} headingLevel={headingLevel} />
-              ))}
-            </div>
-          </section>
-        )
-      })}
-    </div>
+        })}
+      </div>
+    </Lightbox>
   )
 }

@@ -128,7 +128,7 @@ export function DocumentViewer({
                   width={pages[i].width}
                   height={pages[i].height}
                   decoding="async"
-                  className="h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-lg bg-white shadow-2xl"
+                  className="h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-lg bg-paper shadow-2xl"
                 />
               )}
             />

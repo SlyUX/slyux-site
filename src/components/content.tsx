@@ -1,8 +1,10 @@
 import Image from 'next/image'
 import { PortableText, toPlainText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock, TypedObject } from '@portabletext/types'
+import { Maximize2 } from 'lucide-react'
 
 import { TransitionLink } from '@/components/grid-nav'
+import { LightboxButton, type LightboxItem } from '@/components/lightbox'
 import { Rail } from '@/components/rail'
 import { cn, externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
@@ -93,31 +95,81 @@ export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudy
   )
 }
 
+type CardImage = NonNullable<CreativeWorkCard['image']>
+
+/** An image's size after its Studio crop, from the asset ID ("image-<hash>-1600x900-jpg"). */
+function imageSize(image: Pick<CardImage, 'asset' | 'crop'>) {
+  const [w, h] = (image.asset?._ref?.match(/-(\d+)x(\d+)-/)?.slice(1) ?? []).map(Number)
+  if (!w || !h) return undefined
+  const c = image.crop
+  return {
+    width: Math.round(w * (1 - (c?.left ?? 0) - (c?.right ?? 0))),
+    height: Math.round(h * (1 - (c?.top ?? 0) - (c?.bottom ?? 0))),
+  }
+}
+
 /**
- * A piece on the Brand & Illustration page. Mature pieces show no artwork —
- * just the title and an outbound link — so the visitor chooses to go further.
+ * Where a piece's card goes: its own page (a story or PDFs), else its case
+ * study, else off-site. Mature pieces only ever link out. `undefined` means
+ * the card opens its artwork in the lightbox instead.
+ */
+export function cardHref(work: CreativeWorkCard): string | undefined {
+  const outbound = externalHref(work.externalUrl)
+  const section = sectionOfKind(work.kind)
+  if (work.mature) return outbound
+  if (work.hasPage && section) return `/portfolio/${section}/${work.slug}`
+  if (work.caseStudySlug) return `/case-studies/${work.caseStudySlug}`
+  return outbound
+}
+
+/**
+ * The lightbox's images for a group of cards: every card that doesn't link
+ * anywhere, its main image then its "More images", in card order.
+ */
+export function lightboxItems(works: CreativeWorkCard[]): LightboxItem[] {
+  return works.flatMap((work) => {
+    if (work.mature || cardHref(work)) return []
+    return [work.image, ...(work.gallery ?? [])].flatMap((image, i) => {
+      const size = image?.asset ? imageSize(image) : undefined
+      if (!image || !size) return []
+      // Big enough to judge the work on a large screen; never more than the source.
+      const width = Math.min(2400, size.width)
+      return [{
+        key: `${work._id}-${i}`,
+        pieceKey: work._id,
+        title: work.title,
+        alt: image.alt || work.title,
+        src: urlFor(image).width(width).format('webp').quality(85).url(),
+        width,
+        height: Math.round((width * size.height) / size.width),
+      }]
+    })
+  })
+}
+
+/**
+ * A portfolio card. The artwork fills the card, cropped around the image's
+ * focal point, unless the piece asks to show it whole or the image is
+ * transparent — then it sits whole on white. Mature pieces show no artwork:
+ * just the title and an outbound link, so the visitor chooses to go further.
+ * Cards that don't link anywhere open their artwork larger (see Lightbox).
  */
 export function CreativeTile({
   work,
   matureLabel,
+  enlargeLabel,
   large = false,
   headingLevel: Heading = 'h3',
 }: {
   work: CreativeWorkCard
   matureLabel: string
+  /** Names the lightbox button, e.g. "View larger". */
+  enlargeLabel: string
   large?: boolean
   headingLevel?: 'h2' | 'h3'
 }) {
   const outbound = externalHref(work.externalUrl)
-  // Where the tile goes: its own page (a story or PDFs), else its case study, else off-site.
-  const section = sectionOfKind(work.kind)
-  const href = work.mature
-    ? outbound
-    : work.hasPage && section
-      ? `/portfolio/${section}/${work.slug}`
-      : work.caseStudySlug
-        ? `/case-studies/${work.caseStudySlug}`
-        : outbound
+  const href = cardHref(work)
   const meta = [work.client, work.year].filter(Boolean).join(' · ')
 
   if (work.mature) {
@@ -134,29 +186,71 @@ export function CreativeTile({
     )
   }
 
-  const image = work.image?.asset ? (
-    <Image
-      src={urlFor(work.image).width(large ? 1400 : 700).url()}
-      alt={work.image.alt ?? ''}
-      width={large ? 1400 : 700}
-      height={large ? 1050 : 525}
-      sizes={large ? '(max-width: 768px) 100vw, 66vw' : '(max-width: 768px) 50vw, 33vw'}
-      className="h-full w-full object-contain p-4"
-    />
-  ) : null
+  const card = large ? { width: 1400, height: 1050 } : { width: 800, height: 800 }
+  const size = work.image?.asset ? imageSize(work.image) : undefined
+  const whole = work.cardFit === 'whole' || work.opaque === false
+  let image: React.ReactNode = null
+  if (work.image && size) {
+    if (whole) {
+      const width = Math.min(card.width, size.width)
+      image = (
+        <Image
+          src={urlFor(work.image).width(width).url()}
+          alt={work.image.alt ?? ''}
+          width={width}
+          height={Math.round((width * size.height) / size.width)}
+          sizes={large ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 25vw'}
+          className="h-full w-full object-contain p-4"
+        />
+      )
+    } else {
+      // Cropped to the card's shape by Sanity, around the focal point; never upscaled.
+      const scale = Math.min(1, size.width / card.width, size.height / card.height)
+      const width = Math.round(card.width * scale)
+      const height = Math.round(card.height * scale)
+      image = (
+        <Image
+          src={urlFor(work.image).width(width).height(height).url()}
+          alt={work.image.alt ?? ''}
+          width={width}
+          height={height}
+          sizes={large ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 25vw'}
+          className="h-full w-full object-cover"
+        />
+      )
+    }
+  }
 
+  const stretch = 'after:absolute after:inset-0 group-hover:text-primary'
   return (
     <article className="group relative flex flex-col">
-      <div className={cn('bg-surface flex items-center justify-center overflow-hidden rounded-2xl', large ? 'aspect-[4/3]' : 'aspect-square')}>
+      <div
+        className={cn(
+          'border-border bg-paper group-hover:border-primary relative overflow-hidden rounded-2xl border transition-colors',
+          large ? 'aspect-[4/3]' : 'aspect-square',
+        )}
+      >
         {image}
+        {!href && image && (
+          <span
+            aria-hidden
+            className="bg-background/90 text-foreground absolute top-3 right-3 flex size-8 items-center justify-center rounded-full opacity-0 shadow-md transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
+          >
+            <Maximize2 className="size-4" />
+          </span>
+        )}
       </div>
       <Heading className="mt-3 font-semibold">
         {href ? (
           href.startsWith('/') ? (
-            <TransitionLink href={href} className="after:absolute after:inset-0 group-hover:text-primary">{work.title}</TransitionLink>
+            <TransitionLink href={href} className={stretch}>{work.title}</TransitionLink>
           ) : (
-            <a href={href} target="_blank" rel="noopener noreferrer" className="after:absolute after:inset-0 group-hover:text-primary">{work.title}</a>
+            <a href={href} target="_blank" rel="noopener noreferrer" className={stretch}>{work.title}</a>
           )
+        ) : image ? (
+          <LightboxButton pieceKey={work._id} label={`${enlargeLabel}: ${work.title}`} className={cn(stretch, 'text-left')}>
+            {work.title}
+          </LightboxButton>
         ) : (
           work.title
         )}

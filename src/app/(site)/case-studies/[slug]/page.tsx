@@ -8,7 +8,7 @@ import { MetricStrip, WorkStory } from '@/components/content'
 import { Gallery } from '@/components/gallery'
 import { Personas } from '@/components/personas'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
-import { getSiteSettings } from '@/lib/site-settings'
+import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { urlFor } from '@/sanity/image'
 import type { CaseStudyDetail } from '@/lib/types'
 
@@ -36,13 +36,7 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
   const galleries = study.galleries ?? []
   const before = galleries.filter((g) => g.placement === 'before')
   const after = galleries.filter((g) => g.placement !== 'before')
-  const labels = {
-    fullPage: s.fullPageLabel,
-    enlarge: s.enlargeLabel,
-    close: s.closeLabel,
-    previous: s.previousLabel,
-    next: s.nextLabel,
-  }
+  const labels = galleryLabels(s)
 
   return (
     <article>
