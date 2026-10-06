@@ -57,9 +57,9 @@ const DEFAULTS = {
     illustration: { title: 'Illustration' },
   },
   creativeSections: {
-    data: 'Data analysis & UX research',
+    data: 'Data analysis',
     audit: 'Site audits',
-    strategy: 'Strategy',
+    strategy: 'Research & strategy',
     designSystem: 'Design systems',
     ux: 'Screens & prototypes',
     brand: 'Brand systems',
@@ -70,7 +70,7 @@ const DEFAULTS = {
     logo: 'Logos',
   },
   kindLabels: {
-    data: 'Data & research',
+    data: 'Data analysis',
     audit: 'Site audit',
     strategy: 'Strategy',
     designSystem: 'Design system',

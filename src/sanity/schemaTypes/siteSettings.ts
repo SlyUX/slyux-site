@@ -266,9 +266,9 @@ export default defineType({
       group: 'creative',
       description: 'Headings for each kind of piece within a subpage (e.g. Logos within Design). A group only appears when it has pieces.',
       fields: [
-        defineField({ name: 'data', title: 'Data analysis & UX research', type: 'string' }),
+        defineField({ name: 'data', title: 'Data analysis', type: 'string' }),
         defineField({ name: 'audit', title: 'Site audits', type: 'string' }),
-        defineField({ name: 'strategy', title: 'Strategy', type: 'string' }),
+        defineField({ name: 'strategy', title: 'Research & strategy', type: 'string' }),
         defineField({ name: 'designSystem', title: 'Design systems', type: 'string' }),
         defineField({ name: 'ux', title: 'UX screens & prototypes', type: 'string' }),
         defineField({ name: 'brand', title: 'Brand systems', type: 'string' }),
@@ -287,9 +287,9 @@ export default defineType({
       description:
         'The small label on each portfolio card saying what the piece is. Cards with a full page behind them (a project or case study) show it in burnt orange, under a navy top edge.',
       fields: [
-        defineField({ name: 'data', title: 'Data analysis & UX research', type: 'string' }),
+        defineField({ name: 'data', title: 'Data analysis', type: 'string' }),
         defineField({ name: 'audit', title: 'Site audits', type: 'string' }),
-        defineField({ name: 'strategy', title: 'Strategy', type: 'string' }),
+        defineField({ name: 'strategy', title: 'Research & strategy', type: 'string' }),
         defineField({ name: 'designSystem', title: 'Design systems', type: 'string' }),
         defineField({ name: 'ux', title: 'UX screens & prototypes', type: 'string' }),
         defineField({ name: 'brand', title: 'Brand systems', type: 'string' }),
