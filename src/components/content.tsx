@@ -147,10 +147,30 @@ export function lightboxItems(works: CreativeWorkCard[]): LightboxItem[] {
   })
 }
 
+/** Cards with a full page behind them: a project page or a case study. */
+export const isDeepCard = (work: CreativeWorkCard) => !!cardHref(work)?.startsWith('/')
+
+/** The label naming what a piece is; in color on cards with a full page behind them. */
+function KindChip({ label, deep, className }: { label: string; deep: boolean; className?: string }) {
+  return (
+    <span
+      className={cn(
+        'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold',
+        deep ? 'bg-primary text-primary-foreground' : 'bg-surface text-muted-foreground',
+        className,
+      )}
+    >
+      {label}
+    </span>
+  )
+}
+
 /**
  * A portfolio card. The artwork fills the card, cropped around the image's
- * focal point, unless the piece asks to show it whole or the image is
- * transparent — then it sits whole on white. Mature pieces show no artwork:
+ * focal point. It shows whole, on white, for brand and logo work (logos are
+ * never cropped), transparent images, and pieces set to "Show the whole
+ * image". A chip names the kind of piece; cards with a full page behind them
+ * get it in color under an orange top edge. Mature pieces show no artwork:
  * just the title and an outbound link, so the visitor chooses to go further.
  * Cards that don't link anywhere open their artwork larger (see Lightbox).
  */
@@ -158,6 +178,7 @@ export function CreativeTile({
   work,
   matureLabel,
   enlargeLabel,
+  kindLabels,
   large = false,
   headingLevel: Heading = 'h3',
 }: {
@@ -165,16 +186,21 @@ export function CreativeTile({
   matureLabel: string
   /** Names the lightbox button, e.g. "View larger". */
   enlargeLabel: string
+  /** Chip text per kind, from Site settings. */
+  kindLabels: Record<string, string>
   large?: boolean
   headingLevel?: 'h2' | 'h3'
 }) {
   const outbound = externalHref(work.externalUrl)
   const href = cardHref(work)
+  const deep = !!href?.startsWith('/')
+  const kindLabel = work.kind ? kindLabels[work.kind] : undefined
   const meta = [work.client, work.year].filter(Boolean).join(' · ')
 
   if (work.mature) {
     return (
       <article className="border-border flex flex-col justify-between rounded-2xl border p-6">
+        {kindLabel && <KindChip label={kindLabel} deep={false} className="mb-3 self-start" />}
         <Heading className="font-display text-xl font-semibold">{work.title}</Heading>
         {work.summary && <p className="text-muted-foreground mt-2 text-sm">{work.summary}</p>}
         {outbound && (
@@ -188,7 +214,7 @@ export function CreativeTile({
 
   const card = large ? { width: 1400, height: 1050 } : { width: 800, height: 800 }
   const size = work.image?.asset ? imageSize(work.image) : undefined
-  const whole = work.cardFit === 'whole' || work.opaque === false
+  const whole = sectionOfKind(work.kind) === 'brand' || work.cardFit === 'whole' || work.opaque === false
   let image: React.ReactNode = null
   if (work.image && size) {
     if (whole) {
@@ -231,6 +257,8 @@ export function CreativeTile({
         )}
       >
         {image}
+        {deep && <span aria-hidden className="bg-primary absolute inset-x-0 top-0 h-[5px]" />}
+        {kindLabel && <KindChip label={kindLabel} deep={deep} className="absolute top-3 left-3 shadow-sm" />}
         {!href && image && (
           <span
             aria-hidden

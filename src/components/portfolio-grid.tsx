@@ -14,11 +14,13 @@ export function PortfolioGrid({
   works,
   headings,
   matureLabel,
+  kindLabels,
   labels,
 }: {
   works: CreativeWorkCard[]
   headings: SiteSettings['creativeSections']
   matureLabel: string
+  kindLabels: SiteSettings['kindLabels']
   labels: ReturnType<typeof galleryLabels>
 }) {
   const groups = PORTFOLIO_KINDS.map((kind) => ({
@@ -47,7 +49,7 @@ export function PortfolioGrid({
                 )}
                 <div className="grid gap-x-6 gap-y-10 md:grid-cols-2">
                   {group.items.map((work) => (
-                    <CreativeTile key={work._id} work={work} matureLabel={matureLabel} enlargeLabel={labels.enlarge} large headingLevel={headingLevel} />
+                    <CreativeTile key={work._id} work={work} matureLabel={matureLabel} enlargeLabel={labels.enlarge} kindLabels={kindLabels} large headingLevel={headingLevel} />
                   ))}
                 </div>
               </section>
@@ -63,12 +65,12 @@ export function PortfolioGrid({
               )}
               {hasLead && (
                 <div className="mb-10">
-                  <CreativeTile work={lead} matureLabel={matureLabel} enlargeLabel={labels.enlarge} large headingLevel={headingLevel} />
+                  <CreativeTile work={lead} matureLabel={matureLabel} enlargeLabel={labels.enlarge} kindLabels={kindLabels} large headingLevel={headingLevel} />
                 </div>
               )}
               <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
                 {(hasLead ? rest : group.items).map((work) => (
-                  <CreativeTile key={work._id} work={work} matureLabel={matureLabel} enlargeLabel={labels.enlarge} headingLevel={headingLevel} />
+                  <CreativeTile key={work._id} work={work} matureLabel={matureLabel} enlargeLabel={labels.enlarge} kindLabels={kindLabels} headingLevel={headingLevel} />
                 ))}
               </div>
             </section>

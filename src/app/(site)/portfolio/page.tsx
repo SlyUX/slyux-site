@@ -3,7 +3,7 @@ import { stegaClean } from 'next-sanity'
 
 import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
-import { CreativeTile, lightboxItems } from '@/components/content'
+import { CreativeTile, isDeepCard, lightboxItems } from '@/components/content'
 import { Lightbox } from '@/components/lightbox'
 import { PORTFOLIO_SECTION_QUERY, safeFetch } from '@/lib/queries'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
@@ -28,13 +28,17 @@ export default async function PortfolioPage() {
     ),
   ])
 
-  // Featured pieces first (the query orders them so), mature pieces never
-  // previewed here — they live on their section page as links only.
-  const sections = PORTFOLIO_SECTIONS.map((section) => ({
-    section,
-    copy: s.portfolioSections[section],
-    items: works.filter((w) => sectionOfKind(w.kind) === section && !w.mature).slice(0, PREVIEW_COUNT),
-  })).filter((entry) => entry.items.length > 0)
+  // Pieces with a full page behind them lead each row, then featured pieces
+  // (the query orders them so). Mature pieces are never previewed here —
+  // they live on their section page as links only.
+  const sections = PORTFOLIO_SECTIONS.map((section) => {
+    const pieces = works.filter((w) => sectionOfKind(w.kind) === section && !w.mature)
+    return {
+      section,
+      copy: s.portfolioSections[section],
+      items: [...pieces.filter(isDeepCard), ...pieces.filter((w) => !isDeepCard(w))].slice(0, PREVIEW_COUNT),
+    }
+  }).filter((entry) => entry.items.length > 0)
 
   const labels = galleryLabels(s)
 
@@ -62,7 +66,7 @@ export default async function PortfolioPage() {
           <Lightbox items={lightboxItems(items)} labels={labels}>
             <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
               {items.map((work) => (
-                <CreativeTile key={work._id} work={work} matureLabel={s.matureLabel} enlargeLabel={labels.enlarge} headingLevel="h3" />
+                <CreativeTile key={work._id} work={work} matureLabel={s.matureLabel} enlargeLabel={labels.enlarge} kindLabels={s.kindLabels} headingLevel="h3" />
               ))}
             </div>
           </Lightbox>

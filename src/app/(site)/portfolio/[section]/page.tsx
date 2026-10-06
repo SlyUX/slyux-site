@@ -46,7 +46,7 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
       <PageHeader title={copy.title} intro={copy.intro} back={{ label: s.creativeTitle, href: '/portfolio' }} />
       <div className="mt-14">
         {works.length > 0 ? (
-          <PortfolioGrid works={works} headings={s.creativeSections} matureLabel={s.matureLabel} labels={galleryLabels(s)} />
+          <PortfolioGrid works={works} headings={s.creativeSections} matureLabel={s.matureLabel} kindLabels={s.kindLabels} labels={galleryLabels(s)} />
         ) : studies.length > 0 ? (
           <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
             {studies.map((study) => (
