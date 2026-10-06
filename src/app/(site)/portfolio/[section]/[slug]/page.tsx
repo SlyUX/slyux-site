@@ -67,18 +67,35 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
         their main image is a document cover, not the result.
       */}
       {section !== 'ux' && work.image?.asset && heroSize && (
-        <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6 md:pb-16">
-          <div className="bg-paper border-border flex justify-center overflow-hidden rounded-2xl border p-6 sm:p-10">
-            <Image
-              src={urlFor(work.image).width(Math.min(1800, heroSize.width)).url()}
-              alt={work.image.alt ?? ''}
-              width={heroSize.width}
-              height={heroSize.height}
-              priority
-              sizes="(max-width: 1200px) 100vw, 1152px"
-              className="h-auto max-h-[28rem] w-auto max-w-full object-contain"
-            />
-          </div>
+        // Gutter outside, width inside — the same frame as Section, so the preview lines up with the text.
+        <div className="px-4 pb-12 sm:px-6 md:pb-16">
+          {work.kind === 'brand' ? (
+            // A brand mark sits in generous white space on its card image. From md up,
+            // zoom in ~30%, clipping only that margin; narrower screens show it whole,
+            // since a wide wordmark would clip.
+            <div className="bg-paper border-border relative mx-auto h-72 max-w-6xl overflow-hidden rounded-2xl border sm:h-[28rem]">
+              <Image
+                src={urlFor(work.image).width(Math.min(2000, heroSize.width)).url()}
+                alt={work.image.alt ?? ''}
+                fill
+                priority
+                sizes="(max-width: 1200px) 100vw, 1152px"
+                className="object-contain md:scale-[1.3]"
+              />
+            </div>
+          ) : (
+            <div className="bg-paper border-border mx-auto flex max-w-6xl justify-center overflow-hidden rounded-2xl border p-6 sm:p-10">
+              <Image
+                src={urlFor(work.image).width(Math.min(1800, heroSize.width)).url()}
+                alt={work.image.alt ?? ''}
+                width={heroSize.width}
+                height={heroSize.height}
+                priority
+                sizes="(max-width: 1200px) 100vw, 1152px"
+                className="h-auto max-h-[28rem] w-auto max-w-full object-contain"
+              />
+            </div>
+          )}
         </div>
       )}
       <Section className="pt-0 md:pt-0">
