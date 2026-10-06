@@ -98,7 +98,7 @@ export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudy
 type CardImage = NonNullable<CreativeWorkCard['image']>
 
 /** An image's size after its Studio crop, from the asset ID ("image-<hash>-1600x900-jpg"). */
-function imageSize(image: Pick<CardImage, 'asset' | 'crop'>) {
+export function imageSize(image: Pick<CardImage, 'asset' | 'crop'>) {
   const [w, h] = (image.asset?._ref?.match(/-(\d+)x(\d+)-/)?.slice(1) ?? []).map(Number)
   if (!w || !h) return undefined
   const c = image.crop
