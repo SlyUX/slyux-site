@@ -1,7 +1,7 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
 
 import { slugField } from './slugField'
-import { PORTFOLIO_KINDS } from '../portfolio'
+import { PORTFOLIO_KINDS, sectionOfKind } from '../portfolio'
 
 
 /**
@@ -69,8 +69,10 @@ export default defineType({
         direction: 'horizontal',
       },
       initialValue: 'fill',
+      // Brand and logo pieces always show whole, on white, so the choice only appears for other kinds.
+      hidden: ({ document }) => sectionOfKind(document?.kind as string | undefined) === 'brand',
       description:
-        "Fill crops the image to the card's shape around its focal point (set it with the crop tool on the image). Use Show the whole image for wide logos or banners that mustn't be cut. Transparent images always show whole, on white.",
+        "Fill crops the image to the card's shape around its focal point (set it with the crop tool on the image). Use Show the whole image for banners or covers that mustn't be cut. Transparent images always show whole, on white.",
     }),
     defineField({
       name: 'client',

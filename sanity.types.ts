@@ -395,6 +395,15 @@ export type SiteSettings = {
     graphic?: string;
     logo?: string;
   };
+  kindLabels?: {
+    ux?: string;
+    brand?: string;
+    logo?: string;
+    campaign?: string;
+    graphic?: string;
+    illustration?: string;
+    book?: string;
+  };
   matureLabel?: string;
   resumeTitle?: string;
   resumeIntro?: string;
@@ -676,6 +685,15 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     campaign?: string;
     graphic?: string;
     logo?: string;
+  };
+  kindLabels?: {
+    ux?: string;
+    brand?: string;
+    logo?: string;
+    campaign?: string;
+    graphic?: string;
+    illustration?: string;
+    book?: string;
   };
   matureLabel?: string;
   resumeTitle?: string;

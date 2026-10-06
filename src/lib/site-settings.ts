@@ -65,6 +65,15 @@ const DEFAULTS = {
     graphic: 'Graphic design',
     logo: 'Logos',
   },
+  kindLabels: {
+    ux: 'UX',
+    brand: 'Brand strategy',
+    logo: 'Logo',
+    campaign: 'Campaign',
+    graphic: 'Graphic design',
+    illustration: 'Illustration',
+    book: 'Book',
+  },
   matureLabel: 'Mature content — view off-site',
   resumeTitle: 'Résumé',
   resumeDownloadLabel: 'Download PDF',
@@ -78,6 +87,7 @@ type SectionCopy = { title: string; intro?: string }
 
 export type SiteSettings = Omit<Settings, keyof typeof DEFAULTS> & typeof DEFAULTS & {
   creativeSections: Required<NonNullable<Settings['creativeSections']>>
+  kindLabels: Required<NonNullable<Settings['kindLabels']>>
   portfolioSections: Record<PortfolioSection, SectionCopy>
 }
 
@@ -90,6 +100,13 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
     if (!empty) merged[key] = value
   }
   merged.creativeSections = { ...DEFAULTS.creativeSections, ...(fetched?.creativeSections ?? {}) }
+  // Per-kind card labels: a cleared label falls back to its default.
+  merged.kindLabels = Object.fromEntries(
+    Object.entries(DEFAULTS.kindLabels).map(([kind, label]) => [
+      kind,
+      fetched?.kindLabels?.[kind as keyof typeof DEFAULTS.kindLabels] || label,
+    ]),
+  )
   // Per-section copy: a cleared title falls back to the default; intro is optional.
   merged.portfolioSections = Object.fromEntries(
     PORTFOLIO_SECTIONS.map((key) => {

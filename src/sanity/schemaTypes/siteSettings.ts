@@ -276,6 +276,23 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'kindLabels',
+      title: 'Card labels',
+      type: 'object',
+      group: 'creative',
+      description:
+        'The small label on each portfolio card saying what the piece is. Cards with a full page behind them (a project or case study) show it in color, under an orange top edge.',
+      fields: [
+        defineField({ name: 'ux', title: 'UX screens & prototypes', type: 'string' }),
+        defineField({ name: 'brand', title: 'Brand systems', type: 'string' }),
+        defineField({ name: 'logo', title: 'Logos', type: 'string' }),
+        defineField({ name: 'campaign', title: 'Campaigns', type: 'string' }),
+        defineField({ name: 'graphic', title: 'Graphic design', type: 'string' }),
+        defineField({ name: 'illustration', title: 'Illustration', type: 'string' }),
+        defineField({ name: 'book', title: 'Books & comics', type: 'string' }),
+      ],
+    }),
+    defineField({
       name: 'matureLabel',
       title: 'Mature content label',
       type: 'string',
