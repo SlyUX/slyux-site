@@ -19,6 +19,11 @@ export const PORTFOLIO_SECTION_TITLES: Record<PortfolioSection, string> = {
 
 /** `title` labels the Kind field; `list` names the kind's list in the Studio sidebar. */
 export const PORTFOLIO_KINDS = [
+  { title: 'UX — audit / evaluation', list: 'Audits & evaluations', value: 'audit', section: 'ux' },
+  { title: 'UX — data & analytics', list: 'Data & analytics', value: 'data', section: 'ux' },
+  { title: 'UX — strategy & roadmap', list: 'Strategy & roadmaps', value: 'strategy', section: 'ux' },
+  { title: 'UX — research & insights', list: 'Research & insights', value: 'research', section: 'ux' },
+  { title: 'UX — design system', list: 'Design systems', value: 'designSystem', section: 'ux' },
   { title: 'UX — screens & prototypes', list: 'Screens & prototypes', value: 'ux', section: 'ux' },
   { title: 'Brand — brand system', list: 'Brand systems', value: 'brand', section: 'brand' },
   { title: 'Brand — logo', list: 'Logos', value: 'logo', section: 'brand' },
@@ -33,8 +38,10 @@ export type PortfolioKind = (typeof PORTFOLIO_KINDS)[number]['value']
 /**
  * Kinds shown as projects: every piece a half-width tile linking to its own
  * page, rather than a full-width featured lead above a grid of small tiles.
+ * The UX disciplines are the evidence behind the case studies — documents
+ * and analyses with pages of their own.
  */
-export const PROJECT_KINDS: readonly PortfolioKind[] = ['brand']
+export const PROJECT_KINDS: readonly PortfolioKind[] = ['brand', 'audit', 'data', 'strategy', 'research', 'designSystem']
 
 export const kindsInSection = (section: PortfolioSection): PortfolioKind[] =>
   PORTFOLIO_KINDS.filter((k) => k.section === section).map((k) => k.value)

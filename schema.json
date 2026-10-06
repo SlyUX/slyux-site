@@ -1004,6 +1004,26 @@
           "of": [
             {
               "type": "string",
+              "value": "audit"
+            },
+            {
+              "type": "string",
+              "value": "data"
+            },
+            {
+              "type": "string",
+              "value": "strategy"
+            },
+            {
+              "type": "string",
+              "value": "research"
+            },
+            {
+              "type": "string",
+              "value": "designSystem"
+            },
+            {
+              "type": "string",
               "value": "ux"
             },
             {
@@ -2366,6 +2386,41 @@
         "value": {
           "type": "object",
           "attributes": {
+            "audit": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "data": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "strategy": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "research": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "designSystem": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
             "ux": {
               "type": "objectAttribute",
               "value": {
@@ -2424,6 +2479,41 @@
         "value": {
           "type": "object",
           "attributes": {
+            "audit": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "data": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "strategy": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "research": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "designSystem": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
             "ux": {
               "type": "objectAttribute",
               "value": {
