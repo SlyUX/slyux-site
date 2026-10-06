@@ -182,10 +182,9 @@ export type CreativeWork = {
   title: string;
   slug: Slug;
   kind:
-    | "audit"
     | "data"
+    | "audit"
     | "strategy"
-    | "research"
     | "designSystem"
     | "ux"
     | "brand"
@@ -398,10 +397,9 @@ export type SiteSettings = {
   };
   portfolioViewAll?: string;
   creativeSections?: {
-    audit?: string;
     data?: string;
+    audit?: string;
     strategy?: string;
-    research?: string;
     designSystem?: string;
     ux?: string;
     brand?: string;
@@ -412,10 +410,9 @@ export type SiteSettings = {
     logo?: string;
   };
   kindLabels?: {
-    audit?: string;
     data?: string;
+    audit?: string;
     strategy?: string;
-    research?: string;
     designSystem?: string;
     ux?: string;
     brand?: string;
@@ -699,10 +696,9 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   };
   portfolioViewAll?: string;
   creativeSections?: {
-    audit?: string;
     data?: string;
+    audit?: string;
     strategy?: string;
-    research?: string;
     designSystem?: string;
     ux?: string;
     brand?: string;
@@ -713,10 +709,9 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     logo?: string;
   };
   kindLabels?: {
-    audit?: string;
     data?: string;
+    audit?: string;
     strategy?: string;
-    research?: string;
     designSystem?: string;
     ux?: string;
     brand?: string;
@@ -908,7 +903,6 @@ export type PORTFOLIO_SECTION_QUERY_RESULT = Array<{
     | "graphic"
     | "illustration"
     | "logo"
-    | "research"
     | "strategy"
     | "ux";
   image: ImageWithAlt | null;
@@ -947,7 +941,6 @@ export type PORTFOLIO_FEATURED_QUERY_RESULT = Array<{
     | "graphic"
     | "illustration"
     | "logo"
-    | "research"
     | "strategy"
     | "ux";
   image: ImageWithAlt | null;
@@ -986,7 +979,6 @@ export type CREATIVE_WORK_QUERY_RESULT = {
     | "graphic"
     | "illustration"
     | "logo"
-    | "research"
     | "strategy"
     | "ux";
   image: ImageWithAlt | null;
@@ -1038,7 +1030,6 @@ export type CREATIVE_WORK_PATHS_QUERY_RESULT = Array<{
     | "graphic"
     | "illustration"
     | "logo"
-    | "research"
     | "strategy"
     | "ux";
   slug: string;
