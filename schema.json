@@ -1004,19 +1004,15 @@
           "of": [
             {
               "type": "string",
-              "value": "audit"
-            },
-            {
-              "type": "string",
               "value": "data"
             },
             {
               "type": "string",
-              "value": "strategy"
+              "value": "audit"
             },
             {
               "type": "string",
-              "value": "research"
+              "value": "strategy"
             },
             {
               "type": "string",
@@ -2386,13 +2382,6 @@
         "value": {
           "type": "object",
           "attributes": {
-            "audit": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "string"
-              },
-              "optional": true
-            },
             "data": {
               "type": "objectAttribute",
               "value": {
@@ -2400,14 +2389,14 @@
               },
               "optional": true
             },
-            "strategy": {
+            "audit": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
               "optional": true
             },
-            "research": {
+            "strategy": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
@@ -2479,13 +2468,6 @@
         "value": {
           "type": "object",
           "attributes": {
-            "audit": {
-              "type": "objectAttribute",
-              "value": {
-                "type": "string"
-              },
-              "optional": true
-            },
             "data": {
               "type": "objectAttribute",
               "value": {
@@ -2493,14 +2475,14 @@
               },
               "optional": true
             },
-            "strategy": {
+            "audit": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
               },
               "optional": true
             },
-            "research": {
+            "strategy": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"

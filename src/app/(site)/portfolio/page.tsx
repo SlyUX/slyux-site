@@ -7,6 +7,7 @@ import { CreativeTile, isDeepCard, lightboxItems } from '@/components/content'
 import { Lightbox } from '@/components/lightbox'
 import { PORTFOLIO_SECTION_QUERY, safeFetch } from '@/lib/queries'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
+import { cn } from '@/lib/utils'
 import { PORTFOLIO_KINDS, PORTFOLIO_SECTIONS, sectionOfKind } from '@/sanity/portfolio'
 import type { CreativeWorkCard } from '@/lib/types'
 
@@ -15,8 +16,8 @@ export async function generateMetadata(): Promise<Metadata> {
   return stegaClean({ title: s.creativeTitle, description: s.creativeIntro ?? undefined })
 }
 
-/** How many pieces each section previews on the landing page. */
-const PREVIEW_COUNT = 4
+/** How many pieces each section previews on the landing page: one row. UX cards are wide, three to a row. */
+const previewCount = (section: string) => (section === 'ux' ? 3 : 4)
 
 export default async function PortfolioPage() {
   const [s, works] = await Promise.all([
@@ -36,7 +37,7 @@ export default async function PortfolioPage() {
     return {
       section,
       copy: s.portfolioSections[section],
-      items: [...pieces.filter(isDeepCard), ...pieces.filter((w) => !isDeepCard(w))].slice(0, PREVIEW_COUNT),
+      items: [...pieces.filter(isDeepCard), ...pieces.filter((w) => !isDeepCard(w))].slice(0, previewCount(section)),
     }
   }).filter((entry) => entry.items.length > 0)
 
@@ -64,7 +65,7 @@ export default async function PortfolioPage() {
             </TransitionLink>
           </div>
           <Lightbox items={lightboxItems(items)} labels={labels}>
-            <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-4">
+            <div className={cn('grid gap-x-6 gap-y-10', section === 'ux' ? 'sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-2 md:grid-cols-4')}>
               {items.map((work) => (
                 <CreativeTile key={work._id} work={work} matureLabel={s.matureLabel} enlargeLabel={labels.enlarge} kindLabels={s.kindLabels} headingLevel="h3" />
               ))}

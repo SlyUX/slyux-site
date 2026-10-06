@@ -212,7 +212,11 @@ export function CreativeTile({
     )
   }
 
-  const card = large ? { width: 1400, height: 1050 } : { width: 800, height: 800 }
+  // UX pieces are documents and slides, so their cards are wide (3:2) everywhere;
+  // other cards are 4:3 when large and square in grids.
+  const shape = sectionOfKind(work.kind) === 'ux' ? 'wide' : large ? 'large' : 'square'
+  const card = { wide: { width: 1500, height: 1000 }, large: { width: 1400, height: 1050 }, square: { width: 800, height: 800 } }[shape]
+  const sizes = shape === 'square' ? '(max-width: 768px) 50vw, 25vw' : large ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'
   const size = work.image?.asset ? imageSize(work.image) : undefined
   const whole = sectionOfKind(work.kind) === 'brand' || work.cardFit === 'whole' || work.opaque === false
   let image: React.ReactNode = null
@@ -225,7 +229,7 @@ export function CreativeTile({
           alt={work.image.alt ?? ''}
           width={width}
           height={Math.round((width * size.height) / size.width)}
-          sizes={large ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 25vw'}
+          sizes={sizes}
           className="h-full w-full object-contain p-4"
         />
       )
@@ -240,7 +244,7 @@ export function CreativeTile({
           alt={work.image.alt ?? ''}
           width={width}
           height={height}
-          sizes={large ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 50vw, 25vw'}
+          sizes={sizes}
           className="h-full w-full object-cover"
         />
       )
@@ -253,7 +257,7 @@ export function CreativeTile({
       <div
         className={cn(
           'border-border bg-paper group-hover:border-primary relative overflow-hidden rounded-2xl border transition-colors',
-          large ? 'aspect-[4/3]' : 'aspect-square',
+          { wide: 'aspect-[3/2]', large: 'aspect-[4/3]', square: 'aspect-square' }[shape],
         )}
       >
         {image}
