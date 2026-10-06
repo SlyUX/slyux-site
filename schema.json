@@ -1004,11 +1004,7 @@
           "of": [
             {
               "type": "string",
-              "value": "data"
-            },
-            {
-              "type": "string",
-              "value": "audit"
+              "value": "designSystem"
             },
             {
               "type": "string",
@@ -1016,7 +1012,11 @@
             },
             {
               "type": "string",
-              "value": "designSystem"
+              "value": "audit"
+            },
+            {
+              "type": "string",
+              "value": "data"
             },
             {
               "type": "string",
@@ -2546,6 +2546,20 @@
               "optional": true
             }
           }
+        },
+        "optional": true
+      },
+      "caseStudiesRowHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "caseStudyLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },

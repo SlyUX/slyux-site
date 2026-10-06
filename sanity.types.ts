@@ -182,10 +182,10 @@ export type CreativeWork = {
   title: string;
   slug: Slug;
   kind:
-    | "data"
-    | "audit"
-    | "strategy"
     | "designSystem"
+    | "strategy"
+    | "audit"
+    | "data"
     | "ux"
     | "brand"
     | "logo"
@@ -422,6 +422,8 @@ export type SiteSettings = {
     illustration?: string;
     book?: string;
   };
+  caseStudiesRowHeading?: string;
+  caseStudyLabel?: string;
   matureLabel?: string;
   resumeTitle?: string;
   resumeIntro?: string;
@@ -721,6 +723,8 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     illustration?: string;
     book?: string;
   };
+  caseStudiesRowHeading?: string;
+  caseStudyLabel?: string;
   matureLabel?: string;
   resumeTitle?: string;
   resumeIntro?: string;
