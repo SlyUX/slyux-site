@@ -22,7 +22,8 @@
     --primary on --surface ...............  4.27  large text only (≥3) — big numbers OK
     white on --primary ...................  4.88  (AA)
     --fox on --background ................  3.37  FAILS for text — decorative / large graphics only
-    --fox on --ink .......................  5.12  (AA) — icons/text on the dark hero
+    --fox on --ink .......................  5.12  (AA) — icons/text on the dark hero;
+                                                 also --ink on --fox: project chips on cards
     --ink-foreground on --ink ............ 17.24  (AAA)
     --ink-muted on --ink .................  8.18  (AAA)
     white on --brand .....................  6.25  (AA) — Highlights numbers

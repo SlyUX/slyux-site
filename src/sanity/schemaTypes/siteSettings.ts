@@ -281,7 +281,7 @@ export default defineType({
       type: 'object',
       group: 'creative',
       description:
-        'The small label on each portfolio card saying what the piece is. Cards with a full page behind them (a project or case study) show it in color, under an orange top edge.',
+        'The small label on each portfolio card saying what the piece is. Cards with a full page behind them (a project or case study) show it in orange, under a navy top edge.',
       fields: [
         defineField({ name: 'ux', title: 'UX screens & prototypes', type: 'string' }),
         defineField({ name: 'brand', title: 'Brand systems', type: 'string' }),
