@@ -19,9 +19,9 @@ export const PORTFOLIO_SECTION_TITLES: Record<PortfolioSection, string> = {
 
 /** `title` labels the Kind field; `list` names the kind's list in the Studio sidebar. */
 export const PORTFOLIO_KINDS = [
-  { title: 'UX — data analysis / research', list: 'Data analysis & UX research', value: 'data', section: 'ux' },
+  { title: 'UX — data analysis', list: 'Data analysis', value: 'data', section: 'ux' },
   { title: 'UX — site audit', list: 'Site audits', value: 'audit', section: 'ux' },
-  { title: 'UX — strategy', list: 'Strategy', value: 'strategy', section: 'ux' },
+  { title: 'UX — research & strategy', list: 'Research & strategy', value: 'strategy', section: 'ux' },
   { title: 'UX — design system', list: 'Design systems', value: 'designSystem', section: 'ux' },
   { title: 'UX — screens & prototypes', list: 'Screens & prototypes', value: 'ux', section: 'ux' },
   { title: 'Brand — brand system', list: 'Brand systems', value: 'brand', section: 'brand' },
