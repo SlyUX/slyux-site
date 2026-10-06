@@ -51,7 +51,7 @@ export const CASE_STUDY_SLUGS_QUERY = defineQuery(
 const PDF_DOCUMENT = `_key,title,"file": file.asset->{url,originalFilename},
   pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}`
 
-const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,client,year,credit,summary,externalUrl,mature,featured,
+const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,
   "hasPage": count(body) > 0 || count(documents) > 0,
   "caseStudySlug": caseStudy->slug.current`
 

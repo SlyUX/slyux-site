@@ -11,12 +11,30 @@ import { projectId, dataset, apiVersion } from "./src/sanity/env";
 /** Types that must only ever have one document. See src/sanity/structure.ts. */
 const SINGLETONS = ["siteSettings"];
 
+/**
+ * Templates only the sidebar's lists offer: e.g. "+" in Portfolio → Logos
+ * starts a piece with its kind already set. Kept out of the global menu.
+ */
+const LIST_TEMPLATES = ["creativeWork-kind"];
+
 export default defineConfig({
   basePath: "/studio",
   title: "Sly UX",
   projectId,
   dataset,
-  schema: { types: schemaTypes },
+  schema: {
+    types: schemaTypes,
+    templates: (prev) => [
+      ...prev,
+      {
+        id: "creativeWork-kind",
+        title: "Portfolio piece",
+        schemaType: "creativeWork",
+        parameters: [{ name: "kind", type: "string" }],
+        value: ({ kind }: { kind: string }) => ({ kind }),
+      },
+    ],
+  },
   plugins: [
     structureTool({ structure }),
     // Visual Editing: the live site beside the editor, click any text to edit
@@ -32,7 +50,11 @@ export default defineConfig({
     // the document ID; this stops a second one being made from the + button.
     newDocumentOptions: (prev, { creationContext }) =>
       creationContext.type === "global"
-        ? prev.filter((template) => !SINGLETONS.includes(template.templateId))
+        ? prev.filter(
+            (template) =>
+              !SINGLETONS.includes(template.templateId) &&
+              !LIST_TEMPLATES.includes(template.templateId),
+          )
         : prev,
   },
 });

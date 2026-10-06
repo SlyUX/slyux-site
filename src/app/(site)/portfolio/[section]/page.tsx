@@ -6,7 +6,7 @@ import { PageHeader, Section } from '@/components/ui'
 import { CaseStudyCard } from '@/components/content'
 import { PortfolioGrid } from '@/components/portfolio-grid'
 import { CASE_STUDIES_QUERY, PORTFOLIO_SECTION_QUERY, safeFetch } from '@/lib/queries'
-import { getSiteSettings } from '@/lib/site-settings'
+import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { PORTFOLIO_SECTIONS, isPortfolioSection, kindsInSection } from '@/sanity/portfolio'
 import type { CaseStudyCard as CaseStudyCardData, CreativeWorkCard } from '@/lib/types'
 
@@ -46,7 +46,7 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
       <PageHeader title={copy.title} intro={copy.intro} back={{ label: s.creativeTitle, href: '/portfolio' }} />
       <div className="mt-14">
         {works.length > 0 ? (
-          <PortfolioGrid works={works} headings={s.creativeSections} matureLabel={s.matureLabel} />
+          <PortfolioGrid works={works} headings={s.creativeSections} matureLabel={s.matureLabel} labels={galleryLabels(s)} />
         ) : studies.length > 0 ? (
           <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
             {studies.map((study) => (

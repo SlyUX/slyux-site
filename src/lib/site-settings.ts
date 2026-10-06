@@ -100,6 +100,15 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
   return merged as SiteSettings
 })
 
+/** Gallery and lightbox labels, from Site settings. */
+export const galleryLabels = (s: SiteSettings) => ({
+  fullPage: s.fullPageLabel,
+  enlarge: s.enlargeLabel,
+  close: s.closeLabel,
+  previous: s.previousLabel,
+  next: s.nextLabel,
+})
+
 /** The PDF badge template and reader labels, from Site settings. */
 export const documentSettings = (s: SiteSettings) => ({
   badge: s.pdfBadge,

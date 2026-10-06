@@ -64,7 +64,7 @@ export function DocumentGrid({ docs, labels }: { docs: ReturnType<typeof readabl
             triggerLabel={`${doc.title}: ${doc.badge}`}
             className="group block w-full text-left"
           >
-            <span className="border-border group-hover:border-primary relative block overflow-hidden rounded-xl border bg-white transition-colors">
+            <span className="border-border group-hover:border-primary relative block overflow-hidden rounded-xl border bg-paper transition-colors">
               <Image
                 src={urlFor(doc.cover!).width(1100).url()}
                 alt=""

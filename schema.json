@@ -1042,6 +1042,23 @@
         },
         "optional": true
       },
+      "cardFit": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "fill"
+            },
+            {
+              "type": "string",
+              "value": "whole"
+            }
+          ]
+        },
+        "optional": true
+      },
       "client": {
         "type": "objectAttribute",
         "value": {
