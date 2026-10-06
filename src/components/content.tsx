@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { PortableText, toPlainText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock, TypedObject } from '@portabletext/types'
-import { Maximize2 } from 'lucide-react'
+import { ExternalLink, FolderOpen, Maximize2 } from 'lucide-react'
 
 import { TransitionLink } from '@/components/grid-nav'
 import { LightboxButton, type LightboxItem } from '@/components/lightbox'
@@ -179,6 +179,7 @@ export function CaseStudyTile({
         )}
         <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />
         {label && <KindChip label={label} deep className="absolute top-3 left-3 shadow-sm" />}
+        <CardAction action="page" />
       </div>
       <Heading className="mt-3 font-semibold">
         <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
@@ -192,6 +193,24 @@ export function CaseStudyTile({
 
 /** Cards with a full page behind them: a project page or a case study. */
 export const isDeepCard = (work: CreativeWorkCard) => !!cardHref(work)?.startsWith('/')
+
+/**
+ * What clicking a card does, in its thumbnail's top-right corner (across from
+ * the chip): a folder opens a project page or case study, diverging arrows
+ * open the artwork larger, an outward arrow opens another site. Decorative —
+ * the card's link or button already says where it goes.
+ */
+function CardAction({ action }: { action: 'page' | 'enlarge' | 'external' }) {
+  const Icon = { page: FolderOpen, enlarge: Maximize2, external: ExternalLink }[action]
+  return (
+    <span
+      aria-hidden
+      className="bg-background/90 text-foreground absolute top-3 right-3 flex size-8 items-center justify-center rounded-full shadow-md"
+    >
+      <Icon className="size-4" />
+    </span>
+  )
+}
 
 /** The label naming what a piece is; in color on cards with a full page behind them. */
 function KindChip({ label, deep, className }: { label: string; deep: boolean; className?: string }) {
@@ -306,14 +325,7 @@ export function CreativeTile({
         {image}
         {deep && <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />}
         {kindLabel && <KindChip label={kindLabel} deep={deep} className="absolute top-3 left-3 shadow-sm" />}
-        {!href && image && (
-          <span
-            aria-hidden
-            className="bg-background/90 text-foreground absolute top-3 right-3 flex size-8 items-center justify-center rounded-full opacity-0 shadow-md transition-opacity group-focus-within:opacity-100 group-hover:opacity-100"
-          >
-            <Maximize2 className="size-4" />
-          </span>
-        )}
+        {href ? <CardAction action={deep ? 'page' : 'external'} /> : image && <CardAction action="enlarge" />}
       </div>
       <Heading className="mt-3 font-semibold">
         {href ? (

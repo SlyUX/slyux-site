@@ -51,8 +51,7 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
         content: (
           <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 lg:grid-cols-3">
             {studies.map((study) => (
-              // Under the row heading when artifact rows follow; the row heading hides when it's alone.
-              <CaseStudyTile key={study._id} study={study} headingLevel={works.length > 0 ? 'h3' : 'h2'} />
+              <CaseStudyTile key={study._id} study={study} />
             ))}
           </div>
         ),
@@ -65,7 +64,14 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
         <PageHeader title={copy.title} intro={copy.intro} back={{ label: s.creativeTitle, href: '/portfolio' }} />
       </Section>
       {works.length > 0 || lead ? (
-        <PortfolioGrid works={works} headings={s.creativeSections} matureLabel={s.matureLabel} labels={galleryLabels(s)} lead={lead} />
+        <PortfolioGrid
+          works={works}
+          headings={s.creativeSections}
+          matureLabel={s.matureLabel}
+          labels={galleryLabels(s)}
+          lead={lead}
+          pageTitle={copy.title}
+        />
       ) : (
         <Section className="pt-0 md:pt-0">
           <p className="text-muted-foreground">{s.workEmpty}</p>
