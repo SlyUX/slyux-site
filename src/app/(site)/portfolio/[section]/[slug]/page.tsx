@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { TransitionLink } from '@/components/grid-nav'
 import { PageHeader, Section } from '@/components/ui'
-import { RichText, WorkStory } from '@/components/content'
+import { imageSize, RichText, WorkStory } from '@/components/content'
 import { DocumentGrid, readableDocuments } from '@/components/documents'
 import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib/queries'
 import { documentSettings, getSiteSettings } from '@/lib/site-settings'
@@ -42,13 +42,13 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
   const outbound = externalHref(work.externalUrl)
   const docSettings = documentSettings(s)
   const docs = readableDocuments(work.documents, docSettings.badge)
-  // A UX piece's main image is the cover on its card (a document cover or a
-  // typographic card); its page carries its own figures, so only "More images" show.
-  const cover = section === 'ux' ? [] : [work.image]
-  const images = [...cover, ...(work.gallery ?? [])].flatMap((img) =>
+  // The main image leads the page as its preview (or, for a UX piece, is only
+  // the cover on its card), so the grid below the story shows "More images" only.
+  const images = (work.gallery ?? []).flatMap((img) =>
     img?.asset ? [{ ...img, ref: img.asset._ref }] : [],
   )
   const hasLinks = !!(work.caseStudy?.slug || outbound)
+  const heroSize = work.image?.asset ? imageSize(work.image) : undefined
 
   return (
     <article>
@@ -61,6 +61,26 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
         />
         {work.credit && <p className="text-muted-foreground mt-4 text-sm">{work.credit}</p>}
       </Section>
+      {/*
+        The improved state up front: the piece's main image, whole on white and
+        capped in height so a logo never fills the screen. UX pieces skip it;
+        their main image is a document cover, not the result.
+      */}
+      {section !== 'ux' && work.image?.asset && heroSize && (
+        <div className="mx-auto max-w-6xl px-4 pb-12 sm:px-6 md:pb-16">
+          <div className="bg-paper border-border flex justify-center overflow-hidden rounded-2xl border p-6 sm:p-10">
+            <Image
+              src={urlFor(work.image).width(Math.min(1800, heroSize.width)).url()}
+              alt={work.image.alt ?? ''}
+              width={heroSize.width}
+              height={heroSize.height}
+              priority
+              sizes="(max-width: 1200px) 100vw, 1152px"
+              className="h-auto max-h-[28rem] w-auto max-w-full object-contain"
+            />
+          </div>
+        </div>
+      )}
       <Section className="pt-0 md:pt-0">
         <WorkStory
           body={work.body}

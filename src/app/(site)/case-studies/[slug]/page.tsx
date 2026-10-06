@@ -63,18 +63,24 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
         )}
       </Section>
 
-      {/* The card image repeats on the page only when there's no hero background. */}
-      {study.heroImage?.asset && !heroBg && (
+      {/*
+        The improved state up front: the card image as a preview right after the
+        introduction, so the outcome lands before the story explains it. Framed
+        16:9 from the top-left, where screenshots start reading; the full screens
+        are in the galleries below.
+      */}
+      {study.heroImage?.asset && (
         <div className="mx-auto max-w-6xl px-4 sm:px-6">
-          <Image
-            src={urlFor(study.heroImage).width(2000).url()}
-            alt={study.heroImage.alt ?? ''}
-            width={2000}
-            height={1250}
-            priority
-            sizes="(max-width: 1200px) 100vw, 1152px"
-            className="h-auto w-full rounded-2xl"
-          />
+          <div className="border-border relative aspect-[16/9] overflow-hidden rounded-2xl border">
+            <Image
+              src={urlFor(study.heroImage).width(2304).url()}
+              alt={study.heroImage.alt ?? ''}
+              fill
+              priority
+              sizes="(max-width: 1200px) 100vw, 1152px"
+              className="object-cover object-left-top"
+            />
+          </div>
         </div>
       )}
 
