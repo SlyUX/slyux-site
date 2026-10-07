@@ -103,7 +103,7 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
           body={work.body}
           extra={
             docs.length
-              ? [{ key: 'documents', heading: s.documentsHeading, content: <DocumentGrid docs={docs} labels={docSettings.labels} /> }]
+              ? [{ key: 'documents', heading: work.documentsHeading || s.documentsHeading, content: <DocumentGrid docs={docs} labels={docSettings.labels} /> }]
               : undefined
           }
           railHeading={s.howItStartedHeading}

@@ -24,8 +24,8 @@ export default defineType({
       title: 'PDF',
       type: 'file',
       options: { accept: 'application/pdf' },
-      description: 'The original, offered as a download from the reader.',
-      validation: (rule) => rule.required(),
+      description:
+        "Optional. The original, offered as a download from the reader. Leave it empty when the pages shouldn't be downloadable, e.g. a client's published book.",
     }),
     defineField({
       name: 'pages',
