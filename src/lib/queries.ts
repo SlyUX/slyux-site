@@ -22,6 +22,10 @@ export async function safeFetch<T>(
   }
 }
 
+const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,
+  "hasPage": count(body) > 0 || count(documents) > 0,
+  "caseStudySlug": caseStudy->slug.current`
+
 const CASE_STUDY_CARD = `_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics`
 
 export const SITE_SETTINGS_QUERY = defineQuery(`*[_type=="siteSettings" && _id=="siteSettings"][0]{
@@ -31,7 +35,9 @@ export const SITE_SETTINGS_QUERY = defineQuery(`*[_type=="siteSettings" && _id==
   "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},
   "heroVideoType": heroVideo.asset->mimeType,
   "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}},
-  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}}
+  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}},
+  "portfolioUxCaseStudy": portfolioUxCaseStudy->{${CASE_STUDY_CARD}},
+  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{${PORTFOLIO_CARD}}
 }`)
 
 export const CASE_STUDIES_QUERY = defineQuery(
@@ -52,9 +58,6 @@ export const CASE_STUDY_SLUGS_QUERY = defineQuery(
 const PDF_DOCUMENT = `_key,title,"file": file.asset->{url,originalFilename},
   pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}`
 
-const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,
-  "hasPage": count(body) > 0 || count(documents) > 0,
-  "caseStudySlug": caseStudy->slug.current`
 
 /** All pieces in one portfolio section. `$kinds` comes from `kindsInSection()`. */
 export const PORTFOLIO_SECTION_QUERY = defineQuery(
