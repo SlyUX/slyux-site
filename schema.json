@@ -351,7 +351,7 @@
               }
             }
           },
-          "optional": false
+          "optional": true
         },
         "pages": {
           "type": "objectAttribute",
@@ -1144,6 +1144,13 @@
               "name": "pdfDocument"
             }
           }
+        },
+        "optional": true
+      },
+      "documentsHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
         },
         "optional": true
       },

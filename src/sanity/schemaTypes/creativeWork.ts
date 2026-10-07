@@ -122,6 +122,13 @@ export default defineType({
         'Thumbnails with a PDF badge that open a page-by-page reader, shown on the piece\'s page instead of the images above. Adding one gives the piece its own page.',
     }),
     defineField({
+      name: 'documentsHeading',
+      group: 'page',
+      title: 'Documents heading',
+      type: 'string',
+      description: 'Optional. Heads the section of PDF documents on this page, e.g. "The comic". Empty uses the one in Site settings.',
+    }),
+    defineField({
       name: 'howItStarted',
       group: 'page',
       title: 'How it started',
