@@ -136,7 +136,7 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
                 height={1050}
                 priority={i === 0}
                 sizes="(max-width: 768px) 100vw, 50vw"
-                className="bg-surface h-auto w-full rounded-2xl"
+                className="bg-paper h-auto w-full rounded-2xl"
               />
             ))}
           </div>
