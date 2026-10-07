@@ -13,6 +13,8 @@ const nextConfig: NextConfig = {
       { source: "/work", destination: "/case-studies", permanent: true },
       { source: "/work/:slug", destination: "/case-studies/:slug", permanent: true },
       { source: "/creative", destination: "/portfolio", permanent: true },
+      // The publishing case study, refocused on one site and renamed.
+      { source: "/case-studies/publishing", destination: "/case-studies/jesus-calling", permanent: true },
     ];
   },
   images: {
