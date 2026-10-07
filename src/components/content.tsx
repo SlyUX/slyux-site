@@ -381,17 +381,17 @@ const richTextComponents: PortableTextComponents = {
       const [w, h] = (value.asset._ref?.match(/-(\d+)x(\d+)-/)?.slice(1) ?? ['1600', '1000']).map(Number)
       const width = Math.min(1600, w)
       return (
-        <figure className="my-4">
+        // The figure is only as wide as the image, so the caption centers on the image, not the column.
+        <figure className="my-4" style={{ maxWidth: w }}>
           <Image
             src={urlFor(value).width(width).url()}
             alt={value.alt ?? ''}
             width={width}
             height={Math.round((width * h) / w)}
             sizes={`(max-width: 768px) 100vw, ${Math.min(768, w)}px`}
-            style={{ maxWidth: w }}
             className="bg-paper h-auto w-full rounded-xl"
           />
-          {value.caption && <figcaption className="text-muted-foreground mt-2 text-sm">{value.caption}</figcaption>}
+          {value.caption && <figcaption className="text-caption mt-2 text-center text-sm">{value.caption}</figcaption>}
         </figure>
       )
     },

@@ -17,6 +17,8 @@
     --foreground on --paper ............. 16.83  (AAA) — cards and document pages
     --muted-foreground on --background ...  6.82  (AA)
     --muted-foreground on --surface ......  6.24  (AA)
+    --caption on --background ............  9.48  (AAA) — image captions
+    --caption on --surface ...............  8.67  (AAA) — captions in the "How it started" rail
     --heading on --background ............ 10.31  (AAA) — page titles
     --primary on --background ............  4.67  (AA)
     --primary on --surface ...............  4.27  large text only (≥3) — big numbers OK
@@ -40,6 +42,7 @@
   --surface: #eef0f3;
   --paper: #ffffff; /* white ground for artwork: cards, story images, galleries, document pages */
   --muted-foreground: #52595e;
+  --caption: #3d4449; /* dark gray: between --muted-foreground and --foreground */
   --border: #dbdee2;
   --primary: #cf3c09;
   --primary-foreground: #ffffff;
@@ -66,6 +69,7 @@
   --color-surface: var(--surface);
   --color-paper: var(--paper);
   --color-muted-foreground: var(--muted-foreground);
+  --color-caption: var(--caption);
   --color-border: var(--border);
   --color-primary: var(--primary);
   --color-primary-foreground: var(--primary-foreground);
