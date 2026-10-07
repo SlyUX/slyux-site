@@ -54,7 +54,7 @@ export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudy
   const lead = study.metrics?.[0]
   return (
     <article className="group relative flex flex-col">
-      <div className="bg-surface relative aspect-[4/3] overflow-hidden rounded-2xl">
+      <div className="bg-paper relative aspect-[4/3] overflow-hidden rounded-2xl">
         {study.heroImage?.asset ? (
           <Image
             // Uncropped at the source; the frame crops from the top-left, where
@@ -69,7 +69,7 @@ export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudy
           // No image yet: a faint blueprint grid with the title's initial in navy.
           <div
             aria-hidden
-            className="text-heading/20 font-display flex h-full items-center justify-center blueprint-grid text-7xl"
+            className="bg-surface text-heading/20 font-display flex h-full items-center justify-center blueprint-grid text-7xl"
           >
             {study.title.charAt(0)}
           </div>
@@ -389,7 +389,7 @@ const richTextComponents: PortableTextComponents = {
             height={Math.round((width * h) / w)}
             sizes={`(max-width: 768px) 100vw, ${Math.min(768, w)}px`}
             style={{ maxWidth: w }}
-            className="h-auto w-full rounded-xl"
+            className="bg-paper h-auto w-full rounded-xl"
           />
           {value.caption && <figcaption className="text-muted-foreground mt-2 text-sm">{value.caption}</figcaption>}
         </figure>
