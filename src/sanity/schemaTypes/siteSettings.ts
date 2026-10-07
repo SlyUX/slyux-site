@@ -1,5 +1,7 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
 
+import { kindsInSection } from '../portfolio'
+
 /**
  * Every reader-facing string that isn't part of a case study, creative piece
  * or page. A singleton pinned to the ID `siteSettings` by
@@ -310,6 +312,32 @@ export default defineType({
       validation: (rule) => rule.max(3).unique(),
     }),
     defineField({
+      name: 'portfolioUxCaseStudy',
+      title: 'Portfolio page, UX row: case study',
+      type: 'reference',
+      to: [{ type: 'caseStudy' }],
+      options: { disableNew: true },
+      group: 'creative',
+      description: 'The first card in the UX row on the Portfolio page. Empty uses the first case study on the UX page.',
+    }),
+    defineField({
+      name: 'portfolioUxPieces',
+      title: 'Portfolio page, UX row: two more cards',
+      type: 'array',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{ type: 'creativeWork' }],
+          // Only pieces from the UX section can be picked.
+          options: { filter: 'kind in $kinds && mature != true', filterParams: { kinds: kindsInSection('ux') }, disableNew: true },
+        }),
+      ],
+      group: 'creative',
+      description:
+        'The second and third cards. Empty, or only one picked, fills in from the first piece in each row of the UX page, in that order (Design systems first).',
+      validation: (rule) => rule.max(2).unique(),
+    }),
+    defineField({
       name: 'caseStudiesRowHeading',
       title: 'Case studies row heading',
       type: 'string',
@@ -321,7 +349,7 @@ export default defineType({
       title: '"Case study" card label',
       type: 'string',
       group: 'creative',
-      description: 'The chip on case study cards in that row.',
+      description: 'The chip on the case study card in the UX row of the Portfolio page.',
     }),
     defineField({
       name: 'matureLabel',

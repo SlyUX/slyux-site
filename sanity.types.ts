@@ -235,62 +235,11 @@ export type SanityImageHotspot = {
   width: number;
 };
 
-export type CaseStudy = {
-  _id: string;
-  _type: "caseStudy";
-  _createdAt: string;
-  _updatedAt: string;
-  _rev: string;
-  title: string;
-  slug: Slug;
-  summary: string;
-  organization?: string;
-  role?: string;
-  years?: string;
-  skills?: Array<string>;
-  heroImage?: ImageWithAlt;
-  heroBackground?: {
-    asset?: SanityImageAssetReference;
-    media?: unknown;
-    hotspot?: SanityImageHotspot;
-    crop?: SanityImageCrop;
-    _type: "image";
-  };
-  metrics?: Array<
-    {
-      _key: string;
-    } & Metric
-  >;
-  body?: RichText;
-  personasIntro?: string;
-  personas?: Array<
-    {
-      _key: string;
-    } & Persona
-  >;
-  galleries?: Array<{
-    heading: string;
-    intro?: string;
-    placement?: "before" | "after";
-    layout?: "phone" | "wide";
-    images?: Array<
-      | ({
-          _key: string;
-        } & ImageWithAlt)
-      | ({
-          _key: string;
-        } & GalleryScreen)
-    >;
-    _type: "gallery";
-    _key: string;
-  }>;
-  links?: Array<
-    {
-      _key: string;
-    } & Link
-  >;
-  order?: number;
-  seoDescription?: string;
+export type CreativeWorkReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "creativeWork";
 };
 
 export type SiteSettings = {
@@ -428,6 +377,12 @@ export type SiteSettings = {
       _key: string;
     } & CaseStudyReference
   >;
+  portfolioUxCaseStudy?: CaseStudyReference;
+  portfolioUxPieces?: Array<
+    {
+      _key: string;
+    } & CreativeWorkReference
+  >;
   caseStudiesRowHeading?: string;
   caseStudyLabel?: string;
   matureLabel?: string;
@@ -458,6 +413,64 @@ export type SiteSettings = {
     _type: "inquiryType";
     _key: string;
   }>;
+};
+
+export type CaseStudy = {
+  _id: string;
+  _type: "caseStudy";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  slug: Slug;
+  summary: string;
+  organization?: string;
+  role?: string;
+  years?: string;
+  skills?: Array<string>;
+  heroImage?: ImageWithAlt;
+  heroBackground?: {
+    asset?: SanityImageAssetReference;
+    media?: unknown;
+    hotspot?: SanityImageHotspot;
+    crop?: SanityImageCrop;
+    _type: "image";
+  };
+  metrics?: Array<
+    {
+      _key: string;
+    } & Metric
+  >;
+  body?: RichText;
+  personasIntro?: string;
+  personas?: Array<
+    {
+      _key: string;
+    } & Persona
+  >;
+  galleries?: Array<{
+    heading: string;
+    intro?: string;
+    placement?: "before" | "after";
+    layout?: "phone" | "wide";
+    images?: Array<
+      | ({
+          _key: string;
+        } & ImageWithAlt)
+      | ({
+          _key: string;
+        } & GalleryScreen)
+    >;
+    _type: "gallery";
+    _key: string;
+  }>;
+  links?: Array<
+    {
+      _key: string;
+    } & Link
+  >;
+  order?: number;
+  seoDescription?: string;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -574,8 +587,9 @@ export type AllSanitySchemaTypes =
   | CreativeWork
   | SanityImageCrop
   | SanityImageHotspot
-  | CaseStudy
+  | CreativeWorkReference
   | SiteSettings
+  | CaseStudy
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -587,7 +601,7 @@ export type AllSanitySchemaTypes =
 
 // Source: src/lib/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_type=="siteSettings" && _id=="siteSettings"][0]{  ...,  "resumePdfUrl": resumePdf.asset->url,  "heroVideoUrl": heroVideo.asset->url,  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},  "heroVideoType": heroVideo.asset->mimeType,  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}}
+// Query: *[_type=="siteSettings" && _id=="siteSettings"][0]{  ...,  "resumePdfUrl": resumePdf.asset->url,  "heroVideoUrl": heroVideo.asset->url,  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},  "heroVideoType": heroVideo.asset->mimeType,  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}}
 export type SITE_SETTINGS_QUERY_RESULT = {
   _id: "siteSettings";
   _type: "siteSettings";
@@ -744,6 +758,56 @@ export type SITE_SETTINGS_QUERY_RESULT = {
         _key: string;
       } & Metric
     > | null;
+  }> | null;
+  portfolioUxCaseStudy: {
+    _id: string;
+    title: string;
+    slug: string;
+    summary: string;
+    organization: string | null;
+    role: string | null;
+    years: string | null;
+    skills: Array<string> | null;
+    heroImage: ImageWithAlt | null;
+    metrics: Array<
+      {
+        _key: string;
+      } & Metric
+    > | null;
+  } | null;
+  portfolioUxPieces: Array<{
+    _id: string;
+    title: string;
+    slug: string;
+    kind:
+      | "audit"
+      | "book"
+      | "brand"
+      | "campaign"
+      | "data"
+      | "designSystem"
+      | "graphic"
+      | "illustration"
+      | "logo"
+      | "strategy"
+      | "ux";
+    image: ImageWithAlt | null;
+    cardFit: "fill" | "whole" | null;
+    opaque: boolean | null;
+    gallery: Array<
+      {
+        _key: string;
+      } & ImageWithAlt
+    > | null;
+    client: string | null;
+    year: string | null;
+    credit: string | null;
+    summary: string | null;
+    externalUrl: string | null;
+    mature: boolean | null;
+    featured: boolean | null;
+    hasPage: boolean | true | null;
+    caseStudySlug: string | null;
   }> | null;
   caseStudiesRowHeading?: string;
   caseStudyLabel?: string;
@@ -1101,7 +1165,7 @@ export type EXPERIENCE_QUERY_RESULT = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "resumePdfUrl": resumePdf.asset->url,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}\n}': SITE_SETTINGS_QUERY_RESULT;
+    '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "resumePdfUrl": resumePdf.asset->url,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}\n}': SITE_SETTINGS_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}': CASE_STUDIES_QUERY_RESULT;
     '*[_type=="caseStudy" && slug.current==$slug][0]{\n  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,personasIntro,\n  personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},\n  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}\n}': CASE_STUDY_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)].slug.current': CASE_STUDY_SLUGS_QUERY_RESULT;
