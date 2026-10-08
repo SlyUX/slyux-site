@@ -156,14 +156,18 @@ export function lightboxItems(works: CreativeWorkCard[]): LightboxItem[] {
 export function CaseStudyTile({
   study,
   label,
+  details = false,
   headingLevel: Heading = 'h3',
 }: {
   study: CaseStudyCardData
   /** The chip text; omit where a heading already says "Case studies". */
   label?: string
+  /** Two to a row on the Case Studies page: a larger title, the summary (three lines at most), and the lead metric. */
+  details?: boolean
   headingLevel?: 'h2' | 'h3'
 }) {
   const meta = [study.organization, study.years].filter(Boolean).join(' · ')
+  const lead = details ? study.metrics?.[0] : undefined
   return (
     <article className="group relative flex flex-col">
       <div className="border-border bg-paper group-hover:border-primary relative aspect-[3/2] overflow-hidden rounded-2xl border transition-colors">
@@ -173,7 +177,7 @@ export function CaseStudyTile({
             src={urlFor(study.heroImage).width(1100).url()}
             alt={study.heroImage.alt ?? ''}
             fill
-            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            sizes={details ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw'}
             className="object-cover object-left-top"
           />
         )}
@@ -181,19 +185,26 @@ export function CaseStudyTile({
         {label && <KindChip label={label} deep className="absolute top-3 left-3 shadow-sm" />}
         <CardAction action="page" />
       </div>
-      <Heading className="mt-3 font-semibold">
+      <Heading className={cn('font-semibold', details ? 'mt-4 text-xl' : 'mt-3')}>
         <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
           {study.title}
         </TransitionLink>
       </Heading>
       {meta && <p className="text-muted-foreground text-sm">{meta}</p>}
+      {details && study.summary && <p className="text-muted-foreground mt-2 line-clamp-3 text-sm leading-relaxed">{study.summary}</p>}
+      {lead && (
+        <p className="mt-2 text-sm font-semibold">
+          <span className="text-primary">{lead.value}</span> {lead.label}
+        </p>
+      )}
     </article>
   )
 }
 
 /**
- * One case study as a row on the Case Studies page: the thumbnail beside its
- * summary, so the text reads as a dek instead of a paragraph under a card.
+ * One case study as a row in the Case Studies page's featured band: the
+ * thumbnail beside its summary, so the text reads as a dek. Its title sits a
+ * step below the band heading.
  * `flip` puts the thumbnail on the right; the page alternates it down the rows.
  * Phones stack the thumbnail above the text.
  */
@@ -239,7 +250,7 @@ export function CaseStudyRow({
       </div>
       <div className="flex flex-col gap-2">
         {meta && <p className="text-muted-foreground text-sm">{meta}</p>}
-        <Heading className="font-display text-2xl font-semibold md:text-3xl">
+        <Heading className="font-display text-2xl font-semibold">
           <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
             {study.title}
           </TransitionLink>
