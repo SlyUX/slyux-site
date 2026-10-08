@@ -143,7 +143,7 @@ export function CaseStudyTile({
   details?: boolean
   /** Under the title: the organization and years, or just the organization (the home page). */
   meta?: 'full' | 'client'
-  headingLevel?: 'h2' | 'h3'
+  headingLevel?: 'h2' | 'h3' | 'h4'
 }) {
   const meta = (metaShown === 'client' ? [study.organization] : [study.organization, study.years]).filter(Boolean).join(' · ')
   const lead = details ? study.metrics?.[0] : undefined
@@ -196,7 +196,7 @@ export function CaseStudyRow({
   study: CaseStudyCardData
   flip?: boolean
   priority?: boolean
-  headingLevel?: 'h2' | 'h3'
+  headingLevel?: 'h2' | 'h3' | 'h4'
 }) {
   const meta = [study.organization, study.years].filter(Boolean).join(' · ')
   const lead = study.metrics?.[0]
@@ -323,7 +323,7 @@ export function CreativeTile({
   large?: boolean
   /** A row's featured lead: the image beside its summary, like the Case Studies featured row. */
   feature?: boolean
-  headingLevel?: 'h2' | 'h3'
+  headingLevel?: 'h2' | 'h3' | 'h4'
 }) {
   const outbound = externalHref(work.externalUrl)
   const href = cardHref(work)

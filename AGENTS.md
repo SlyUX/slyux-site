@@ -20,7 +20,7 @@ Stephen Fox's portfolio. Primary audience: hiring managers for director/lead UX/
 
 ## Rules (adapted from ND Riot's AGENTS.md)
 1. **Verify APIs** in `node_modules/next/dist/docs/` or Context7 before use — never from memory.
-2. **Content is Sanity's.** No display copy hardcoded in components; defaults live only in `src/lib/site-settings.ts` and each needs a matching schema field. Exceptions (a11y text) get a comment.
+2. **Content is Sanity's.** No display copy hardcoded in components; defaults live only in `src/lib/site-settings.ts` and each needs a matching schema field. Exceptions (a11y text) get a comment. The one page-sized exception is `/styleguide`: it documents the code, so its text lives in `src/app/(site)/styleguide/page.tsx` beside what it describes. When you add or change a token, component, or rule, update the styleguide in the same commit.
 3. **Generated types only.** `npm run typegen` (runs on prebuild). Wrap queries in `defineQuery()`; alias results in `src/lib/types.ts`. GROQ returns `null` for absent fields.
 4. **All fetches via `safeFetch()`** with a fallback. Every list needs an empty state.
 5. **Tokens only** — no raw hex or palette classes in components. New color pairs must clear WCAG AA; record the ratio in `globals.css`. Palette is PROVISIONAL pending art direction.
