@@ -203,17 +203,21 @@ export function ViewerStage({
   }
   const direction = leaving === null ? undefined : index > leaving ? 'next' : 'prev'
 
+  // One column exactly as wide as the stage (minmax(0, 1fr), not auto), so an
+  // item can never grow it: an image's "no wider than its container" limit then
+  // measures against the screen, not against the image itself. Each item
+  // centers its content within that width.
   return (
-    <div className={cn('grid justify-items-center', className)}>
+    <div className={cn('grid w-full grid-cols-[minmax(0,1fr)]', className)}>
       {leaving !== null && (
-        <div key={`out-${leaving}`} aria-hidden className="viewer-leaving [grid-area:1/1]">
+        <div key={`out-${leaving}`} aria-hidden className="viewer-leaving flex min-w-0 items-start justify-center [grid-area:1/1]">
           {render(leaving, true)}
         </div>
       )}
       <div
         key={`in-${index}`}
         onAnimationEnd={(e) => e.target === e.currentTarget && setLeaving(null)}
-        className={cn('relative [grid-area:1/1]', direction && `viewer-blind-${direction}`)}
+        className={cn('relative flex min-w-0 items-start justify-center [grid-area:1/1]', direction && `viewer-blind-${direction}`)}
       >
         {render(index, false)}
       </div>
