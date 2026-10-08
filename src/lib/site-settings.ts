@@ -88,6 +88,7 @@ const DEFAULTS = {
     book: 'Book',
   },
   caseStudiesRowHeading: 'Case studies',
+  portfolioFeaturedHeading: 'Featured',
   caseStudyLabel: 'Case study',
   matureLabel: 'Mature content — view off-site',
   resumeTitle: 'Résumé',

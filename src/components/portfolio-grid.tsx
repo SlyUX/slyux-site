@@ -1,7 +1,7 @@
 import { CreativeTile, lightboxItems } from '@/components/content'
 import { Lightbox } from '@/components/lightbox'
 import { Section } from '@/components/ui'
-import { PORTFOLIO_KINDS, PROJECT_KINDS } from '@/sanity/portfolio'
+import { PORTFOLIO_KINDS, PROJECT_KINDS, type PortfolioKind } from '@/sanity/portfolio'
 import type { CreativeWorkCard } from '@/lib/types'
 import type { galleryLabels, SiteSettings } from '@/lib/site-settings'
 
@@ -13,8 +13,8 @@ type Row = { key: string; heading: string; content: React.ReactNode; action?: Re
  * starting on the surface tone, and each carries its heading, unless a lone
  * row's heading would only repeat the page title (an "Illustration" row alone
  * on the Illustration page). The headings name the kind, so the cards here
- * carry no kind chips. A featured piece leads its group as a row, its image
- * beside its summary, like the Case Studies featured row.
+ * carry no kind chips. Featured pieces lead the page in a band of their own,
+ * each a row with its image beside its summary, like the Case Studies page.
  */
 export function PortfolioGrid({
   works,
@@ -23,6 +23,7 @@ export function PortfolioGrid({
   labels,
   lead,
   pageTitle,
+  featuredHeading,
 }: {
   works: CreativeWorkCard[]
   headings: SiteSettings['creativeSections']
@@ -32,14 +33,21 @@ export function PortfolioGrid({
   lead?: Row
   /** The page's own title, so a row heading never just repeats it. */
   pageTitle: string
+  /** Heads the band of featured pieces at the top of the page. */
+  featuredHeading: string
 }) {
+  // Featured pieces lead the page in a band of their own, each a row like the
+  // Case Studies featured row, and leave their kind's row. Projects (brand
+  // systems, UX pieces) sit side by side as equals, featured or not.
+  const isFeatured = (w: CreativeWorkCard) => !!w.featured && !w.mature && !PROJECT_KINDS.includes(w.kind as PortfolioKind)
+  const featured = works.filter(isFeatured)
   const groups = PORTFOLIO_KINDS.map((kind) => ({
     kind: kind.value,
     heading: headings[kind.value],
-    items: works.filter((w) => w.kind === kind.value),
+    items: works.filter((w) => w.kind === kind.value && !isFeatured(w)),
   })).filter((g) => g.items.length > 0)
 
-  const rowCount = groups.length + (lead ? 1 : 0)
+  const rowCount = groups.length + (lead ? 1 : 0) + (featured.length ? 1 : 0)
   const showHeading = (heading: string) => rowCount > 1 || heading.trim().toLowerCase() !== pageTitle.trim().toLowerCase()
   const tile = (work: CreativeWorkCard, heading: string, shape?: 'large' | 'feature') => (
     <CreativeTile
@@ -55,35 +63,29 @@ export function PortfolioGrid({
 
   const rows: Row[] = [
     ...(lead ? [lead] : []),
-    ...groups.map((group) => {
-      const [first, ...rest] = group.items
-      // Projects (brand systems, UX pieces) sit side by side as equals, featured or not.
-      if (PROJECT_KINDS.includes(group.kind)) {
-        return {
-          key: group.kind,
-          heading: group.heading,
-          content: <div className="grid gap-x-6 gap-y-10 md:grid-cols-2">{group.items.map((work) => tile(work, group.heading, 'large'))}</div>,
-        }
-      }
-      const hasLead = first.featured && !first.mature
-      return {
-        key: group.kind,
-        heading: group.heading,
-        content: (
-          <>
-            {hasLead && <div className="mb-14">{tile(first, group.heading, 'feature')}</div>}
-            <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
-              {(hasLead ? rest : group.items).map((work) => tile(work, group.heading))}
-            </div>
-          </>
-        ),
-      }
-    }),
+    ...(featured.length
+      ? [{
+          key: 'featured',
+          heading: featuredHeading,
+          content: <div className="flex flex-col gap-16">{featured.map((work) => tile(work, featuredHeading, 'feature'))}</div>,
+        }]
+      : []),
+    ...groups.map((group) => ({
+      key: group.kind,
+      heading: group.heading,
+      content: PROJECT_KINDS.includes(group.kind) ? (
+        <div className="grid gap-x-6 gap-y-10 md:grid-cols-2">{group.items.map((work) => tile(work, group.heading, 'large'))}</div>
+      ) : (
+        <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
+          {group.items.map((work) => tile(work, group.heading))}
+        </div>
+      ),
+    })),
   ]
 
-  // One lightbox for the page: cards that don't link anywhere step through it together.
+  // One lightbox for the page; each card that doesn't link anywhere opens only its own images.
   return (
-    <Lightbox items={lightboxItems(groups.flatMap((g) => g.items))} labels={labels}>
+    <Lightbox items={lightboxItems(works)} labels={labels}>
       {rows.map((row, i) => (
         <Section
           key={row.key}
