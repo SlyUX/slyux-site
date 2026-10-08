@@ -12,8 +12,8 @@ import { sectionOfKind } from '@/sanity/portfolio'
 import type { CaseStudyCard as CaseStudyCardData, CmsMetric, CreativeWorkCard, SanityImage } from '@/lib/types'
 
 /**
- * A stat's value. The display face is a Didone, whose ×, + and ~ are hairlines
- * that all but vanish at stat sizes, so those symbols are set in the sans.
+ * A stat's value. The display face is a Bodoni, whose ×, + and ~ are thin
+ * strokes that fade at stat sizes, so those symbols are set in the sans.
  */
 function StatValue({ value }: { value: string }) {
   return value
