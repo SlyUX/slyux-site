@@ -190,8 +190,10 @@ export type CreativeWork = {
     | "brand"
     | "logo"
     | "campaign"
+    | "printAd"
     | "graphic"
     | "illustration"
+    | "cover"
     | "book";
   image?: ImageWithAlt;
   cardFit?: "fill" | "whole";
@@ -365,8 +367,10 @@ export type SiteSettings = {
     ux?: string;
     brand?: string;
     illustration?: string;
+    cover?: string;
     book?: string;
     campaign?: string;
+    printAd?: string;
     graphic?: string;
     logo?: string;
   };
@@ -379,8 +383,10 @@ export type SiteSettings = {
     brand?: string;
     logo?: string;
     campaign?: string;
+    printAd?: string;
     graphic?: string;
     illustration?: string;
+    cover?: string;
     book?: string;
   };
   uxCaseStudies?: Array<
@@ -757,8 +763,10 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     ux?: string;
     brand?: string;
     illustration?: string;
+    cover?: string;
     book?: string;
     campaign?: string;
+    printAd?: string;
     graphic?: string;
     logo?: string;
   };
@@ -771,8 +779,10 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     brand?: string;
     logo?: string;
     campaign?: string;
+    printAd?: string;
     graphic?: string;
     illustration?: string;
+    cover?: string;
     book?: string;
   };
   uxCaseStudies: Array<{
@@ -816,11 +826,13 @@ export type SITE_SETTINGS_QUERY_RESULT = {
       | "book"
       | "brand"
       | "campaign"
+      | "cover"
       | "data"
       | "designSystem"
       | "graphic"
       | "illustration"
       | "logo"
+      | "printAd"
       | "strategy"
       | "ux";
     image: ImageWithAlt | null;
@@ -1020,11 +1032,13 @@ export type PORTFOLIO_SECTION_QUERY_RESULT = Array<{
     | "book"
     | "brand"
     | "campaign"
+    | "cover"
     | "data"
     | "designSystem"
     | "graphic"
     | "illustration"
     | "logo"
+    | "printAd"
     | "strategy"
     | "ux";
   image: ImageWithAlt | null;
@@ -1058,11 +1072,13 @@ export type PORTFOLIO_FEATURED_QUERY_RESULT = Array<{
     | "book"
     | "brand"
     | "campaign"
+    | "cover"
     | "data"
     | "designSystem"
     | "graphic"
     | "illustration"
     | "logo"
+    | "printAd"
     | "strategy"
     | "ux";
   image: ImageWithAlt | null;
@@ -1096,11 +1112,13 @@ export type CREATIVE_WORK_QUERY_RESULT = {
     | "book"
     | "brand"
     | "campaign"
+    | "cover"
     | "data"
     | "designSystem"
     | "graphic"
     | "illustration"
     | "logo"
+    | "printAd"
     | "strategy"
     | "ux";
   image: ImageWithAlt | null;
@@ -1148,11 +1166,13 @@ export type CREATIVE_WORK_PATHS_QUERY_RESULT = Array<{
     | "book"
     | "brand"
     | "campaign"
+    | "cover"
     | "data"
     | "designSystem"
     | "graphic"
     | "illustration"
     | "logo"
+    | "printAd"
     | "strategy"
     | "ux";
   slug: string;

@@ -1036,11 +1036,19 @@
             },
             {
               "type": "string",
+              "value": "printAd"
+            },
+            {
+              "type": "string",
               "value": "graphic"
             },
             {
               "type": "string",
               "value": "illustration"
+            },
+            {
+              "type": "string",
+              "value": "cover"
             },
             {
               "type": "string",
@@ -2174,6 +2182,13 @@
               },
               "optional": true
             },
+            "cover": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
             "book": {
               "type": "objectAttribute",
               "value": {
@@ -2182,6 +2197,13 @@
               "optional": true
             },
             "campaign": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "printAd": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"
@@ -2267,6 +2289,13 @@
               },
               "optional": true
             },
+            "printAd": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
             "graphic": {
               "type": "objectAttribute",
               "value": {
@@ -2275,6 +2304,13 @@
               "optional": true
             },
             "illustration": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "cover": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"

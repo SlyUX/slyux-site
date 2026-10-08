@@ -27,8 +27,10 @@ export const PORTFOLIO_KINDS = [
   { title: 'Brand — brand system', list: 'Brand systems', value: 'brand', section: 'brand' },
   { title: 'Brand — logo', list: 'Logos', value: 'logo', section: 'brand' },
   { title: 'Design — campaign', list: 'Campaigns', value: 'campaign', section: 'design' },
+  { title: 'Design — print ad', list: 'Print ads', value: 'printAd', section: 'design' },
   { title: 'Design — graphic / print / web', list: 'Graphic design', value: 'graphic', section: 'design' },
   { title: 'Illustration', list: 'Illustration', value: 'illustration', section: 'illustration' },
+  { title: 'Illustration — book cover', list: 'Book covers', value: 'cover', section: 'illustration' },
   { title: 'Illustration — book / comic', list: 'Books & comics', value: 'book', section: 'illustration' },
 ] as const satisfies readonly { title: string; list: string; value: string; section: PortfolioSection }[]
 
