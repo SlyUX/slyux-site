@@ -25,13 +25,13 @@ export function Personas({
 
   return (
     <section aria-labelledby="personas-heading">
-      <h2 id="personas-heading" className="font-display text-heading text-3xl font-semibold">
+      <h2 id="personas-heading" className="font-display text-3xl font-semibold">
         {heading}
       </h2>
       {intro && <p className="text-muted-foreground mt-2">{intro}</p>}
-      <ul className="mt-8 grid gap-6 lg:grid-cols-2">
+      <ul className="mt-10 grid gap-6 lg:grid-cols-2">
         {personas.map((p) => (
-          <li key={p._key} className="bg-surface flex min-w-0 flex-col gap-6 rounded-2xl p-6 sm:flex-row sm:p-8">
+          <li key={p._key} className="bg-surface flex min-w-0 flex-col gap-6 rounded-ui p-6 sm:flex-row sm:p-8">
             <div className="flex items-center gap-4 sm:w-40 sm:shrink-0 sm:flex-col sm:items-start">
               {p.photo?.asset && (
                 <Image
@@ -49,7 +49,7 @@ export function Personas({
                 {!!p.traits?.length && (
                   <ul className="mt-2 flex flex-wrap gap-1.5 sm:flex-col sm:items-start">
                     {p.traits.map((t) => (
-                      <li key={t} className="bg-background rounded-full px-2.5 py-0.5 text-xs font-semibold">
+                      <li key={t} className="bg-background rounded-ui px-2.5 py-0.5 text-xs font-semibold">
                         {t}
                       </li>
                     ))}

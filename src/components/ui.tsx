@@ -1,6 +1,6 @@
 import { cva, type VariantProps } from 'class-variance-authority'
 
-import { TransitionLink } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/transition-link'
 import { TrackedText } from '@/components/tracked-text'
 import { cn } from '@/lib/utils'
 import type { CmsLink } from '@/lib/types'
@@ -36,13 +36,18 @@ export function Section({
   )
 }
 
-const buttonVariants = cva(
-  'inline-flex items-center justify-center gap-2 rounded-full px-5 py-2.5 text-sm font-semibold transition-colors',
+/**
+ * Buttons. Primary is the orange action; secondary is 75% white with a navy
+ * border and text, so it reads on any band. Both carry a 1px border so they
+ * match in height side by side.
+ */
+export const buttonVariants = cva(
+  'rounded-ui inline-flex items-center justify-center gap-2 border px-5 py-2.5 text-sm font-semibold transition-colors',
   {
     variants: {
       variant: {
-        primary: 'bg-primary text-primary-foreground hover:bg-foreground',
-        secondary: 'border border-foreground/20 hover:border-primary hover:text-primary',
+        primary: 'bg-primary text-primary-foreground hover:bg-heading border-transparent',
+        secondary: 'bg-paper/75 border-heading text-heading hover:bg-paper hover:border-primary hover:text-primary',
       },
     },
     defaultVariants: { variant: 'primary' },
@@ -70,27 +75,51 @@ export function ButtonLink({
   )
 }
 
+/**
+ * A section's heading, the same on every band and page: one size and color,
+ * and one gap (40px) to the content. An intro can sit below it and an action
+ * (a "See all" button) beside it.
+ */
+export function SectionHeading({
+  id,
+  intro,
+  action,
+  children,
+}: {
+  id?: string
+  intro?: React.ReactNode
+  action?: React.ReactNode
+  children: React.ReactNode
+}) {
+  return (
+    <div className="mb-10 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
+      <div>
+        <h2 id={id} className="font-display text-3xl font-semibold">
+          {children}
+        </h2>
+        {intro && <p className="text-muted-foreground mt-2">{intro}</p>}
+      </div>
+      {action}
+    </div>
+  )
+}
+
 /** Title + optional intro at the top of a page. The page's only <h1>. */
 export function PageHeader({
   title,
   intro,
   eyebrow,
-  back,
+  breadcrumb,
 }: {
   title: string
   intro?: string | null
   eyebrow?: string | null
-  /** The parent page. Following it rolls the blind back up. */
-  back?: { label: string; href: string }
+  /** Where the page sits (a Breadcrumb), above the title. */
+  breadcrumb?: React.ReactNode
 }) {
   return (
     <header>
-      {back && (
-        <TransitionLink href={back.href} className="text-muted-foreground hover:text-primary mb-6 inline-flex items-center gap-1.5 text-sm font-medium">
-          <span aria-hidden>←</span>
-          {back.label}
-        </TransitionLink>
-      )}
+      {breadcrumb}
       {eyebrow && <p className="text-primary mb-3 text-sm font-semibold tracking-wide uppercase"><TrackedText>{eyebrow}</TrackedText></p>}
       <h1 className="font-display text-heading text-4xl leading-tight font-semibold tracking-tight md:text-5xl">{title}</h1>
       {intro && <p className="text-muted-foreground mt-5 text-lg leading-relaxed">{intro}</p>}

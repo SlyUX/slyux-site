@@ -1,7 +1,7 @@
 import { BookOpen, Handshake } from 'lucide-react'
 
 import { Hero } from '@/components/hero'
-import { ButtonLink, Section } from '@/components/ui'
+import { ButtonLink, Section, SectionHeading } from '@/components/ui'
 import { CaseStudyTile, MetricStrip } from '@/components/content'
 import { getSiteSettings } from '@/lib/site-settings'
 
@@ -36,11 +36,7 @@ export default async function HomePage() {
 
       {featured.length > 0 && (
         <Section aria-labelledby="featured-heading">
-          {s.featuredHeading && (
-            <h2 id="featured-heading" className="font-display mb-10 text-3xl font-semibold">
-              {s.featuredHeading}
-            </h2>
-          )}
+          {s.featuredHeading && <SectionHeading id="featured-heading">{s.featuredHeading}</SectionHeading>}
           {/* Three to a row: thumbnail, title, and client. The Case Studies page carries the summaries. */}
           <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3">
             {featured.map((study) => (

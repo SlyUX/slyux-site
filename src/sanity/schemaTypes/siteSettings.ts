@@ -14,7 +14,7 @@ export default defineType({
   groups: [
     { name: 'general', title: 'General', default: true },
     { name: 'home', title: 'Home page' },
-    { name: 'nav', title: 'Navigation map' },
+    { name: 'nav', title: 'Navigation' },
     { name: 'work', title: 'Case Studies page' },
     { name: 'creative', title: 'Portfolio pages' },
     { name: 'resume', title: 'Résumé page' },
@@ -49,15 +49,15 @@ export default defineType({
     }),
     defineField({
       name: 'gridNav',
-      title: 'Navigation map (3 × 3)',
+      title: 'Navigation',
       type: 'array',
       group: 'nav',
       description:
-        'The site is laid out as a 3 × 3 map. Each section sits in one cell; navigating pans the view toward it. Put Home in the center. Pages not on the map still work — they just fade in instead of panning.',
+        'The pages in the header (and the phone menu), in order. Portfolio sections are grouped behind "Portfolio" and always follow the Portfolio page\'s order. Home is skipped in the header, since the logo links home.',
       validation: (rule) =>
         rule.max(9).custom((cells: { cell?: number }[] | undefined) => {
           const used = (cells ?? []).map((c) => c.cell)
-          return new Set(used).size === used.length ? true : 'Two sections share a cell.'
+          return new Set(used).size === used.length ? true : 'Two pages share a position.'
         }),
       of: [
         defineArrayMember({
@@ -75,27 +75,15 @@ export default defineType({
             }),
             defineField({
               name: 'cell',
-              title: 'Cell',
+              title: 'Order',
               type: 'number',
-              options: {
-                list: [
-                  { title: 'Top left', value: 1 },
-                  { title: 'Top center', value: 2 },
-                  { title: 'Top right', value: 3 },
-                  { title: 'Middle left', value: 4 },
-                  { title: 'Center', value: 5 },
-                  { title: 'Middle right', value: 6 },
-                  { title: 'Bottom left', value: 7 },
-                  { title: 'Bottom center', value: 8 },
-                  { title: 'Bottom right', value: 9 },
-                ],
-              },
+              description: 'Lower numbers come first.',
               validation: (rule) => rule.required(),
             }),
           ],
           preview: {
             select: { title: 'label', cell: 'cell', href: 'href' },
-            prepare: ({ title, cell, href }) => ({ title, subtitle: `Cell ${cell} · ${href}` }),
+            prepare: ({ title, cell, href }) => ({ title, subtitle: `${cell} · ${href}` }),
           },
         }),
       ],

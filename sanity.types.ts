@@ -257,7 +257,7 @@ export type SiteSettings = {
   gridNav?: Array<{
     label: string;
     href: string;
-    cell: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+    cell: number;
     _type: "gridCell";
     _key: string;
   }>;
@@ -634,7 +634,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   gridNav?: Array<{
     label: string;
     href: string;
-    cell: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9;
+    cell: number;
     _type: "gridCell";
     _key: string;
   }>;

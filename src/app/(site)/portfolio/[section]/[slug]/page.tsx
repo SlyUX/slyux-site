@@ -3,15 +3,17 @@ import { stegaClean } from 'next-sanity'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
-import { TransitionLink } from '@/components/grid-nav'
-import { PageHeader, Section } from '@/components/ui'
+import { TransitionLink } from '@/components/transition-link'
+import { buttonVariants, PageHeader, Section } from '@/components/ui'
 import { imageSize, RichText, WorkStory } from '@/components/content'
+import { Breadcrumb } from '@/components/breadcrumb'
 import { DocumentGrid, readableDocuments } from '@/components/documents'
+import { Lightbox, LightboxButton, type LightboxItem } from '@/components/lightbox'
 import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib/queries'
-import { documentSettings, getSiteSettings } from '@/lib/site-settings'
+import { documentSettings, galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
-import { isPortfolioSection, kindsInSection, sectionOfKind } from '@/sanity/portfolio'
+import { isPortfolioSection, kindsInSection, PORTFOLIO_SECTIONS, sectionOfKind } from '@/sanity/portfolio'
 import type { CreativeWorkDetail } from '@/lib/types'
 
 export async function generateStaticParams() {
@@ -45,8 +47,23 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
   // The main image leads the page as its preview (or, for a UX piece, is only
   // the cover on its card), so the grid below the story shows "More images" only.
   const images = (work.gallery ?? []).flatMap((img) =>
-    img?.asset ? [{ ...img, ref: img.asset._ref }] : [],
+    img?.asset ? [{ ...img, ref: img.asset._ref, size: imageSize(img) }] : [],
   )
+  const labels = galleryLabels(s)
+  const morePiece = `${work._id}-more`
+  const moreItems: LightboxItem[] = images.flatMap((img, i) => {
+    if (!img.size) return []
+    const full = Math.min(2400, img.size.width)
+    return [{
+      key: `${morePiece}-${i}`,
+      pieceKey: morePiece,
+      title: work.title,
+      alt: img.alt || work.title,
+      src: urlFor(img).width(full).format('webp').quality(85).url(),
+      width: full,
+      height: Math.round((full * img.size.height) / img.size.width),
+    }]
+  })
   const hasLinks = !!(work.caseStudy?.slug || outbound)
   const heroSize = work.image?.asset ? imageSize(work.image) : undefined
 
@@ -57,7 +74,14 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
           title={work.title}
           intro={work.summary}
           eyebrow={[work.client, work.year].filter(Boolean).join(' · ') || null}
-          back={{ label: s.portfolioSections[section].title, href: `/portfolio/${section}` }}
+          breadcrumb={
+            <Breadcrumb
+              parent={{ label: s.creativeTitle, href: '/portfolio' }}
+              items={PORTFOLIO_SECTIONS.map((sec) => ({ label: s.portfolioSections[sec].title, href: `/portfolio/${sec}` }))}
+              current={`/portfolio/${section}`}
+              page={work.title}
+            />
+          }
         />
         {work.credit && <p className="text-muted-foreground mt-4 text-sm">{work.credit}</p>}
       </Section>
@@ -73,7 +97,7 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
             // A brand mark sits in generous white space on its card image. From md up,
             // zoom in ~30%, clipping only that margin; narrower screens show it whole,
             // since a wide wordmark would clip.
-            <div className="bg-paper border-border relative mx-auto h-72 max-w-6xl overflow-hidden rounded-2xl border sm:h-[28rem]">
+            <div className="bg-paper border-border relative mx-auto h-72 max-w-6xl overflow-hidden rounded-ui border sm:h-[28rem]">
               <Image
                 src={urlFor(work.image).width(Math.min(2000, heroSize.width)).url()}
                 alt={work.image.alt ?? ''}
@@ -84,7 +108,7 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
               />
             </div>
           ) : (
-            <div className="bg-paper border-border mx-auto flex max-w-6xl justify-center overflow-hidden rounded-2xl border p-6 sm:p-10">
+            <div className="bg-paper border-border mx-auto flex max-w-6xl justify-center overflow-hidden rounded-ui border p-6 sm:p-10">
               <Image
                 src={urlFor(work.image).width(Math.min(1800, heroSize.width)).url()}
                 alt={work.image.alt ?? ''}
@@ -109,37 +133,47 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
           railHeading={s.howItStartedHeading}
           rail={work.howItStarted?.length ? <RichText value={work.howItStarted} compact /> : undefined}
         >
+          {/* Links out, as secondary buttons, the same as on case studies. */}
           {hasLinks && (
-            <div className="mt-10 flex flex-wrap gap-x-6 gap-y-2">
+            <div className="mt-10 flex flex-wrap gap-3">
               {work.caseStudy?.slug && (
-                <TransitionLink href={`/case-studies/${work.caseStudy.slug}`} className="text-primary font-semibold underline underline-offset-4">
+                <TransitionLink href={`/case-studies/${work.caseStudy.slug}`} className={buttonVariants({ variant: 'secondary' })}>
                   {work.caseStudy.title}
                 </TransitionLink>
               )}
               {outbound && (
-                <a href={outbound} target="_blank" rel="noopener noreferrer" className="text-primary font-semibold underline underline-offset-4">
+                <a href={outbound} target="_blank" rel="noopener noreferrer" className={buttonVariants({ variant: 'secondary' })}>
                   {outbound.replace(/^https?:\/\/(www\.)?/, '').replace(/\/$/, '')}
                 </a>
               )}
             </div>
           )}
         </WorkStory>
-        {/* PDFs, when there are any, stand in for the images. */}
+        {/* PDFs, when there are any, stand in for the images. The images are one gallery: each opens the viewer at itself. */}
         {!docs.length && images.length > 0 && (
-          <div className="mt-16 grid gap-6 md:grid-cols-2">
-            {images.map((img, i) => (
-              <Image
-                key={img.ref}
-                src={urlFor(img).width(1400).url()}
-                alt={img.alt ?? ''}
-                width={1400}
-                height={1050}
-                priority={i === 0}
-                sizes="(max-width: 768px) 100vw, 50vw"
-                className="bg-paper h-auto w-full rounded-2xl"
-              />
-            ))}
-          </div>
+          <Lightbox items={moreItems} labels={labels}>
+            <div className="mt-16 grid gap-6 md:grid-cols-2">
+              {images.map((img, i) => (
+                <LightboxButton
+                  key={img.ref}
+                  pieceKey={morePiece}
+                  at={i}
+                  label={`${labels.enlarge}: ${img.alt || work.title}`}
+                  className="block w-full cursor-zoom-in"
+                >
+                  <Image
+                    src={urlFor(img).width(1400).url()}
+                    alt={img.alt ?? ''}
+                    width={1400}
+                    height={img.size ? Math.round((1400 * img.size.height) / img.size.width) : 1050}
+                    priority={i === 0}
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="bg-paper rounded-ui h-auto w-full"
+                  />
+                </LightboxButton>
+              ))}
+            </div>
+          </Lightbox>
         )}
       </Section>
     </article>

@@ -22,7 +22,10 @@
     --heading on --background ............ 10.31  (AAA) — page titles
     --primary on --background ............  4.67  (AA)
     --primary on --surface ...............  4.27  large text only (≥3) — big numbers OK
-    white on --primary ...................  4.88  (AA)
+    white on --primary ...................  4.88  (AA) — primary buttons
+    white on --heading ................... 10.77  (AAA) — primary button hover
+    --heading on --paper at 75% .......... 10.41  (AAA) — secondary buttons, worst case on --surface
+    --primary on --paper at 75% ..........  4.72  (AA) — secondary button hover, worst case on --surface
     --fox on --background ................  3.37  FAILS for text — decorative / large graphics only
     --fox on --ink .......................  5.12  (AA) — icons/text on the dark hero
     white on --project ...................  5.50  (AA) — project chips on cards (burnt orange)
@@ -90,6 +93,12 @@
   --color-project-foreground: var(--project-foreground);
 
   --font-sans: var(--font-geist);
+  /* Corners. Every outermost element is 7px. An element nested a small inset
+     inside its parent (a tab in its 3px track, a menu item in its list) takes
+     the parent's radius minus the inset, so the corners stay concentric.
+     Exception: phone screenshots keep a device-like corner. */
+  --radius-ui: 7px;
+  --radius-ui-inner: 4px;
   --font-display: var(--font-bodoni);
 
   /* Fluid display sizes: body text stays fixed, headings scale 320px→1280px. */

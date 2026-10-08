@@ -90,7 +90,7 @@ export function GalleryViewer({
                 }
                 className={cn(
                   'bg-paper border-border group-hover:border-primary h-auto w-full border transition-colors',
-                  phone ? (rail ? 'rounded-xl shadow-sm' : 'rounded-[1.25rem] shadow-sm') : 'rounded-xl',
+                  phone ? (rail ? 'rounded-xl shadow-sm' : 'rounded-[1.25rem] shadow-sm') : 'rounded-ui',
                 )}
               />
               {it.caption && (
@@ -140,7 +140,7 @@ export function GalleryViewer({
                 style={{ width: it.view.displayWidth }}
                 className="mx-auto mb-10 box-content max-w-[calc(100%-2rem)] px-4 sm:max-w-[calc(100%-3rem)] sm:px-6 lg:max-w-6xl"
               >
-                <div className="bg-paper overflow-hidden rounded-xl shadow-2xl">
+                <div className="bg-paper rounded-ui overflow-hidden shadow-2xl">
                   {it.view.slices.map((slice, si) => (
                     // Plain <img>: slices are pre-sized by Sanity and must stack with no gaps.
                     // A tall page is one image split for delivery, so only the first carries alt text.

@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { TransitionLink } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/transition-link'
 import { TrackedText } from '@/components/tracked-text'
 import { Briefcase, FileText, LayoutGrid, MessageCircle, Palette, User, type LucideIcon } from 'lucide-react'
 
@@ -104,7 +104,7 @@ export function Hero({ eyebrow, headline, intro, brandmark, videoUrl, videoType,
                   </>
                 )
                 const cls =
-                  'group flex h-full flex-col items-center gap-3 rounded-2xl border border-ink-foreground/15 bg-ink/40 px-4 py-6 backdrop-blur-sm transition-colors hover:border-fox hover:bg-ink/70'
+                  'group flex h-full flex-col items-center gap-3 rounded-ui border border-ink-foreground/15 bg-ink/40 px-4 py-6 backdrop-blur-sm transition-colors hover:border-fox hover:bg-ink/70'
                 return (
                   <li key={action._key}>
                     {external ? (

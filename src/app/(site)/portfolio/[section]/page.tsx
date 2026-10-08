@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 import { notFound } from 'next/navigation'
 
+import { Breadcrumb } from '@/components/breadcrumb'
 import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { CaseStudyTile } from '@/components/content'
 import { PortfolioGrid } from '@/components/portfolio-grid'
@@ -61,7 +62,17 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
   return (
     <>
       <Section className="pb-10 md:pb-12">
-        <PageHeader title={copy.title} intro={copy.intro} back={{ label: s.creativeTitle, href: '/portfolio' }} />
+        <PageHeader
+          title={copy.title}
+          intro={copy.intro}
+          breadcrumb={
+            <Breadcrumb
+              parent={{ label: s.creativeTitle, href: '/portfolio' }}
+              items={PORTFOLIO_SECTIONS.map((sec) => ({ label: s.portfolioSections[sec].title, href: `/portfolio/${sec}` }))}
+              current={`/portfolio/${section}`}
+            />
+          }
+        />
       </Section>
       {works.length > 0 || lead ? (
         <PortfolioGrid

@@ -1,6 +1,6 @@
 import { CreativeTile, lightboxItems } from '@/components/content'
 import { Lightbox } from '@/components/lightbox'
-import { Section } from '@/components/ui'
+import { Section, SectionHeading } from '@/components/ui'
 import { PORTFOLIO_KINDS, PROJECT_KINDS, type PortfolioKind } from '@/sanity/portfolio'
 import type { CreativeWorkCard } from '@/lib/types'
 import type { galleryLabels, SiteSettings } from '@/lib/site-settings'
@@ -94,12 +94,9 @@ export function PortfolioGrid({
           aria-labelledby={showHeading(row.heading) ? `group-${row.key}` : undefined}
         >
           {showHeading(row.heading) && (
-            <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-              <h2 id={`group-${row.key}`} className="font-display text-3xl font-semibold">
-                {row.heading}
-              </h2>
-              {row.action}
-            </div>
+            <SectionHeading id={`group-${row.key}`} action={row.action}>
+              {row.heading}
+            </SectionHeading>
           )}
           {row.content}
         </Section>

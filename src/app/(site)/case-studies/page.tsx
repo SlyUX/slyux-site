@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 
-import { PageHeader, Section } from '@/components/ui'
+import { PageHeader, Section, SectionHeading } from '@/components/ui'
 import { CaseStudyRow, CaseStudyTile } from '@/components/content'
 import { CASE_STUDIES_QUERY, safeFetch } from '@/lib/queries'
 import { getSiteSettings } from '@/lib/site-settings'
@@ -50,11 +50,7 @@ export default async function WorkPage() {
             tone={i % 2 === 0 ? 'surface' : 'default'}
             aria-labelledby={group.heading ? `group-${group.key}` : undefined}
           >
-            {group.heading && (
-              <h2 id={`group-${group.key}`} className="font-display mb-12 text-3xl font-semibold">
-                {group.heading}
-              </h2>
-            )}
+            {group.heading && <SectionHeading id={`group-${group.key}`}>{group.heading}</SectionHeading>}
             {group.key === featuredKey ? (
               <div className="flex flex-col gap-16">
                 {group.studies.map((study, index) => (
