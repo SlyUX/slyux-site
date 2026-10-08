@@ -295,6 +295,7 @@ export function CreativeTile({
   enlargeLabel,
   kindLabels,
   large = false,
+  feature = false,
   headingLevel: Heading = 'h3',
 }: {
   work: CreativeWorkCard
@@ -304,6 +305,8 @@ export function CreativeTile({
   /** Chip text per kind, from Site settings. Omit where a heading already names the kind. */
   kindLabels?: Record<string, string>
   large?: boolean
+  /** A row's featured lead: the image beside its summary, like the Case Studies featured row. */
+  feature?: boolean
   headingLevel?: 'h2' | 'h3'
 }) {
   const outbound = externalHref(work.externalUrl)
@@ -327,11 +330,11 @@ export function CreativeTile({
     )
   }
 
-  // UX pieces are documents and slides, so their cards are wide (3:2) everywhere;
-  // other cards are 4:3 when large and square in grids.
-  const shape = sectionOfKind(work.kind) === 'ux' ? 'wide' : large ? 'large' : 'square'
+  // UX pieces are documents and slides, so their cards are wide (3:2) everywhere,
+  // as is a featured row's image; other cards are 4:3 when large and square in grids.
+  const shape = sectionOfKind(work.kind) === 'ux' || feature ? 'wide' : large ? 'large' : 'square'
   const card = { wide: { width: 1500, height: 1000 }, large: { width: 1400, height: 1050 }, square: { width: 800, height: 800 } }[shape]
-  const sizes = shape === 'square' ? '(max-width: 768px) 50vw, 25vw' : large ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'
+  const sizes = shape === 'square' ? '(max-width: 768px) 50vw, 25vw' : large || feature ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'
   const size = work.image?.asset ? imageSize(work.image) : undefined
   const whole = sectionOfKind(work.kind) === 'brand' || work.cardFit === 'whole' || work.opaque === false
   let image: React.ReactNode = null
@@ -367,34 +370,52 @@ export function CreativeTile({
   }
 
   const stretch = 'after:absolute after:inset-0 group-hover:text-primary'
+  const frame = (
+    <div
+      className={cn(
+        'border-border bg-paper group-hover:border-primary relative overflow-hidden rounded-2xl border transition-colors',
+        { wide: 'aspect-[3/2]', large: 'aspect-[4/3]', square: 'aspect-square' }[shape],
+      )}
+    >
+      {image}
+      {deep && <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />}
+      {kindLabel && <KindChip label={kindLabel} deep={deep} className="absolute top-3 left-3 shadow-sm" />}
+      {href ? <CardAction action={deep ? 'page' : 'external'} /> : image && <CardAction action="enlarge" />}
+    </div>
+  )
+  // The title is the card's one link or button, stretched over the whole card.
+  const title = href ? (
+    href.startsWith('/') ? (
+      <TransitionLink href={href} className={stretch}>{work.title}</TransitionLink>
+    ) : (
+      <a href={href} target="_blank" rel="noopener noreferrer" className={stretch}>{work.title}</a>
+    )
+  ) : image ? (
+    <LightboxButton pieceKey={work._id} label={`${enlargeLabel}: ${work.title}`} className={cn(stretch, 'text-left')}>
+      {work.title}
+    </LightboxButton>
+  ) : (
+    work.title
+  )
+
+  if (feature) {
+    return (
+      <article className="group relative grid items-center gap-6 md:grid-cols-2 md:gap-12">
+        {frame}
+        <div className="flex flex-col gap-2">
+          {meta && <p className="text-muted-foreground text-sm">{meta}</p>}
+          <Heading className="font-display text-2xl font-semibold">{title}</Heading>
+          {work.summary && <p className="text-muted-foreground leading-relaxed">{work.summary}</p>}
+          {work.credit && <p className="text-muted-foreground text-xs">{work.credit}</p>}
+        </div>
+      </article>
+    )
+  }
+
   return (
     <article className="group relative flex flex-col">
-      <div
-        className={cn(
-          'border-border bg-paper group-hover:border-primary relative overflow-hidden rounded-2xl border transition-colors',
-          { wide: 'aspect-[3/2]', large: 'aspect-[4/3]', square: 'aspect-square' }[shape],
-        )}
-      >
-        {image}
-        {deep && <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />}
-        {kindLabel && <KindChip label={kindLabel} deep={deep} className="absolute top-3 left-3 shadow-sm" />}
-        {href ? <CardAction action={deep ? 'page' : 'external'} /> : image && <CardAction action="enlarge" />}
-      </div>
-      <Heading className="mt-3 font-semibold">
-        {href ? (
-          href.startsWith('/') ? (
-            <TransitionLink href={href} className={stretch}>{work.title}</TransitionLink>
-          ) : (
-            <a href={href} target="_blank" rel="noopener noreferrer" className={stretch}>{work.title}</a>
-          )
-        ) : image ? (
-          <LightboxButton pieceKey={work._id} label={`${enlargeLabel}: ${work.title}`} className={cn(stretch, 'text-left')}>
-            {work.title}
-          </LightboxButton>
-        ) : (
-          work.title
-        )}
-      </Heading>
+      {frame}
+      <Heading className="mt-3 font-semibold">{title}</Heading>
       {meta && <p className="text-muted-foreground text-sm">{meta}</p>}
       {work.credit && <p className="text-muted-foreground mt-1 text-xs">{work.credit}</p>}
     </article>
