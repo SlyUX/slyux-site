@@ -128,7 +128,7 @@ export function ViewerDialog({
       {/* Scrolls only when fullscreen; otherwise the dialog is the one scroll container. */}
       <div ref={frameRef} className="min-h-full [&:fullscreen]:bg-ink [&:fullscreen]:overflow-y-auto">
       <div className="sticky top-0 z-10 flex items-center justify-between gap-3 p-3 sm:p-4">
-        <p aria-live="polite" className="bg-background text-foreground min-w-0 truncate rounded-full px-4 py-2 text-sm font-semibold tabular-nums shadow-lg">
+        <p aria-live="polite" className="bg-background text-foreground min-w-0 truncate rounded-ui px-4 py-2 text-sm font-semibold tabular-nums shadow-lg">
           {counter}
           {srText && <span className="sr-only">: {srText}</span>}
         </p>
@@ -142,7 +142,7 @@ export function ViewerDialog({
                 onClick={() => go(-1)}
                 disabled={index === 0}
                 aria-label={labels.previous}
-                className="bg-background text-foreground hover:text-primary flex size-10 items-center justify-center rounded-full shadow-lg disabled:opacity-40"
+                className="bg-background text-foreground hover:text-primary flex size-10 items-center justify-center rounded-ui shadow-lg disabled:opacity-40"
               >
                 <ChevronLeft aria-hidden className="size-5" />
               </button>
@@ -152,7 +152,7 @@ export function ViewerDialog({
                 onClick={() => go(1)}
                 disabled={index === count - 1}
                 aria-label={labels.next}
-                className="bg-background text-foreground hover:text-primary flex size-10 items-center justify-center rounded-full shadow-lg disabled:opacity-40"
+                className="bg-background text-foreground hover:text-primary flex size-10 items-center justify-center rounded-ui shadow-lg disabled:opacity-40"
               >
                 <ChevronRight aria-hidden className="size-5" />
               </button>
@@ -162,7 +162,7 @@ export function ViewerDialog({
             type="button"
             onClick={close}
             aria-label={labels.close}
-            className="bg-background text-foreground hover:text-primary inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-sm font-semibold shadow-lg sm:px-4"
+            className="bg-background text-foreground hover:text-primary inline-flex h-10 items-center gap-1.5 rounded-ui px-3 text-sm font-semibold shadow-lg sm:px-4"
           >
             <X aria-hidden className="size-4" />
             {/* Icon only on phones, where the counter needs the room. */}

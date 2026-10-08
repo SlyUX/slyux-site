@@ -33,7 +33,7 @@ export function toDocument(doc: PdfDocumentData, badgeTemplate: string) {
 /** The red "Look inside" chip over a document thumbnail. */
 export function PdfBadge({ text }: { text: string }) {
   return (
-    <span className="bg-pdf text-pdf-foreground absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-semibold shadow-md">
+    <span className="bg-pdf text-pdf-foreground absolute top-3 left-3 inline-flex items-center gap-1.5 rounded-ui px-2.5 py-1 text-xs font-semibold shadow-md">
       <BookOpenText aria-hidden className="size-3.5" strokeWidth={2} />
       {text}
     </span>
@@ -64,7 +64,7 @@ export function DocumentGrid({ docs, labels }: { docs: ReturnType<typeof readabl
             triggerLabel={`${doc.title}: ${doc.badge}`}
             className="group block w-full text-left"
           >
-            <span className="border-border group-hover:border-primary relative block overflow-hidden rounded-xl border bg-paper transition-colors">
+            <span className="border-border group-hover:border-primary relative block overflow-hidden rounded-ui border bg-paper transition-colors">
               <Image
                 src={urlFor(doc.cover!).width(1100).url()}
                 alt=""

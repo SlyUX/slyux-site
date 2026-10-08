@@ -27,7 +27,7 @@ export default async function ContactPage() {
             <li key={type._key}>
               <a
                 href={mailto(type.subject)}
-                className="border-border hover:border-primary group block h-full rounded-2xl border p-6 transition-colors"
+                className="border-border hover:border-primary group block h-full rounded-ui border p-6 transition-colors"
               >
                 <span className="font-display group-hover:text-primary text-2xl font-semibold">{type.label}</span>
                 {type.description && <span className="text-muted-foreground mt-2 block">{type.description}</span>}

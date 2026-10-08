@@ -15,7 +15,7 @@ export interface LightboxItem {
   height: number
 }
 
-type Open = (pieceKey: string) => void
+type Open = (pieceKey: string, at?: number) => void
 
 const LightboxContext = createContext<{ open: Open; buttons: Map<string, HTMLButtonElement> } | null>(null)
 
@@ -45,10 +45,10 @@ export function Lightbox({
   // One Map for the component's life; buttons add and remove themselves.
   const [buttons] = useState(() => new Map<string, HTMLButtonElement>())
 
-  const open: Open = (key) => {
+  const open: Open = (key, at = 0) => {
     if (!items.some((it) => it.pieceKey === key)) return
     setPieceKey(key)
-    openAt(0)
+    openAt(at)
   }
 
   return (
@@ -68,7 +68,8 @@ export function Lightbox({
           // The title alone when the image has no description of its own.
           srText={item && (item.alt === item.title ? item.title : `${item.title} — ${item.alt}`)}
           labels={labels}
-          onClosed={() => pieceKey && buttons.get(pieceKey)?.focus()}
+          // Back to the thumbnail of the image last shown, or the card that opened the piece.
+          onClosed={(i) => pieceKey && (buttons.get(`${pieceKey}#${i}`) ?? buttons.get(`${pieceKey}#0`))?.focus()}
         >
           <div
             // The dim space around the image closes the lightbox, as elsewhere.
@@ -90,7 +91,7 @@ export function Lightbox({
                   width={shown[i].width}
                   height={shown[i].height}
                   decoding="async"
-                  className="bg-paper h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-lg shadow-2xl"
+                  className="bg-paper h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-ui shadow-2xl"
                 />
                 )
               }
@@ -109,11 +110,14 @@ export function Lightbox({
  */
 export function LightboxButton({
   pieceKey,
+  at,
   label,
   className,
   children,
 }: {
   pieceKey: string
+  /** Which of the piece's images to open at; a gallery's thumbnails each open at their own. */
+  at?: number
   /** Accessible name, e.g. "View larger: Wheelhouse Marketing". */
   label: string
   className?: string
@@ -124,12 +128,12 @@ export function LightboxButton({
   return (
     <button
       ref={(el) => {
-        if (el) lightbox.buttons.set(pieceKey, el)
-        else lightbox.buttons.delete(pieceKey)
+        if (el) lightbox.buttons.set(`${pieceKey}#${at ?? 0}`, el)
+        else lightbox.buttons.delete(`${pieceKey}#${at ?? 0}`)
       }}
       type="button"
       aria-label={label}
-      onClick={() => lightbox.open(pieceKey)}
+      onClick={() => lightbox.open(pieceKey, at)}
       className={className}
     >
       {children}

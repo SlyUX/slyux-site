@@ -45,7 +45,7 @@ export default async function CmsPage({ params }: PageProps<'/[slug]'>) {
             height={1000}
             priority
             sizes="(max-width: 1024px) 100vw, 320px"
-            className="h-auto w-full rounded-2xl"
+            className="h-auto w-full rounded-ui"
           />
         )}
       </div>

@@ -118,12 +118,12 @@ export function Gallery({
           {gallery.heading}
         </h3>
       ) : headingAs === 'h2' ? (
-        <h2 id={id} className={rail ? 'text-heading text-lg font-semibold' : 'font-display text-heading text-3xl font-semibold'}>
+        <h2 id={id} className={rail ? 'text-heading text-lg font-semibold' : 'font-display text-3xl font-semibold'}>
           {gallery.heading}
         </h2>
       ) : null}
       {gallery.intro && <p className={rail ? 'text-muted-foreground mt-1 text-sm' : 'text-muted-foreground mt-2'}>{gallery.intro}</p>}
-      <div className={rail ? 'mt-4' : 'mt-8'}>
+      <div className={rail ? 'mt-4' : 'mt-10'}>
         <GalleryViewer items={items} layout={phone ? 'phone' : 'wide'} rail={rail} labels={labels} />
       </div>
     </section>

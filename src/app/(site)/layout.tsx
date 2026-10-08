@@ -1,9 +1,11 @@
 import Image from 'next/image'
 import { draftMode } from 'next/headers'
 
-import { GridNav, TransitionLink } from '@/components/grid-nav'
+import { SiteNav } from '@/components/site-nav'
+import { TransitionLink } from '@/components/transition-link'
 import { PreviewTools } from '@/components/preview-tools'
-import { getSiteSettings } from '@/lib/site-settings'
+import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
+import { ViewerLabelsProvider } from '@/components/viewer-labels'
 import { externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 
@@ -48,10 +50,12 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
             )}
           </TransitionLink>
           {/* aria-label is a11y-only text, not CMS copy. */}
-          <GridNav cells={settings.gridNav} label="Site map" portfolio={{ label: settings.creativeTitle, href: '/portfolio' }} />
+          <SiteNav entries={settings.gridNav} label="Main" portfolio={{ label: settings.creativeTitle, href: '/portfolio' }} />
         </div>
       </header>
-      <main id="main" className="flex-1">{children}</main>
+      <main id="main" className="flex-1">
+        <ViewerLabelsProvider labels={galleryLabels(settings)}>{children}</ViewerLabelsProvider>
+      </main>
       <footer className="bg-footer text-footer-foreground px-4 py-10 sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 text-sm md:flex-row md:items-center md:justify-between">
           <p className="text-footer-muted">{settings.footerLine ?? `© ${new Date().getFullYear()} ${settings.ownerName}`}</p>

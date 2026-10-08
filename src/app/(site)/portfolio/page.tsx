@@ -1,8 +1,8 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 
-import { TransitionLink } from '@/components/grid-nav'
-import { PageHeader, Section } from '@/components/ui'
+import { TransitionLink } from '@/components/transition-link'
+import { buttonVariants, PageHeader, Section, SectionHeading } from '@/components/ui'
 import { CaseStudyTile, CreativeTile, isDeepCard, lightboxItems } from '@/components/content'
 import { Lightbox } from '@/components/lightbox'
 import { CASE_STUDIES_QUERY, PORTFOLIO_SECTION_QUERY, safeFetch } from '@/lib/queries'
@@ -72,20 +72,20 @@ export default async function PortfolioPage() {
       {/* Each section a full-width band, alternating from the surface tone, like the subpages. */}
       {sections.map(({ section, copy, study, items }, i) => (
         <Section key={section} aria-labelledby={`portfolio-${section}`} tone={i % 2 === 0 ? 'surface' : 'default'}>
-          <div className="mb-8 flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 id={`portfolio-${section}`} className="font-display text-3xl font-semibold">
-                <TransitionLink href={`/portfolio/${section}`} className="hover:text-primary">
-                  {copy.title}
-                </TransitionLink>
-              </h2>
-              {copy.intro && <p className="text-muted-foreground mt-2">{copy.intro}</p>}
-            </div>
-            <TransitionLink href={`/portfolio/${section}`} className="text-primary text-sm font-semibold underline underline-offset-4">
-              {s.portfolioViewAll}
-              <span className="sr-only"> {copy.title}</span>
+          <SectionHeading
+            id={`portfolio-${section}`}
+            intro={copy.intro}
+            action={
+              <TransitionLink href={`/portfolio/${section}`} className={buttonVariants({ variant: 'secondary' })}>
+                {s.portfolioViewAll}
+                <span className="sr-only"> {copy.title}</span>
+              </TransitionLink>
+            }
+          >
+            <TransitionLink href={`/portfolio/${section}`} className="hover:text-primary">
+              {copy.title}
             </TransitionLink>
-          </div>
+          </SectionHeading>
           <Lightbox items={lightboxItems(items)} labels={labels}>
             <div className={cn('grid gap-x-6 gap-y-10', section === 'ux' ? 'sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-2 md:grid-cols-4')}>
               {study && <CaseStudyTile study={study} label={s.caseStudyLabel} />}

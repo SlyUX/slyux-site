@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 
-import { TransitionLink } from '@/components/grid-nav'
-import { PageHeader, Section } from '@/components/ui'
+import { TransitionLink } from '@/components/transition-link'
+import { buttonVariants, PageHeader, Section, SectionHeading } from '@/components/ui'
 import { EXPERIENCE_QUERY, safeFetch } from '@/lib/queries'
 import { getSiteSettings } from '@/lib/site-settings'
+import { cn } from '@/lib/utils'
 import type { ExperienceEntry } from '@/lib/types'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -40,7 +41,7 @@ export default async function ResumePage() {
         {s.resumePdfUrl && (
           <a
             href={`${s.resumePdfUrl}?dl=`}
-            className="bg-primary text-primary-foreground hover:bg-foreground inline-flex shrink-0 items-center rounded-full px-5 py-2.5 text-sm font-semibold transition-colors"
+            className={cn(buttonVariants(), 'shrink-0')}
           >
             {s.resumeDownloadLabel}
           </a>
@@ -50,9 +51,7 @@ export default async function ResumePage() {
       <div className="mt-14 grid gap-14 lg:grid-cols-[2fr_1fr]">
         {groups.length > 0 && (
           <section aria-labelledby="experience-heading">
-            <h2 id="experience-heading" className="font-display mb-8 text-3xl font-semibold">
-              {s.experienceHeading}
-            </h2>
+            <SectionHeading id="experience-heading">{s.experienceHeading}</SectionHeading>
             <ol className="space-y-10">
               {groups.map((group) => (
                 <li key={`${group.organization}-${group.roles[0]._id}`}>
@@ -96,16 +95,14 @@ export default async function ResumePage() {
         <aside className="space-y-12">
           {!!s.skillGroups?.length && (
             <section aria-labelledby="skills-heading">
-              <h2 id="skills-heading" className="font-display mb-6 text-3xl font-semibold">
-                {s.skillsHeading}
-              </h2>
+              <SectionHeading id="skills-heading">{s.skillsHeading}</SectionHeading>
               <div className="space-y-6">
                 {s.skillGroups.map((group) => (
                   <div key={group._key}>
                     <h3 className="font-semibold">{group.heading}</h3>
                     <ul className="mt-2 flex flex-wrap gap-2">
                       {group.skills?.map((skill) => (
-                        <li key={skill} className="bg-surface rounded-full px-3 py-1 text-sm">
+                        <li key={skill} className="bg-surface rounded-ui px-3 py-1 text-sm">
                           {skill}
                         </li>
                       ))}
@@ -117,9 +114,7 @@ export default async function ResumePage() {
           )}
           {!!s.education?.length && (
             <section aria-labelledby="education-heading">
-              <h2 id="education-heading" className="font-display mb-4 text-3xl font-semibold">
-                {s.educationHeading}
-              </h2>
+              <SectionHeading id="education-heading">{s.educationHeading}</SectionHeading>
               <ul className="space-y-2">
                 {s.education.map((item) => (
                   <li key={item}>{item}</li>

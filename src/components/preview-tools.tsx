@@ -48,7 +48,7 @@ export function PreviewTools() {
               router.refresh()
             })
           }
-          className="bg-primary text-primary-foreground fixed right-4 bottom-4 z-50 rounded-full px-4 py-2 text-sm font-semibold shadow-lg disabled:opacity-70"
+          className="bg-primary text-primary-foreground fixed right-4 bottom-4 z-50 rounded-ui px-4 py-2 text-sm font-semibold shadow-lg disabled:opacity-70"
         >
           {/* Editor-only control, never shown to visitors; not CMS copy. */}
           Exit preview

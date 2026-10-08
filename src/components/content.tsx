@@ -3,9 +3,10 @@ import { PortableText, toPlainText, type PortableTextComponents } from '@portabl
 import type { PortableTextBlock, TypedObject } from '@portabletext/types'
 import { ExternalLink, FolderOpen, Images, Maximize2 } from 'lucide-react'
 
-import { TransitionLink } from '@/components/grid-nav'
+import { TransitionLink } from '@/components/transition-link'
 import { LightboxButton, type LightboxItem } from '@/components/lightbox'
 import { Rail } from '@/components/rail'
+import { ZoomableImage } from '@/components/zoomable-image'
 import { cn, externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import { sectionOfKind } from '@/sanity/portfolio'
@@ -148,7 +149,7 @@ export function CaseStudyTile({
   const lead = details ? study.metrics?.[0] : undefined
   return (
     <article className="group relative flex flex-col">
-      <div className="border-border bg-paper group-hover:border-primary relative aspect-[3/2] overflow-hidden rounded-2xl border transition-colors">
+      <div className="border-border bg-paper group-hover:border-primary relative aspect-[3/2] overflow-hidden rounded-ui border transition-colors">
         {study.heroImage?.asset && (
           <Image
             // Uncropped at the source; the frame crops from the top-left, where screenshots start reading.
@@ -203,7 +204,7 @@ export function CaseStudyRow({
     <article className="group relative grid items-center gap-6 md:grid-cols-2 md:gap-12">
       <div
         className={cn(
-          'border-border bg-paper group-hover:border-primary relative aspect-[3/2] overflow-hidden rounded-2xl border transition-colors',
+          'border-border bg-paper group-hover:border-primary relative aspect-[3/2] overflow-hidden rounded-ui border transition-colors',
           flip && 'md:order-last',
         )}
       >
@@ -262,7 +263,7 @@ function CardAction({ action, count = 1 }: { action: 'page' | 'enlarge' | 'exter
     <span
       aria-hidden
       className={cn(
-        'bg-background/90 text-foreground absolute top-3 right-3 flex h-8 items-center justify-center rounded-full shadow-md',
+        'bg-background/90 text-foreground absolute top-3 right-3 flex h-8 items-center justify-center rounded-ui shadow-md',
         gallery ? 'gap-1.5 px-2.5 text-xs font-semibold tabular-nums' : 'w-8',
       )}
     >
@@ -282,7 +283,7 @@ function KindChip({ label, deep, className }: { label: string; deep: boolean; cl
   return (
     <span
       className={cn(
-        'inline-flex items-center rounded-full px-2.5 py-1 text-xs font-semibold',
+        'inline-flex items-center rounded-ui px-2.5 py-1 text-xs font-semibold',
         deep ? 'bg-project text-project-foreground' : 'bg-surface text-muted-foreground',
         className,
       )}
@@ -332,7 +333,7 @@ export function CreativeTile({
 
   if (work.mature) {
     return (
-      <article className="border-border flex flex-col justify-between rounded-2xl border p-6">
+      <article className="border-border flex flex-col justify-between rounded-ui border p-6">
         {kindLabel && <KindChip label={kindLabel} deep={false} className="mb-3 self-start" />}
         <Heading className="font-display text-xl font-semibold">{work.title}</Heading>
         {work.summary && <p className="text-muted-foreground mt-2 text-sm">{work.summary}</p>}
@@ -390,7 +391,7 @@ export function CreativeTile({
   const frame = (
     <div
       className={cn(
-        'border-border bg-paper group-hover:border-primary relative overflow-hidden rounded-2xl border transition-colors',
+        'border-border bg-paper group-hover:border-primary relative overflow-hidden rounded-ui border transition-colors',
         { wide: 'aspect-[3/2]', large: 'aspect-[4/3]', square: 'aspect-square' }[shape],
       )}
     >
@@ -475,17 +476,30 @@ const richTextComponents: PortableTextComponents = {
       // logo) stay crisp instead of being stretched to the column width.
       const [w, h] = (value.asset._ref?.match(/-(\d+)x(\d+)-/)?.slice(1) ?? ['1600', '1000']).map(Number)
       const width = Math.min(1600, w)
+      // Opens larger on its own, up to the source size.
+      const full = Math.min(2400, w)
+      const zoom: LightboxItem = {
+        key: value.asset._ref,
+        pieceKey: `image-${value.asset._ref}`,
+        title: value.caption || value.alt || '',
+        alt: value.alt || value.caption || '',
+        src: urlFor(value).width(full).format('webp').quality(85).url(),
+        width: full,
+        height: Math.round((full * h) / w),
+      }
       return (
         // The figure is only as wide as the image, so the caption centers on the image, not the column.
         <figure className="my-4" style={{ maxWidth: w }}>
-          <Image
-            src={urlFor(value).width(width).url()}
-            alt={value.alt ?? ''}
-            width={width}
-            height={Math.round((width * h) / w)}
-            sizes={`(max-width: 768px) 100vw, ${Math.min(768, w)}px`}
-            className="bg-paper h-auto w-full rounded-xl"
-          />
+          <ZoomableImage item={zoom}>
+            <Image
+              src={urlFor(value).width(width).url()}
+              alt={value.alt ?? ''}
+              width={width}
+              height={Math.round((width * h) / w)}
+              sizes={`(max-width: 768px) 100vw, ${Math.min(768, w)}px`}
+              className="bg-paper rounded-ui h-auto w-full"
+            />
+          </ZoomableImage>
           {value.caption && <figcaption className="text-caption mt-2 text-center text-sm">{value.caption}</figcaption>}
         </figure>
       )

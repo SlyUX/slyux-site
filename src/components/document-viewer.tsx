@@ -27,7 +27,7 @@ const onFullscreenChange = (cb: () => void) => {
 }
 
 const pill =
-  'bg-background text-foreground hover:text-primary inline-flex h-10 items-center gap-1.5 rounded-full px-3 text-sm font-semibold shadow-lg sm:px-4'
+  'bg-background text-foreground hover:text-primary inline-flex h-10 items-center gap-1.5 rounded-ui px-3 text-sm font-semibold shadow-lg sm:px-4'
 
 /**
  * A PDF as a page-at-a-time reader: the trigger (a document thumbnail, or a
@@ -102,7 +102,7 @@ export function DocumentViewer({
                 type="button"
                 onClick={toggleFullscreen}
                 aria-label={isFullscreen ? labels.exitFullscreen : labels.fullscreen}
-                className="bg-background text-foreground hover:text-primary flex size-10 items-center justify-center rounded-full shadow-lg"
+                className="bg-background text-foreground hover:text-primary flex size-10 items-center justify-center rounded-ui shadow-lg"
               >
                 {isFullscreen ? <Minimize aria-hidden className="size-4" /> : <Maximize aria-hidden className="size-4" />}
               </button>
@@ -128,7 +128,7 @@ export function DocumentViewer({
                   width={pages[i].width}
                   height={pages[i].height}
                   decoding="async"
-                  className="h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-lg bg-paper shadow-2xl"
+                  className="h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-ui bg-paper shadow-2xl"
                 />
               )}
             />
