@@ -11,6 +11,16 @@ import { urlFor } from '@/sanity/image'
 import { sectionOfKind } from '@/sanity/portfolio'
 import type { CaseStudyCard as CaseStudyCardData, CmsMetric, CreativeWorkCard, SanityImage } from '@/lib/types'
 
+/**
+ * A stat's value. The display face is a Didone, whose ×, + and ~ are hairlines
+ * that all but vanish at stat sizes, so those symbols are set in the sans.
+ */
+function StatValue({ value }: { value: string }) {
+  return value
+    .split(/([×+~])/)
+    .map((part, i) => (/^[×+~]$/.test(part) ? <span key={i} className="font-sans font-medium">{part}</span> : part))
+}
+
 /** A row of headline numbers. Used by the home proof strip and case studies. */
 export function MetricStrip({
   metrics,
@@ -40,7 +50,7 @@ export function MetricStrip({
               { default: 'text-primary', ink: 'text-fox', brand: 'text-highlight' }[tone],
             )}
           >
-            {m.value}
+            <StatValue value={m.value} />
           </dd>
         </div>
       ))}

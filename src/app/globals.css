@@ -90,7 +90,7 @@
   --color-project-foreground: var(--project-foreground);
 
   --font-sans: var(--font-geist);
-  --font-display: var(--font-fraunces);
+  --font-display: var(--font-bodoni);
 
   /* Fluid display sizes: body text stays fixed, headings scale 320px→1280px. */
   --text-3xl: clamp(1.5rem, calc(1.25rem + 1.25vw), 2.25rem);

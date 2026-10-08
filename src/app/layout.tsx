@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 import { Analytics } from '@vercel/analytics/next'
-import { Fraunces, Geist } from 'next/font/google'
+import { Bodoni_Moda, Geist } from 'next/font/google'
 
 import './globals.css'
 import { cn } from '@/lib/utils'
@@ -9,8 +9,9 @@ import { getSiteSettings } from '@/lib/site-settings'
 import { SITE_URL } from '@/lib/site-url'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
-// Display serif for headings — provisional, pending art direction.
-const fraunces = Fraunces({ subsets: ['latin'], variable: '--font-fraunces' })
+// Display serif for headings: a Didone. The optical-size axis thickens its
+// hairlines automatically at smaller sizes, so headings stay legible.
+const bodoni = Bodoni_Moda({ subsets: ['latin'], axes: ['opsz'], variable: '--font-bodoni' })
 
 /**
  * Root layout stays minimal so the Studio at /studio is full-screen. Site
@@ -35,7 +36,7 @@ export async function generateMetadata(): Promise<Metadata> {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="en" className={cn(geist.variable, fraunces.variable)}>
+    <html lang="en" className={cn(geist.variable, bodoni.variable)}>
       <body className="bg-background text-foreground min-h-screen font-sans antialiased">
         {children}
         <Analytics />
