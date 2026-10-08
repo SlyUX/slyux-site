@@ -9,12 +9,13 @@ export interface Crumb {
 
 /**
  * Where a child page sits: a plain trail, Parent › Child › Page, small and
- * muted so the title leads. Switching sections stays in the header.
+ * muted so the title leads, with 32px of air before it. Switching sections
+ * stays in the header.
  */
 export function Breadcrumb({ trail, page }: { trail: Crumb[]; page: string }) {
   return (
     // aria-label is a11y-only text, not CMS copy.
-    <nav aria-label="Breadcrumb" className="mb-6">
+    <nav aria-label="Breadcrumb" className="mb-8">
       <ol className="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm">
         {trail.map((crumb) => (
           <li key={crumb.href} className="flex items-center gap-1.5">
