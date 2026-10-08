@@ -66,7 +66,7 @@ export default async function PortfolioPage() {
 
   return (
     <>
-      <Section className="pb-10 md:pb-12">
+      <Section opener className="pb-10 md:pb-12">
         <PageHeader title={s.creativeTitle} intro={s.creativeIntro} />
       </Section>
       {/* Each section a full-width band, alternating from the surface tone, like the subpages. */}

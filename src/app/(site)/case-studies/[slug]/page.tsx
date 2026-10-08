@@ -45,7 +45,7 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
 
   return (
     <article>
-      <Section className="relative isolate overflow-hidden pb-8 md:pb-10">
+      <Section opener className="relative isolate overflow-hidden pb-8 md:pb-10">
         {heroBg && (
           <>
             {/* Decorative: a faded collage of the project behind the title. */}

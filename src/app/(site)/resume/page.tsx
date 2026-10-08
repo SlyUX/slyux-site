@@ -35,7 +35,7 @@ export default async function ResumePage() {
   const groups = groupByOrganization(experience)
 
   return (
-    <Section>
+    <Section opener>
       <div className="flex flex-col gap-6 md:flex-row md:items-end md:justify-between">
         <PageHeader title={s.resumeTitle} intro={s.resumeIntro} />
         {s.resumePdfUrl && (

@@ -28,7 +28,7 @@ export default async function CmsPage({ params }: PageProps<'/[slug]'>) {
   if (!page) notFound()
 
   return (
-    <Section>
+    <Section opener>
       <div className="grid gap-12 lg:grid-cols-[1fr_20rem] lg:items-start">
         <div>
           <PageHeader title={page.title} intro={page.intro} />

@@ -39,7 +39,7 @@ export default async function WorkPage() {
 
   return (
     <>
-      <Section className="pb-10 md:pb-12">
+      <Section opener className="pb-10 md:pb-12">
         <PageHeader title={s.workTitle} intro={s.workIntro} />
       </Section>
       {groups.length ? (

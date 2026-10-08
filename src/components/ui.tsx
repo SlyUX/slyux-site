@@ -10,9 +10,14 @@ import type { CmsLink } from '@/lib/types'
  * content arrives as props.
  */
 
-/** Full-bleed band with a centered, width-limited inner column. */
-const sectionVariants = cva('px-4 py-14 sm:px-6 md:py-20', {
+/**
+ * Full-bleed band with a centered, width-limited inner column. Bands are 48px
+ * top and bottom on phones, 64px on wider screens. A page's opening band (its
+ * header, just below the navigation) starts closer: 32px, then 40px.
+ */
+const sectionVariants = cva('px-4 py-12 sm:px-6 md:py-16', {
   variants: {
+    opener: { true: 'pt-8 md:pt-10' },
     tone: {
       default: '',
       surface: 'bg-surface',
@@ -25,12 +30,13 @@ const sectionVariants = cva('px-4 py-14 sm:px-6 md:py-20', {
 
 export function Section({
   tone,
+  opener,
   className,
   children,
   ...props
 }: React.ComponentProps<'section'> & VariantProps<typeof sectionVariants>) {
   return (
-    <section className={cn(sectionVariants({ tone }), className)} {...props}>
+    <section className={cn(sectionVariants({ tone, opener }), className)} {...props}>
       <div className="mx-auto w-full max-w-6xl">{children}</div>
     </section>
   )
