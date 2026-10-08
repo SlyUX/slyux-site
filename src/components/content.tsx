@@ -388,16 +388,25 @@ export function CreativeTile({
   // A card that opens its own gallery shows how many images it holds.
   const imageCount = !href && image ? 1 + (work.gallery ?? []).filter((g) => g?.asset).length : 0
   const stretch = 'after:absolute after:inset-0 group-hover:text-primary'
+  // A container, so the chip can move by the card's width (see below), not the screen's.
   const frame = (
     <div
       className={cn(
-        'border-border bg-paper group-hover:border-primary relative overflow-hidden rounded-ui border transition-colors',
+        'border-border bg-paper group-hover:border-primary @container relative overflow-hidden rounded-ui border transition-colors',
         { wide: 'aspect-[3/2]', large: 'aspect-[4/3]', square: 'aspect-square' }[shape],
       )}
     >
       {image}
       {deep && <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />}
-      {kindLabel && <KindChip label={kindLabel} deep={deep} className="absolute top-3 left-3 shadow-sm" />}
+      {/*
+        Top-left, across from the indicator. On cards too narrow for both (two
+        or four to a row on phones and tablets), it drops to the bottom-left so
+        the longest chip never runs under a gallery count: 13rem fits
+        "Graphic design" beside a two-digit count.
+      */}
+      {kindLabel && (
+        <KindChip label={kindLabel} deep={deep} className="absolute top-3 left-3 shadow-sm @max-[13rem]:top-auto @max-[13rem]:bottom-3" />
+      )}
       {href ? <CardAction action={deep ? 'page' : 'external'} /> : image && <CardAction action="enlarge" count={imageCount} />}
     </div>
   )

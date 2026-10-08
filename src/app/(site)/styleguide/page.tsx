@@ -602,7 +602,7 @@ export default async function StyleguidePage() {
                 file="src/components/content.tsx · CreativeTile"
                 notes={[
                   'Indicator: a folder opens a page; arrows open the image larger; a gallery adds its icon and image count.',
-                  'A chip names the kind where no heading does. Cards with a page get a burnt-orange chip and a navy top edge.',
+                  'A chip names the kind where no heading does. Cards with a page get a burnt-orange chip and a navy top edge. On cards too narrow for both, the chip drops to the bottom-left so it never runs under the indicator.',
                   'Brand pieces and logos show whole on white; other artwork fills the card, cropped around its focal point.',
                 ]}
               >
