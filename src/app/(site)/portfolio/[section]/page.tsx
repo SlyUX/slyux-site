@@ -71,6 +71,7 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
           labels={galleryLabels(s)}
           lead={lead}
           pageTitle={copy.title}
+          featuredHeading={s.portfolioFeaturedHeading}
         />
       ) : (
         <Section className="pt-0 md:pt-0">

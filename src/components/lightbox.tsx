@@ -20,10 +20,11 @@ type Open = (pieceKey: string) => void
 const LightboxContext = createContext<{ open: Open; buttons: Map<string, HTMLButtonElement> } | null>(null)
 
 /**
- * Cards that don't link anywhere open their artwork here, larger: one viewer
- * for a whole group of cards, so ← / → (and swipe) step from piece to piece,
- * through each piece's extra images. Images are fitted to the screen on white,
- * so transparent artwork reads as it does on its card.
+ * Cards that don't link anywhere open their artwork here, larger. Each card is
+ * its own gallery: ← / → (and swipe) step through that piece's images only, so
+ * a campaign's six images stay together and a single ad shows on its own, with
+ * no arrows. Images are fitted to the screen on white, so transparent artwork
+ * reads as it does on its card.
  */
 export function Lightbox({
   items,
@@ -34,16 +35,20 @@ export function Lightbox({
   labels: Pick<GalleryLabels, 'close' | 'previous' | 'next'>
   children: React.ReactNode
 }) {
-  const viewer = useViewer(items.length)
+  // The piece whose card opened the viewer; only its images are shown.
+  const [pieceKey, setPieceKey] = useState<string | null>(null)
+  const shown = pieceKey ? items.filter((it) => it.pieceKey === pieceKey) : []
+  const viewer = useViewer(shown.length)
   const { index, openAt } = viewer
-  const item = items[index]
+  const item = shown[index]
   // Each card's button, so closing returns focus to the piece last shown.
   // One Map for the component's life; buttons add and remove themselves.
   const [buttons] = useState(() => new Map<string, HTMLButtonElement>())
 
-  const open: Open = (pieceKey) => {
-    const i = items.findIndex((it) => it.pieceKey === pieceKey)
-    if (i >= 0) openAt(i)
+  const open: Open = (key) => {
+    if (!items.some((it) => it.pieceKey === key)) return
+    setPieceKey(key)
+    openAt(0)
   }
 
   return (
@@ -54,15 +59,16 @@ export function Lightbox({
           viewer={viewer}
           label={item?.title ?? ''}
           counter={
+            // The count only when the piece has more than one image.
             <>
-              {index + 1} / {items.length}
-              {item && <span aria-hidden> · {item.title}</span>}
+              {shown.length > 1 && `${index + 1} / ${shown.length}`}
+              {item && <span aria-hidden>{shown.length > 1 && ' · '}{item.title}</span>}
             </>
           }
           // The title alone when the image has no description of its own.
           srText={item && (item.alt === item.title ? item.title : `${item.title} — ${item.alt}`)}
           labels={labels}
-          onClosed={(i) => buttons.get(items[i].pieceKey)?.focus()}
+          onClosed={() => pieceKey && buttons.get(pieceKey)?.focus()}
         >
           <div
             // The dim space around the image closes the lightbox, as elsewhere.
@@ -70,20 +76,24 @@ export function Lightbox({
             className="flex min-h-[calc(100svh-4.5rem)] items-center justify-center px-4 pb-6 sm:px-6"
           >
             <ViewerStage
+              // A fresh stage per piece, so opening one never animates out of another's image.
+              key={pieceKey ?? ''}
               index={index}
-              render={(i, leaving) => (
+              render={(i, leaving) =>
+                shown[i] && (
                 // Plain <img>: pre-sized by Sanity, and fitted to the screen rather than the width.
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
                   onClick={(e) => e.stopPropagation()}
-                  src={items[i].src}
-                  alt={leaving ? '' : items[i].alt}
-                  width={items[i].width}
-                  height={items[i].height}
+                  src={shown[i].src}
+                  alt={leaving ? '' : shown[i].alt}
+                  width={shown[i].width}
+                  height={shown[i].height}
                   decoding="async"
                   className="bg-paper h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-lg shadow-2xl"
                 />
-              )}
+                )
+              }
             />
           </div>
         </ViewerDialog>

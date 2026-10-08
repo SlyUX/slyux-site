@@ -352,6 +352,13 @@ export default defineType({
       validation: (rule) => rule.max(3).unique(),
     }),
     defineField({
+      name: 'portfolioFeaturedHeading',
+      title: 'Featured band heading',
+      type: 'string',
+      group: 'creative',
+      description: 'Heads the band at the top of a portfolio page that holds its featured pieces (any piece marked Featured, except brand systems and UX projects).',
+    }),
+    defineField({
       name: 'portfolioUxCaseStudy',
       title: 'Portfolio page, UX row: case study',
       type: 'reference',

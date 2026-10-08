@@ -394,6 +394,7 @@ export type SiteSettings = {
       _key: string;
     } & CaseStudyReference
   >;
+  portfolioFeaturedHeading?: string;
   portfolioUxCaseStudy?: CaseStudyReference;
   portfolioUxPieces?: Array<
     {
@@ -801,6 +802,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
       } & Metric
     > | null;
   }> | null;
+  portfolioFeaturedHeading?: string;
   portfolioUxCaseStudy: {
     _id: string;
     title: string;

@@ -2350,6 +2350,13 @@
         },
         "optional": true
       },
+      "portfolioFeaturedHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "portfolioUxCaseStudy": {
         "type": "objectAttribute",
         "value": {
