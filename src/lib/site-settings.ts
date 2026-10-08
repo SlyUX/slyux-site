@@ -33,6 +33,7 @@ const DEFAULTS = {
   headline: 'Sly UX',
   workTitle: 'Case Studies',
   workEmpty: 'Case studies are on their way.',
+  caseStudiesMoreHeading: 'More case studies',
   fullPageLabel: 'View full page',
   closeLabel: 'Close',
   howItStartedHeading: 'How it started…',

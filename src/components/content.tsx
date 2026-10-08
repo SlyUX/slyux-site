@@ -191,6 +191,70 @@ export function CaseStudyTile({
   )
 }
 
+/**
+ * One case study as a row on the Case Studies page: the thumbnail beside its
+ * summary, so the text reads as a dek instead of a paragraph under a card.
+ * `flip` puts the thumbnail on the right; the page alternates it down the rows.
+ * Phones stack the thumbnail above the text.
+ */
+export function CaseStudyRow({
+  study,
+  flip = false,
+  priority = false,
+  headingLevel: Heading = 'h3',
+}: {
+  study: CaseStudyCardData
+  flip?: boolean
+  priority?: boolean
+  headingLevel?: 'h2' | 'h3'
+}) {
+  const meta = [study.organization, study.years].filter(Boolean).join(' · ')
+  const lead = study.metrics?.[0]
+  return (
+    <article className="group relative grid items-center gap-6 md:grid-cols-2 md:gap-12">
+      <div
+        className={cn(
+          'border-border bg-paper group-hover:border-primary relative aspect-[3/2] overflow-hidden rounded-2xl border transition-colors',
+          flip && 'md:order-last',
+        )}
+      >
+        {study.heroImage?.asset ? (
+          <Image
+            // Uncropped at the source; the frame crops from the top-left, where screenshots start reading.
+            src={urlFor(study.heroImage).width(1200).url()}
+            alt={study.heroImage.alt ?? ''}
+            fill
+            priority={priority}
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover object-left-top"
+          />
+        ) : (
+          // No image yet: the same blueprint placeholder as the home page cards.
+          <div aria-hidden className="bg-surface text-heading/20 font-display blueprint-grid flex h-full items-center justify-center text-7xl">
+            {study.title.charAt(0)}
+          </div>
+        )}
+        <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />
+        <CardAction action="page" />
+      </div>
+      <div className="flex flex-col gap-2">
+        {meta && <p className="text-muted-foreground text-sm">{meta}</p>}
+        <Heading className="font-display text-2xl font-semibold md:text-3xl">
+          <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
+            {study.title}
+          </TransitionLink>
+        </Heading>
+        {study.summary && <p className="text-muted-foreground leading-relaxed">{study.summary}</p>}
+        {lead && (
+          <p className="mt-1 text-sm font-semibold">
+            <span className="text-primary">{lead.value}</span> {lead.label}
+          </p>
+        )}
+      </div>
+    </article>
+  )
+}
+
 /** Cards with a full page behind them: a project page or a case study. */
 export const isDeepCard = (work: CreativeWorkCard) => !!cardHref(work)?.startsWith('/')
 
