@@ -1,7 +1,15 @@
+import { BookOpen, Handshake } from 'lucide-react'
+
 import { Hero } from '@/components/hero'
 import { ButtonLink, Section } from '@/components/ui'
 import { CaseStudyTile, MetricStrip } from '@/components/content'
 import { getSiteSettings } from '@/lib/site-settings'
+
+/**
+ * Decorative icons for the two closing teasers, in the hero's fox orange: an
+ * open book for the portfolio, a handshake for client work.
+ */
+const TEASER_ICONS = [BookOpen, Handshake]
 
 export default async function HomePage() {
   const s = await getSiteSettings()
@@ -45,16 +53,20 @@ export default async function HomePage() {
       {(s.creativeTeaser?.heading || s.clientTeaser?.heading) && (
         <Section tone="surface">
           <div className="grid gap-12 md:grid-cols-2">
-            {[s.creativeTeaser, s.clientTeaser].map(
-              (teaser, i) =>
-                teaser?.heading && (
-                  <div key={i}>
-                    <h2 className="font-display text-3xl font-semibold">{teaser.heading}</h2>
-                    {teaser.body && <p className="text-muted-foreground mt-3 leading-relaxed">{teaser.body}</p>}
-                    <ButtonLink link={teaser.cta} variant="secondary" className="mt-5" />
-                  </div>
-                ),
-            )}
+            {[s.creativeTeaser, s.clientTeaser].map((teaser, i) => {
+              if (!teaser?.heading) return null
+              const Icon = TEASER_ICONS[i]
+              return (
+                <div key={i}>
+                  <h2 className="font-display flex items-center gap-3 text-3xl font-semibold">
+                    <Icon aria-hidden className="text-fox size-[1em] shrink-0" strokeWidth={1.5} />
+                    {teaser.heading}
+                  </h2>
+                  {teaser.body && <p className="text-muted-foreground mt-3 leading-relaxed">{teaser.body}</p>}
+                  <ButtonLink link={teaser.cta} variant="secondary" className="mt-5" />
+                </div>
+              )
+            })}
           </div>
         </Section>
       )}
