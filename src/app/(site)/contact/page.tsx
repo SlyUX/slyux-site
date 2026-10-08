@@ -19,7 +19,7 @@ export default async function ContactPage() {
     `mailto:${s.contactEmail}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`
 
   return (
-    <Section>
+    <Section opener>
       <PageHeader title={s.contactTitle} intro={s.contactIntro} />
       {s.inquiryTypes?.length ? (
         <ul className="mt-12 grid gap-6 md:grid-cols-2">

@@ -13,10 +13,11 @@ export interface Crumb {
 }
 
 /**
- * Where a child page sits. Wider screens show the parent as a text link, then
- * its children: a row of tabs with the current one raised (portfolio
- * sections), or, for a long list (case studies), one raised tab that opens a
- * menu of them all. Phones show a plain trail: Parent › Child › Page.
+ * Where a child page sits. Wider screens show a white card holding the parent
+ * (a bold, capitalized link), then its children: a row of tabs with the current
+ * one raised (portfolio sections), or, for a long list (case studies), one
+ * raised tab that opens a menu of them all. Phones show a plain trail:
+ * Parent › Child › Page.
  *
  * The tabs sit in a 3px track, so they take the inner radius and their
  * corners stay concentric with it.
@@ -44,7 +45,7 @@ export function Breadcrumb({
 
   return (
     // aria-label is a11y-only text, not CMS copy.
-    <nav aria-label="Breadcrumb" className="mb-8">
+    <nav aria-label="Breadcrumb" className="mb-6">
       <ol className="text-muted-foreground flex flex-wrap items-center gap-1.5 text-sm md:hidden">
         <li>
           <TransitionLink href={parent.href} className="hover:text-primary font-medium">
@@ -81,9 +82,10 @@ export function Breadcrumb({
         )}
       </ol>
 
-      <ol className="hidden items-center gap-4 md:flex">
+      {/* A white card, 10px around its contents; the track inside keeps its own 7px corners. */}
+      <ol className="bg-paper rounded-ui hidden items-center gap-4 p-2.5 pl-3.5 md:inline-flex">
         <li>
-          <TransitionLink href={parent.href} className="text-muted-foreground hover:text-primary text-sm font-medium">
+          <TransitionLink href={parent.href} className="text-foreground hover:text-primary text-sm font-bold tracking-wide uppercase">
             {parent.label}
           </TransitionLink>
         </li>

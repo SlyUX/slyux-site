@@ -69,7 +69,7 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
 
   return (
     <article>
-      <Section className="pb-6 md:pb-8">
+      <Section opener className="pb-6 md:pb-8">
         <PageHeader
           title={work.title}
           intro={work.summary}
