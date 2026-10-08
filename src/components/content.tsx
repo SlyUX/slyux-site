@@ -250,16 +250,28 @@ export const isDeepCard = (work: CreativeWorkCard) => !!cardHref(work)?.startsWi
 /**
  * What clicking a card does, in its thumbnail's top-right corner (across from
  * the chip): a folder opens a project page or case study, diverging arrows
- * open the artwork larger, an outward arrow opens another site. Decorative —
- * the card's link or button already says where it goes.
+ * open the artwork larger, an outward arrow opens another site. A card that
+ * opens a gallery adds the gallery icon and its image count ahead of the
+ * arrows. Decorative — the card's link or button already says where it goes,
+ * and its name carries the count.
  */
-function CardAction({ action }: { action: 'page' | 'enlarge' | 'external' }) {
+function CardAction({ action, count = 1 }: { action: 'page' | 'enlarge' | 'external'; count?: number }) {
   const Icon = { page: FolderOpen, enlarge: Maximize2, external: ExternalLink }[action]
+  const gallery = action === 'enlarge' && count > 1
   return (
     <span
       aria-hidden
-      className="bg-background/90 text-foreground absolute top-3 right-3 flex size-8 items-center justify-center rounded-full shadow-md"
+      className={cn(
+        'bg-background/90 text-foreground absolute top-3 right-3 flex h-8 items-center justify-center rounded-full shadow-md',
+        gallery ? 'gap-1.5 px-2.5 text-xs font-semibold tabular-nums' : 'w-8',
+      )}
     >
+      {gallery && (
+        <>
+          <Images className="size-4" />
+          {count}
+        </>
+      )}
       <Icon className="size-4" />
     </span>
   )
@@ -385,14 +397,7 @@ export function CreativeTile({
       {image}
       {deep && <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />}
       {kindLabel && <KindChip label={kindLabel} deep={deep} className="absolute top-3 left-3 shadow-sm" />}
-      {href ? <CardAction action={deep ? 'page' : 'external'} /> : image && <CardAction action="enlarge" />}
-      {imageCount > 1 && (
-        // Decorative: the button's name carries the count for screen readers.
-        <span aria-hidden className="bg-ink/80 text-ink-foreground absolute right-3 bottom-3 flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums">
-          <Images className="size-3.5" strokeWidth={2} />
-          {imageCount}
-        </span>
-      )}
+      {href ? <CardAction action={deep ? 'page' : 'external'} /> : image && <CardAction action="enlarge" count={imageCount} />}
     </div>
   )
   // The title is the card's one link or button, stretched over the whole card.
