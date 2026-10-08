@@ -55,6 +55,7 @@ export function PortfolioGrid({
       work={work}
       matureLabel={matureLabel}
       enlargeLabel={labels.enlarge}
+      imageCountLabel={labels.imageCount}
       large={shape === 'large'}
       feature={shape === 'feature'}
       headingLevel={showHeading(heading) ? 'h3' : 'h2'}

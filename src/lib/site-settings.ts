@@ -42,6 +42,7 @@ const DEFAULTS = {
   opportunitiesLabel: 'Opportunities to engage',
   barriersLabel: 'Barriers to adoption',
   enlargeLabel: 'View larger',
+  imageCountLabel: '{count} images',
   previousLabel: 'Previous image',
   nextLabel: 'Next image',
   pdfBadge: 'Look inside',
@@ -137,6 +138,7 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
 export const galleryLabels = (s: SiteSettings) => ({
   fullPage: s.fullPageLabel,
   enlarge: s.enlargeLabel,
+  imageCount: s.imageCountLabel,
   close: s.closeLabel,
   previous: s.previousLabel,
   next: s.nextLabel,
