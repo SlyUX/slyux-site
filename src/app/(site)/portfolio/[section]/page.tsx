@@ -65,13 +65,7 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
         <PageHeader
           title={copy.title}
           intro={copy.intro}
-          breadcrumb={
-            <Breadcrumb
-              parent={{ label: s.creativeTitle, href: '/portfolio' }}
-              items={PORTFOLIO_SECTIONS.map((sec) => ({ label: s.portfolioSections[sec].title, href: `/portfolio/${sec}` }))}
-              current={`/portfolio/${section}`}
-            />
-          }
+          breadcrumb={<Breadcrumb trail={[{ label: s.creativeTitle, href: '/portfolio' }]} page={copy.title} />}
         />
       </Section>
       {works.length > 0 || lead ? (
