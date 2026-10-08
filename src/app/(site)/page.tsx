@@ -1,6 +1,6 @@
 import { Hero } from '@/components/hero'
 import { ButtonLink, Section } from '@/components/ui'
-import { CaseStudyCard, MetricStrip } from '@/components/content'
+import { CaseStudyTile, MetricStrip } from '@/components/content'
 import { getSiteSettings } from '@/lib/site-settings'
 
 export default async function HomePage() {
@@ -22,7 +22,7 @@ export default async function HomePage() {
 
       {!!s.proofStats?.length && (
         <Section tone="brand" className="py-12 md:py-14" aria-label="Highlights">
-          <MetricStrip metrics={s.proofStats} tone="brand" />
+          <MetricStrip metrics={s.proofStats} tone="brand" align="center" />
         </Section>
       )}
 
@@ -33,9 +33,10 @@ export default async function HomePage() {
               {s.featuredHeading}
             </h2>
           )}
-          <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
+          {/* Three to a row: thumbnail, title, and client. The Case Studies page carries the summaries. */}
+          <div className="grid gap-x-6 gap-y-10 sm:grid-cols-2 md:grid-cols-3">
             {featured.map((study) => (
-              <CaseStudyCard key={study._id} study={study} />
+              <CaseStudyTile key={study._id} study={study} meta="client" />
             ))}
           </div>
         </Section>
