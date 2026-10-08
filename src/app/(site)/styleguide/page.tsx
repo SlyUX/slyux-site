@@ -304,6 +304,7 @@ const VOICE: [string, React.ReactNode][] = [
   ['First person for my calls, we for the team’s.', 'Be clear which is which.'],
   ['Short and concrete.', 'Short declarative sentences, concrete nouns, no hype words (leveraged, seamless, robust, holistic).'],
   ['Sentence case for headings.', '“Research-led redesigns,” not “Research-Led Redesigns.” Page names follow the navigation.'],
+  ['Lowercase after a label.', '“Scope: research and design,” not “Scope: Research and design.” Proper nouns, job titles, and “I” keep their capitals.'],
   [
     'Titles in italics, or quotation marks: never both.',
     <>
