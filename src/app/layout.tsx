@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 import { Analytics } from '@vercel/analytics/next'
-import { Bodoni_Moda, Geist } from 'next/font/google'
+import { Geist, Libre_Bodoni } from 'next/font/google'
 
 import './globals.css'
 import { cn } from '@/lib/utils'
@@ -9,9 +9,9 @@ import { getSiteSettings } from '@/lib/site-settings'
 import { SITE_URL } from '@/lib/site-url'
 
 const geist = Geist({ subsets: ['latin'], variable: '--font-geist' })
-// Display serif for headings: a Didone. The optical-size axis thickens its
-// hairlines automatically at smaller sizes, so headings stay legible.
-const bodoni = Bodoni_Moda({ subsets: ['latin'], axes: ['opsz'], variable: '--font-bodoni' })
+// Display serif for headings: a Bodoni drawn for text sizes, so its hairlines
+// hold up on dark backgrounds and smaller headings.
+const bodoni = Libre_Bodoni({ subsets: ['latin'], variable: '--font-bodoni' })
 
 /**
  * Root layout stays minimal so the Studio at /studio is full-screen. Site
