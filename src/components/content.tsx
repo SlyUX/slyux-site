@@ -21,13 +21,19 @@ function StatValue({ value }: { value: string }) {
     .map((part, i) => (/^[×+~]$/.test(part) ? <span key={i} className="font-sans font-medium">{part}</span> : part))
 }
 
-/** A row of headline numbers. Used by the home proof strip and case studies. */
+/**
+ * A row of headline numbers. Used by the home proof strip and case studies.
+ * `center` suits the home strip, which sits among centered blocks before any
+ * prose; case studies keep the left edge their text follows.
+ */
 export function MetricStrip({
   metrics,
   tone = 'default',
+  align = 'start',
 }: {
   metrics: CmsMetric[] | null | undefined
   tone?: 'default' | 'ink' | 'brand'
+  align?: 'start' | 'center'
 }) {
   if (!metrics?.length) return null
   return (
@@ -35,7 +41,14 @@ export function MetricStrip({
       {metrics.map((m) => (
         // The number reads first (order-first on <dd>); <dt> stays first in the DOM so
         // assistive tech still announces label → value.
-        <div key={`${m.value}-${m.label}`} className="flex flex-col gap-1">
+        <div
+          key={`${m.value}-${m.label}`}
+          className={cn(
+            'flex flex-col gap-1',
+            // Centered, a last stat left alone in the phone's two columns spans both, so it centers on the page.
+            align === 'center' && 'items-center text-center max-md:last:odd:col-span-2',
+          )}
+        >
           <dt
             className={cn(
               'text-sm leading-snug',
@@ -55,53 +68,6 @@ export function MetricStrip({
         </div>
       ))}
     </dl>
-  )
-}
-
-/** Card linking to a case study. Same shape on the home page and /work. */
-export function CaseStudyCard({ study, headingLevel = 'h3' }: { study: CaseStudyCardData; headingLevel?: 'h2' | 'h3' }) {
-  const Heading = headingLevel
-  const lead = study.metrics?.[0]
-  return (
-    <article className="group relative flex flex-col">
-      <div className="bg-paper relative aspect-[4/3] overflow-hidden rounded-2xl">
-        {study.heroImage?.asset ? (
-          <Image
-            // Uncropped at the source; the frame crops from the top-left, where
-            // screenshots (most card images) start reading.
-            src={urlFor(study.heroImage).width(1100).url()}
-            alt={study.heroImage.alt ?? ''}
-            fill
-            sizes="(max-width: 768px) 100vw, 50vw"
-            className="object-cover object-left-top transition-transform duration-500 group-hover:scale-[1.02]"
-          />
-        ) : (
-          // No image yet: a faint blueprint grid with the title's initial in navy.
-          <div
-            aria-hidden
-            className="bg-surface text-heading/20 font-display flex h-full items-center justify-center blueprint-grid text-7xl"
-          >
-            {study.title.charAt(0)}
-          </div>
-        )}
-      </div>
-      <div className="mt-4 flex flex-col gap-1">
-        {(study.organization || study.years) && (
-          <p className="text-muted-foreground text-sm">{[study.organization, study.years].filter(Boolean).join(' · ')}</p>
-        )}
-        <Heading className="font-display text-2xl font-semibold">
-          <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
-            {study.title}
-          </TransitionLink>
-        </Heading>
-        <p className="text-muted-foreground leading-relaxed">{study.summary}</p>
-        {lead && (
-          <p className="mt-1 text-sm font-semibold">
-            <span className="text-primary">{lead.value}</span> {lead.label}
-          </p>
-        )}
-      </div>
-    </article>
   )
 }
 
@@ -158,15 +124,15 @@ export function lightboxItems(works: CreativeWorkCard[]): LightboxItem[] {
 }
 
 /**
- * A case study as a compact card among portfolio pieces (the UX page's top
- * row): wide image under the navy edge, title, and organization, with an
- * optional "Case study" chip. The full card, with summary and metric, is
- * CaseStudyCard.
+ * A case study as a compact card: wide image under the navy edge, title, and
+ * organization, with an optional "Case study" chip. Used on the home page, the
+ * Portfolio pages' UX rows, and (with `details`) the Case Studies page.
  */
 export function CaseStudyTile({
   study,
   label,
   details = false,
+  meta: metaShown = 'full',
   headingLevel: Heading = 'h3',
 }: {
   study: CaseStudyCardData
@@ -174,9 +140,11 @@ export function CaseStudyTile({
   label?: string
   /** Two to a row on the Case Studies page: a larger title, the summary (three lines at most), and the lead metric. */
   details?: boolean
+  /** Under the title: the organization and years, or just the organization (the home page). */
+  meta?: 'full' | 'client'
   headingLevel?: 'h2' | 'h3'
 }) {
-  const meta = [study.organization, study.years].filter(Boolean).join(' · ')
+  const meta = (metaShown === 'client' ? [study.organization] : [study.organization, study.years]).filter(Boolean).join(' · ')
   const lead = details ? study.metrics?.[0] : undefined
   return (
     <article className="group relative flex flex-col">
