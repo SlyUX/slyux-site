@@ -295,7 +295,7 @@ const RULES = [
   ],
 ]
 
-const VOICE = [
+const VOICE: [string, React.ReactNode][] = [
   [
     'Diplomatic, even when disagreeing.',
     'Describe the work and the conditions behind it, not people’s judgment. Credit what worked before naming what didn’t. When someone decided differently, say so plainly and leave it there.',
@@ -304,7 +304,12 @@ const VOICE = [
   ['First person for my calls, we for the team’s.', 'Be clear which is which.'],
   ['Short and concrete.', 'Short declarative sentences, concrete nouns, no hype words (leveraged, seamless, robust, holistic).'],
   ['Sentence case for headings.', '“Research-led redesigns,” not “Research-Led Redesigns.” Page names follow the navigation.'],
-  ['Titles in italics, or quotation marks: never both.', 'Italics in body text (Jesus Calling); quotation marks where italics can’t go, like summaries and alt text.'],
+  [
+    'Titles in italics, or quotation marks: never both.',
+    <>
+      Italics in body text (<em>Jesus Calling</em>); quotation marks where italics can’t go, like summaries and alt text.
+    </>,
+  ],
   ['American English.', 'Including Studio labels.'],
   ['Alt text says what the image shows and why it matters,', 'in one sentence.'],
 ]
