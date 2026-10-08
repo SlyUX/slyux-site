@@ -13,7 +13,7 @@ import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib
 import { documentSettings, galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
-import { isPortfolioSection, kindsInSection, PORTFOLIO_SECTIONS, sectionOfKind } from '@/sanity/portfolio'
+import { isPortfolioSection, kindsInSection, sectionOfKind } from '@/sanity/portfolio'
 import type { CreativeWorkDetail } from '@/lib/types'
 
 export async function generateStaticParams() {
@@ -76,9 +76,10 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
           eyebrow={[work.client, work.year].filter(Boolean).join(' · ') || null}
           breadcrumb={
             <Breadcrumb
-              parent={{ label: s.creativeTitle, href: '/portfolio' }}
-              items={PORTFOLIO_SECTIONS.map((sec) => ({ label: s.portfolioSections[sec].title, href: `/portfolio/${sec}` }))}
-              current={`/portfolio/${section}`}
+              trail={[
+                { label: s.creativeTitle, href: '/portfolio' },
+                { label: s.portfolioSections[section].title, href: `/portfolio/${section}` },
+              ]}
               page={work.title}
             />
           }

@@ -8,10 +8,10 @@ import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { MetricStrip, WorkStory } from '@/components/content'
 import { Gallery } from '@/components/gallery'
 import { Personas } from '@/components/personas'
-import { CASE_STUDIES_QUERY, CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
+import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { urlFor } from '@/sanity/image'
-import type { CaseStudyCard as CaseStudyCardData, CaseStudyDetail } from '@/lib/types'
+import type { CaseStudyDetail } from '@/lib/types'
 
 export async function generateStaticParams() {
   const slugs = await safeFetch<string[]>(CASE_STUDY_SLUGS_QUERY, {}, [])
@@ -27,11 +27,7 @@ export async function generateMetadata({ params }: PageProps<'/case-studies/[slu
 }
 
 export default async function CaseStudyPage({ params }: PageProps<'/case-studies/[slug]'>) {
-  const [study, s, all] = await Promise.all([
-    getStudy((await params).slug),
-    getSiteSettings(),
-    safeFetch<CaseStudyCardData[]>(CASE_STUDIES_QUERY, {}, []),
-  ])
+  const [study, s] = await Promise.all([getStudy((await params).slug), getSiteSettings()])
   if (!study) notFound()
 
   const facts = [study.organization, study.role, study.years].filter(Boolean)
@@ -57,14 +53,7 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
           title={study.title}
           intro={study.summary}
           eyebrow={study.organization}
-          breadcrumb={
-            <Breadcrumb
-              menu
-              parent={{ label: s.workTitle, href: '/case-studies' }}
-              items={all.map((cs) => ({ label: cs.title, href: `/case-studies/${cs.slug}` }))}
-              current={`/case-studies/${study.slug}`}
-            />
-          }
+          breadcrumb={<Breadcrumb trail={[{ label: s.workTitle, href: '/case-studies' }]} page={study.title} />}
         />
         {facts.length > 1 && (
           <p className="text-muted-foreground mt-6 text-sm">{facts.slice(1).join(' · ')}</p>

@@ -17,7 +17,6 @@
     --foreground on --paper ............. 16.83  (AAA) — cards and document pages
     --muted-foreground on --background ...  6.82  (AA)
     --muted-foreground on --surface ......  6.24  (AA)
-    --subtle-foreground on --paper .......  4.54  (AA) — the lightest gray text allowed; on --paper (white) only
     --caption on --background ............  9.48  (AAA) — image captions
     --caption on --surface ...............  8.67  (AAA) — captions in the "How it started" rail
     --heading on --background ............ 10.31  (AAA) — page titles
@@ -46,7 +45,6 @@
   --surface: #eef0f3;
   --paper: #ffffff; /* white ground for artwork: cards, story images, galleries, document pages */
   --muted-foreground: #52595e;
-  --subtle-foreground: #71777b; /* lightest AA gray on white; fails on --background and --surface */
   --caption: #3d4449; /* dark gray: between --muted-foreground and --foreground */
   --border: #dbdee2;
   --primary: #cf3c09;
@@ -74,7 +72,6 @@
   --color-surface: var(--surface);
   --color-paper: var(--paper);
   --color-muted-foreground: var(--muted-foreground);
-  --color-subtle-foreground: var(--subtle-foreground);
   --color-caption: var(--caption);
   --color-border: var(--border);
   --color-primary: var(--primary);
