@@ -85,7 +85,7 @@ export function Breadcrumb({
       {/* A white card, 10px around its contents; the track inside keeps its own 7px corners. */}
       <ol className="bg-paper rounded-ui hidden items-center gap-4 p-2.5 pl-3.5 md:inline-flex">
         <li>
-          <TransitionLink href={parent.href} className="text-foreground hover:text-primary text-sm font-bold tracking-wide uppercase">
+          <TransitionLink href={parent.href} className="text-subtle-foreground hover:text-primary text-sm font-bold tracking-wide uppercase">
             {parent.label}
           </TransitionLink>
         </li>
