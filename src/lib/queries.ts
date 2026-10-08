@@ -36,6 +36,7 @@ export const SITE_SETTINGS_QUERY = defineQuery(`*[_type=="siteSettings" && _id==
   "heroVideoType": heroVideo.asset->mimeType,
   "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}},
   "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{${CASE_STUDY_CARD}},
+  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{${CASE_STUDY_CARD}}},
   "portfolioUxCaseStudy": portfolioUxCaseStudy->{${CASE_STUDY_CARD}},
   "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{${PORTFOLIO_CARD}}
 }`)

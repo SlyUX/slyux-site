@@ -223,6 +223,42 @@ export default defineType({
     defineField({ name: 'workTitle', title: 'Title', type: 'string', group: 'work' }),
     defineField({ name: 'workIntro', title: 'Intro', type: 'text', rows: 2, group: 'work' }),
     defineField({ name: 'workEmpty', title: 'Empty state', type: 'string', group: 'work', description: 'Shown if no case studies are published.' }),
+    defineField({
+      name: 'caseStudyGroups',
+      title: 'Groups',
+      type: 'array',
+      group: 'work',
+      description:
+        'The Case Studies page, in order: each group is a band with its heading, one case study per row. Case studies left out of every group appear last, under the heading below.',
+      of: [
+        defineArrayMember({
+          name: 'caseStudyGroup',
+          title: 'Group',
+          type: 'object',
+          fields: [
+            defineField({ name: 'heading', title: 'Heading', type: 'string', validation: (rule) => rule.required() }),
+            defineField({
+              name: 'studies',
+              title: 'Case studies',
+              type: 'array',
+              of: [defineArrayMember({ type: 'reference', to: [{ type: 'caseStudy' }], options: { disableNew: true } })],
+              validation: (rule) => rule.required().min(1).unique(),
+            }),
+          ],
+          preview: {
+            select: { title: 'heading', s0: 'studies.0.title', s1: 'studies.1.title', s2: 'studies.2.title' },
+            prepare: ({ title, s0, s1, s2 }) => ({ title, subtitle: [s0, s1, s2].filter(Boolean).join(' · ') }),
+          },
+        }),
+      ],
+    }),
+    defineField({
+      name: 'caseStudiesMoreHeading',
+      title: '"More case studies" heading',
+      type: 'string',
+      group: 'work',
+      description: 'Heads any case studies not in a group. Not shown when every case study is in one, or when there are no groups.',
+    }),
     defineField({ name: 'fullPageLabel', title: '"View full page" button', type: 'string', group: 'work', description: 'On gallery screens that have a full-page version.' }),
     defineField({ name: 'howItStartedHeading', title: '"How it started" rail title', type: 'string', group: 'work', description: 'Titles the right-hand rail of before-the-work context on case studies and portfolio pages.' }),
     defineField({ name: 'documentsHeading', title: 'Documents heading', type: 'string', group: 'work', description: 'Heads the PDF documents, the last section of the story on portfolio pages.' }),
