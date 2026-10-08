@@ -229,7 +229,7 @@ export default defineType({
       type: 'array',
       group: 'work',
       description:
-        'The Case Studies page, in order: each group is a band with its heading, one case study per row. Case studies left out of every group appear last, under the heading below.',
+        'The Case Studies page, in order, each group a band under its heading. The first group is featured: one large row per case study. Later groups show two case studies to a row, so pairs fill them best. Case studies left out of every group appear last, under the heading below.',
       of: [
         defineArrayMember({
           name: 'caseStudyGroup',

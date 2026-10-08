@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 
 import { PageHeader, Section } from '@/components/ui'
-import { CaseStudyRow } from '@/components/content'
+import { CaseStudyRow, CaseStudyTile } from '@/components/content'
 import { CASE_STUDIES_QUERY, safeFetch } from '@/lib/queries'
 import { getSiteSettings } from '@/lib/site-settings'
 import type { CaseStudyCard as CaseStudyCardData } from '@/lib/types'
@@ -33,39 +33,41 @@ export default async function WorkPage() {
   const rest = studies.filter((study) => !placed.has(study._id))
   if (rest.length) groups.push({ key: 'more', heading: groups.length ? s.caseStudiesMoreHeading : null, studies: rest })
 
-  // Thumbnails alternate sides down the whole page, not restarting in each band.
-  let row = 0
-  const banded = groups.map((group) => ({ ...group, rows: group.studies.map((study) => ({ study, index: row++ })) }))
+  // The first group is featured: one large row per case study, thumbnails
+  // alternating sides. Every later group shows two case studies to a row.
+  const featuredKey = groups[0]?.key !== 'more' ? groups[0]?.key : undefined
 
   return (
     <>
       <Section className="pb-10 md:pb-12">
         <PageHeader title={s.workTitle} intro={s.workIntro} />
       </Section>
-      {banded.length ? (
+      {groups.length ? (
         // Each group a full-width band, alternating from the surface tone, like the Portfolio pages.
-        banded.map((group, i) => (
+        groups.map((group, i) => (
           <Section
             key={group.key}
             tone={i % 2 === 0 ? 'surface' : 'default'}
             aria-labelledby={group.heading ? `group-${group.key}` : undefined}
           >
             {group.heading && (
-              <h2 id={`group-${group.key}`} className="font-display mb-10 text-3xl font-semibold">
+              <h2 id={`group-${group.key}`} className="font-display mb-12 text-3xl font-semibold">
                 {group.heading}
               </h2>
             )}
-            <div className="flex flex-col gap-16">
-              {group.rows.map(({ study, index }) => (
-                <CaseStudyRow
-                  key={study._id}
-                  study={study}
-                  flip={index % 2 === 1}
-                  priority={index === 0}
-                  headingLevel={group.heading ? 'h3' : 'h2'}
-                />
-              ))}
-            </div>
+            {group.key === featuredKey ? (
+              <div className="flex flex-col gap-16">
+                {group.studies.map((study, index) => (
+                  <CaseStudyRow key={study._id} study={study} flip={index % 2 === 1} priority={index === 0} headingLevel="h3" />
+                ))}
+              </div>
+            ) : (
+              <div className="grid gap-x-8 gap-y-14 md:grid-cols-2">
+                {group.studies.map((study) => (
+                  <CaseStudyTile key={study._id} study={study} details headingLevel={group.heading ? 'h3' : 'h2'} />
+                ))}
+              </div>
+            )}
           </Section>
         ))
       ) : (
