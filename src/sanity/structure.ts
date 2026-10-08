@@ -1,11 +1,13 @@
 import type { StructureBuilder, StructureResolver } from 'sanity/structure'
 
+import { statusIcon } from './components/StatusIcon'
 import { PORTFOLIO_KINDS, PORTFOLIO_SECTIONS, PORTFOLIO_SECTION_TITLES } from './portfolio'
 
 /**
  * Studio sidebar, laid out like the site: settings, pages, case studies, the
  * portfolio by section and kind (Brand Development → Brand systems, Logos),
- * then the résumé.
+ * then the résumé. Each item's icon counts what needs attention below it
+ * (see StatusIcon).
  *
  * `siteSettings` is pinned to a single document. Without that, the type
  * behaves like any other and editors can create a second one — at which point
@@ -26,6 +28,7 @@ const kindList = (S: StructureBuilder, kind: (typeof PORTFOLIO_KINDS)[number]) =
     .id(`kind-${kind.value}`)
     .title(kind.list)
     .schemaType('creativeWork')
+    .icon(statusIcon('creativeWork', [kind.value]))
     .child(
       S.documentTypeList('creativeWork')
         .title(kind.list)
@@ -43,6 +46,7 @@ const sectionItem = (S: StructureBuilder, section: (typeof PORTFOLIO_SECTIONS)[n
   return S.listItem()
     .id(`section-${section}`)
     .title(title)
+    .icon(statusIcon('creativeWork', kinds.map((k) => k.value)))
     .child(S.list().title(title).items(kinds.map((kind) => kindList(S, kind))))
 }
 
@@ -54,19 +58,22 @@ export const structure: StructureResolver = (S) =>
         .id('siteSettings')
         .schemaType('siteSettings')
         .title('Site settings')
+        .icon(statusIcon('siteSettings'))
         .child(
           S.editor().id('siteSettings').schemaType('siteSettings').documentId('siteSettings'),
         ),
       S.divider(),
-      S.documentTypeListItem('page').title('Pages'),
+      S.documentTypeListItem('page').title('Pages').icon(statusIcon('page')),
       S.listItem()
         .id('caseStudy')
         .title('Case studies')
         .schemaType('caseStudy')
+        .icon(statusIcon('caseStudy'))
         .child(S.documentTypeList('caseStudy').title('Case studies').defaultOrdering(byOrder)),
       S.listItem()
         .id('portfolio')
         .title('Portfolio')
+        .icon(statusIcon('creativeWork'))
         .child(
           S.list()
             .title('Portfolio')
@@ -77,10 +84,11 @@ export const structure: StructureResolver = (S) =>
                 .id('allPortfolio')
                 .title('All portfolio pieces')
                 .schemaType('creativeWork')
+                .icon(statusIcon('creativeWork'))
                 .child(S.documentTypeList('creativeWork').title('All portfolio pieces').defaultOrdering(byOrder)),
             ]),
         ),
-      S.documentTypeListItem('experience').title('Résumé'),
+      S.documentTypeListItem('experience').title('Résumé').icon(statusIcon('experience')),
       ...S.documentTypeListItems().filter((item) => {
         const id = item.getId()
         return id ? !PLACED.includes(id) && !SINGLETONS.includes(id) : true
