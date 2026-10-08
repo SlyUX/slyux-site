@@ -9,7 +9,7 @@ import { client, readToken } from './client'
  * would break those comparisons, so these stay clean. Sanity's default filter
  * already skips links, slugs, layout, dates, IDs, and the like.
  */
-const LOGIC_FIELDS = new Set(['placement', 'kind', 'mimeType'])
+const LOGIC_FIELDS = new Set(['placement', 'kind', 'mimeType', 'cardFit', 'layout', 'icon'])
 
 const previewClient = readToken
   ? client.withConfig({
