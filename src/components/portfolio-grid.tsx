@@ -13,7 +13,8 @@ type Row = { key: string; heading: string; content: React.ReactNode; action?: Re
  * starting on the surface tone, and each carries its heading, unless a lone
  * row's heading would only repeat the page title (an "Illustration" row alone
  * on the Illustration page). The headings name the kind, so the cards here
- * carry no kind chips. A featured piece leads its group at full width.
+ * carry no kind chips. A featured piece leads its group as a row, its image
+ * beside its summary, like the Case Studies featured row.
  */
 export function PortfolioGrid({
   works,
@@ -40,13 +41,14 @@ export function PortfolioGrid({
 
   const rowCount = groups.length + (lead ? 1 : 0)
   const showHeading = (heading: string) => rowCount > 1 || heading.trim().toLowerCase() !== pageTitle.trim().toLowerCase()
-  const tile = (work: CreativeWorkCard, heading: string, large = false) => (
+  const tile = (work: CreativeWorkCard, heading: string, shape?: 'large' | 'feature') => (
     <CreativeTile
       key={work._id}
       work={work}
       matureLabel={matureLabel}
       enlargeLabel={labels.enlarge}
-      large={large}
+      large={shape === 'large'}
+      feature={shape === 'feature'}
       headingLevel={showHeading(heading) ? 'h3' : 'h2'}
     />
   )
@@ -60,7 +62,7 @@ export function PortfolioGrid({
         return {
           key: group.kind,
           heading: group.heading,
-          content: <div className="grid gap-x-6 gap-y-10 md:grid-cols-2">{group.items.map((work) => tile(work, group.heading, true))}</div>,
+          content: <div className="grid gap-x-6 gap-y-10 md:grid-cols-2">{group.items.map((work) => tile(work, group.heading, 'large'))}</div>,
         }
       }
       const hasLead = first.featured && !first.mature
@@ -69,7 +71,7 @@ export function PortfolioGrid({
         heading: group.heading,
         content: (
           <>
-            {hasLead && <div className="mb-10">{tile(first, group.heading, true)}</div>}
+            {hasLead && <div className="mb-14">{tile(first, group.heading, 'feature')}</div>}
             <div className="grid grid-cols-2 gap-x-6 gap-y-10 md:grid-cols-3 lg:grid-cols-4">
               {(hasLead ? rest : group.items).map((work) => tile(work, group.heading))}
             </div>
