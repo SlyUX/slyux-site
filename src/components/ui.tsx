@@ -90,19 +90,22 @@ export function SectionHeading({
   id,
   intro,
   action,
+  as: Heading = 'h2',
   children,
 }: {
   id?: string
   intro?: React.ReactNode
   action?: React.ReactNode
+  /** The level, for a heading nested inside another section (the styleguide's examples). */
+  as?: 'h2' | 'h3' | 'h4'
   children: React.ReactNode
 }) {
   return (
     <div className="mb-10 flex flex-wrap items-end justify-between gap-x-6 gap-y-4">
       <div>
-        <h2 id={id} className="font-display text-3xl font-semibold">
+        <Heading id={id} className="font-display text-3xl font-semibold">
           {children}
-        </h2>
+        </Heading>
         {intro && <p className="text-muted-foreground mt-2">{intro}</p>}
       </div>
       {action}
