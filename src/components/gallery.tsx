@@ -88,7 +88,20 @@ function toItem(img: GalleryImage, phone: boolean, rail: boolean, fallbackAlt: s
  *
  * Every thumbnail opens the shared viewer, where ← / → or a swipe steps through
  * the group.
+ *
+ * Galleries render inside a GalleryStack, which spaces them and, on phones,
+ * moves mobile galleries ahead of desktop ones.
  */
+/**
+ * A column of galleries. On phones, mobile galleries come first (each Gallery
+ * carries its own order); wider screens keep the order they were written in.
+ * The reorder is visual only: screen readers and Tab follow the written order,
+ * which is fine because each gallery stands on its own.
+ */
+export function GalleryStack({ rail = false, children }: { rail?: boolean; children: React.ReactNode }) {
+  return <div className={rail ? 'flex flex-col gap-8' : 'flex flex-col gap-16'}>{children}</div>
+}
+
 export function Gallery({
   gallery,
   id,
@@ -111,7 +124,8 @@ export function Gallery({
     <section
       aria-labelledby={headingAs === 'none' ? undefined : id}
       aria-label={headingAs === 'none' ? gallery.heading : undefined}
-      className={rail ? 'mt-8 first:mt-0' : 'mt-16 first:mt-0'}
+      // Phones show mobile galleries first (see the page's gallery stack); wider screens keep the authored order.
+      className={phone ? 'max-md:-order-1' : undefined}
     >
       {headingAs === 'h3' ? (
         <h3 id={id} className="text-foreground text-sm font-semibold">

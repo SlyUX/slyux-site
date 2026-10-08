@@ -6,7 +6,7 @@ import { notFound } from 'next/navigation'
 import { Breadcrumb } from '@/components/breadcrumb'
 import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { MetricStrip, WorkStory } from '@/components/content'
-import { Gallery } from '@/components/gallery'
+import { Gallery, GalleryStack } from '@/components/gallery'
 import { Personas } from '@/components/personas'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
@@ -103,8 +103,9 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
           body={study.body}
           railHeading={s.howItStartedHeading}
           rail={
-            before.length > 0
-              ? before.map((gallery) => (
+            before.length > 0 ? (
+              <GalleryStack rail>
+                {before.map((gallery) => (
                   <Gallery
                     key={gallery._key}
                     gallery={gallery}
@@ -113,8 +114,9 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
                     rail
                     headingAs={before.length > 1 ? 'h3' : 'none'}
                   />
-                ))
-              : undefined
+                ))}
+              </GalleryStack>
+            ) : undefined
           }
         >
           {!!study.links?.length && (
@@ -140,9 +142,11 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
 
       {after.length > 0 && (
         <Section className="pt-0 md:pt-0">
-          {after.map((gallery) => (
-            <Gallery key={gallery._key} gallery={gallery} id={`gallery-${gallery._key}`} labels={labels} />
-          ))}
+          <GalleryStack>
+            {after.map((gallery) => (
+              <Gallery key={gallery._key} gallery={gallery} id={`gallery-${gallery._key}`} labels={labels} />
+            ))}
+          </GalleryStack>
         </Section>
       )}
     </article>

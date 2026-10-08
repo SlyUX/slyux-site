@@ -47,6 +47,9 @@ export function GalleryViewer({
   const { index, openAt } = viewer
   const phone = layout === 'phone'
   const item = items[index]
+  // On phones, a desktop gallery of two or more becomes one swipe row, the next
+  // capture peeking in, instead of a tall stack. Wider screens keep the grid.
+  const swipe = !rail && !phone && items.length > 1
 
   return (
     <>
@@ -58,13 +61,16 @@ export function GalleryViewer({
               : 'space-y-4'
             : phone
               ? 'grid grid-cols-2 gap-5 sm:grid-cols-3 lg:grid-cols-5'
-              : // Row-by-row (not masonry) so items read left→right in list order.
-                'grid items-start gap-x-6 gap-y-8 md:grid-cols-2',
+              : swipe
+                ? // Phones: a snap-scrolling row bleeding to the screen edges. md+: the two-column grid.
+                  '-mx-4 flex snap-x snap-mandatory scroll-px-4 gap-4 overflow-x-auto px-4 pb-2 sm:-mx-6 sm:scroll-px-6 sm:px-6 md:mx-0 md:grid md:grid-cols-2 md:items-start md:gap-x-6 md:gap-y-8 md:overflow-visible md:px-0 md:pb-0'
+                : // Row-by-row (not masonry) so items read left→right in list order.
+                  'grid items-start gap-x-6 gap-y-8 md:grid-cols-2',
         )}
       >
         {items.map((it, i) => (
           // One card, one click target: image, caption label, and the full-page cue.
-          <div key={it.key}>
+          <div key={it.key} className={swipe ? 'w-[85%] shrink-0 snap-start md:w-auto' : undefined}>
             <button
               ref={(el) => {
                 thumbRefs.current[i] = el
