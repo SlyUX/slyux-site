@@ -266,6 +266,7 @@ export default defineType({
     defineField({ name: 'opportunitiesLabel', title: '"Opportunities to engage" label', type: 'string', group: 'work' }),
     defineField({ name: 'barriersLabel', title: '"Barriers to adoption" label', type: 'string', group: 'work' }),
     defineField({ name: 'enlargeLabel', title: '"View larger" (screen reader)', type: 'string', group: 'work', description: 'Names gallery thumbnails that open a larger image, e.g. "View larger".' }),
+    defineField({ name: 'imageCountLabel', title: '"{count} images" (screen reader)', type: 'string', group: 'work', description: 'Added to a portfolio card\'s name when it opens several images, matching the count on the card. {count} is filled in, e.g. "{count} images".' }),
     defineField({ name: 'closeLabel', title: '"Close" button', type: 'string', group: 'work', description: 'Closes the gallery viewer.' }),
     defineField({ name: 'previousLabel', title: '"Previous" button (screen reader)', type: 'string', group: 'work' }),
     defineField({ name: 'nextLabel', title: '"Next" button (screen reader)', type: 'string', group: 'work' }),

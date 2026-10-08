@@ -90,7 +90,15 @@ export default async function PortfolioPage() {
             <div className={cn('grid gap-x-6 gap-y-10', section === 'ux' ? 'sm:grid-cols-2 md:grid-cols-3' : 'grid-cols-2 md:grid-cols-4')}>
               {study && <CaseStudyTile study={study} label={s.caseStudyLabel} />}
               {items.map((work) => (
-                <CreativeTile key={work._id} work={work} matureLabel={s.matureLabel} enlargeLabel={labels.enlarge} kindLabels={s.kindLabels} headingLevel="h3" />
+                <CreativeTile
+                  key={work._id}
+                  work={work}
+                  matureLabel={s.matureLabel}
+                  enlargeLabel={labels.enlarge}
+                  imageCountLabel={labels.imageCount}
+                  kindLabels={s.kindLabels}
+                  headingLevel="h3"
+                />
               ))}
             </div>
           </Lightbox>

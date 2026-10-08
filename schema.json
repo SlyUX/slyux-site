@@ -1950,6 +1950,13 @@
         },
         "optional": true
       },
+      "imageCountLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "closeLabel": {
         "type": "objectAttribute",
         "value": {

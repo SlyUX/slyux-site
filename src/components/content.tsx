@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import { PortableText, toPlainText, type PortableTextComponents } from '@portabletext/react'
 import type { PortableTextBlock, TypedObject } from '@portabletext/types'
-import { ExternalLink, FolderOpen, Maximize2 } from 'lucide-react'
+import { ExternalLink, FolderOpen, Images, Maximize2 } from 'lucide-react'
 
 import { TransitionLink } from '@/components/grid-nav'
 import { LightboxButton, type LightboxItem } from '@/components/lightbox'
@@ -293,6 +293,7 @@ export function CreativeTile({
   work,
   matureLabel,
   enlargeLabel,
+  imageCountLabel,
   kindLabels,
   large = false,
   feature = false,
@@ -302,6 +303,8 @@ export function CreativeTile({
   matureLabel: string
   /** Names the lightbox button, e.g. "View larger". */
   enlargeLabel: string
+  /** Adds the image count to that name when the card opens several, e.g. "{count} images". */
+  imageCountLabel?: string
   /** Chip text per kind, from Site settings. Omit where a heading already names the kind. */
   kindLabels?: Record<string, string>
   large?: boolean
@@ -369,6 +372,8 @@ export function CreativeTile({
     }
   }
 
+  // A card that opens its own gallery shows how many images it holds.
+  const imageCount = !href && image ? 1 + (work.gallery ?? []).filter((g) => g?.asset).length : 0
   const stretch = 'after:absolute after:inset-0 group-hover:text-primary'
   const frame = (
     <div
@@ -381,6 +386,13 @@ export function CreativeTile({
       {deep && <span aria-hidden className="bg-footer absolute inset-x-0 top-0 h-[5px]" />}
       {kindLabel && <KindChip label={kindLabel} deep={deep} className="absolute top-3 left-3 shadow-sm" />}
       {href ? <CardAction action={deep ? 'page' : 'external'} /> : image && <CardAction action="enlarge" />}
+      {imageCount > 1 && (
+        // Decorative: the button's name carries the count for screen readers.
+        <span aria-hidden className="bg-ink/80 text-ink-foreground absolute right-3 bottom-3 flex items-center gap-1 rounded-full px-2 py-0.5 text-xs font-semibold tabular-nums">
+          <Images className="size-3.5" strokeWidth={2} />
+          {imageCount}
+        </span>
+      )}
     </div>
   )
   // The title is the card's one link or button, stretched over the whole card.
@@ -391,7 +403,11 @@ export function CreativeTile({
       <a href={href} target="_blank" rel="noopener noreferrer" className={stretch}>{work.title}</a>
     )
   ) : image ? (
-    <LightboxButton pieceKey={work._id} label={`${enlargeLabel}: ${work.title}`} className={cn(stretch, 'text-left')}>
+    <LightboxButton
+      pieceKey={work._id}
+      label={[`${enlargeLabel}: ${work.title}`, imageCount > 1 && imageCountLabel?.replace('{count}', String(imageCount))].filter(Boolean).join(', ')}
+      className={cn(stretch, 'text-left')}
+    >
       {work.title}
     </LightboxButton>
   ) : (

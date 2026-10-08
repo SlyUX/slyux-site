@@ -330,6 +330,7 @@ export type SiteSettings = {
   opportunitiesLabel?: string;
   barriersLabel?: string;
   enlargeLabel?: string;
+  imageCountLabel?: string;
   closeLabel?: string;
   previousLabel?: string;
   nextLabel?: string;
@@ -727,6 +728,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   opportunitiesLabel?: string;
   barriersLabel?: string;
   enlargeLabel?: string;
+  imageCountLabel?: string;
   closeLabel?: string;
   previousLabel?: string;
   nextLabel?: string;
