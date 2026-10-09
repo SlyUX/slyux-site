@@ -23,6 +23,16 @@ export default defineType({
   fields: [
     // General
     defineField({
+      name: 'aiStatement',
+      title: 'How I work with AI',
+      type: 'richText',
+      group: 'general',
+      description:
+        'Opens from each AI note placed in a story (insert "AI note" in the text, usually right after the Role line). Leave empty and the notes don\'t show.',
+    }),
+    defineField({ name: 'aiStatementHeading', title: 'AI statement heading', type: 'string', group: 'general' }),
+    defineField({ name: 'aiNoteLabel', title: 'AI note button text', type: 'string', group: 'general' }),
+    defineField({
       name: 'siteTitle',
       title: 'Site title',
       type: 'string',
@@ -295,14 +305,14 @@ export default defineType({
       fields: [
         defineField({ name: 'data', title: 'Data analysis', type: 'string' }),
         defineField({ name: 'audit', title: 'Site audits', type: 'string' }),
-        defineField({ name: 'strategy', title: 'Research & strategy', type: 'string' }),
+        defineField({ name: 'strategy', title: 'Research and strategy', type: 'string' }),
         defineField({ name: 'designSystem', title: 'Design systems', type: 'string' }),
-        defineField({ name: 'ux', title: 'UX screens & prototypes', type: 'string' }),
+        defineField({ name: 'ux', title: 'UX screens and prototypes', type: 'string' }),
         defineField({ name: 'uiAssets', title: 'UI assets', type: 'string' }),
         defineField({ name: 'brand', title: 'Brand systems', type: 'string' }),
         defineField({ name: 'illustration', title: 'Illustration', type: 'string' }),
         defineField({ name: 'cover', title: 'Book covers', type: 'string' }),
-        defineField({ name: 'book', title: 'Books & comics', type: 'string' }),
+        defineField({ name: 'book', title: 'Books and comics', type: 'string' }),
         defineField({ name: 'campaign', title: 'Campaigns', type: 'string' }),
         defineField({ name: 'printAd', title: 'Print ads', type: 'string' }),
         defineField({ name: 'graphic', title: 'Graphic design', type: 'string' }),
@@ -319,9 +329,9 @@ export default defineType({
       fields: [
         defineField({ name: 'data', title: 'Data analysis', type: 'string' }),
         defineField({ name: 'audit', title: 'Site audits', type: 'string' }),
-        defineField({ name: 'strategy', title: 'Research & strategy', type: 'string' }),
+        defineField({ name: 'strategy', title: 'Research and strategy', type: 'string' }),
         defineField({ name: 'designSystem', title: 'Design systems', type: 'string' }),
-        defineField({ name: 'ux', title: 'UX screens & prototypes', type: 'string' }),
+        defineField({ name: 'ux', title: 'UX screens and prototypes', type: 'string' }),
         defineField({ name: 'uiAssets', title: 'UI assets', type: 'string' }),
         defineField({ name: 'brand', title: 'Brand systems', type: 'string' }),
         defineField({ name: 'logo', title: 'Logos', type: 'string' }),
@@ -330,7 +340,7 @@ export default defineType({
         defineField({ name: 'graphic', title: 'Graphic design', type: 'string' }),
         defineField({ name: 'illustration', title: 'Illustration', type: 'string' }),
         defineField({ name: 'cover', title: 'Book covers', type: 'string' }),
-        defineField({ name: 'book', title: 'Books & comics', type: 'string' }),
+        defineField({ name: 'book', title: 'Books and comics', type: 'string' }),
       ],
     }),
     defineField({
@@ -424,7 +434,7 @@ export default defineType({
       ],
     }),
     defineField({ name: 'educationHeading', title: 'Education heading', type: 'string', group: 'resume' }),
-    defineField({ name: 'education', title: 'Education & training', type: 'array', of: [{ type: 'string' }], group: 'resume' }),
+    defineField({ name: 'education', title: 'Education and training', type: 'array', of: [{ type: 'string' }], group: 'resume' }),
 
     // Contact
     defineField({ name: 'contactTitle', title: 'Title', type: 'string', group: 'contact' }),

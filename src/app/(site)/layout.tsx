@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import { draftMode } from 'next/headers'
 
+import { AiStatementProvider } from '@/components/ai-statement'
+import { RichText } from '@/components/content'
 import { SiteNav } from '@/components/site-nav'
 import { TransitionLink } from '@/components/transition-link'
 import { PreviewTools } from '@/components/preview-tools'
@@ -54,7 +56,16 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         </div>
       </header>
       <main id="main" className="flex-1">
-        <ViewerLabelsProvider labels={galleryLabels(settings)}>{children}</ViewerLabelsProvider>
+        <ViewerLabelsProvider labels={galleryLabels(settings)}>
+          <AiStatementProvider
+            label={settings.aiNoteLabel}
+            heading={settings.aiStatementHeading}
+            closeLabel={settings.closeLabel}
+            statement={settings.aiStatement?.length ? <RichText value={settings.aiStatement} /> : undefined}
+          >
+            {children}
+          </AiStatementProvider>
+        </ViewerLabelsProvider>
       </main>
       <footer className="bg-footer text-footer-foreground px-4 py-10 sm:px-6">
         <div className="mx-auto flex max-w-6xl flex-col gap-4 text-sm md:flex-row md:items-center md:justify-between">

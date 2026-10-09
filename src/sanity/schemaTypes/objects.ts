@@ -1,4 +1,5 @@
 import { defineType, defineField, defineArrayMember } from 'sanity'
+import { SparkleIcon } from '@sanity/icons/Sparkle'
 
 /**
  * Small reusable object types. Registered in `index.ts` so any document can
@@ -62,6 +63,20 @@ export const link = defineType({
  * inline images and pull quotes. Deliberately small — every block style here
  * needs a matching renderer in `src/components/rich-text.tsx`.
  */
+/**
+ * Inline in a story: a button that opens the "How I work with AI" statement
+ * (Site settings). It has nothing to fill in; its place in the text is the point.
+ */
+export const aiNote = defineType({
+  name: 'aiNote',
+  title: 'AI note',
+  type: 'object',
+  icon: SparkleIcon,
+  // Sanity needs at least one field; this one is never shown.
+  fields: [defineField({ name: 'placed', type: 'boolean', hidden: true, initialValue: true })],
+  preview: { prepare: () => ({ title: 'How I work with AI' }) },
+})
+
 export const richText = defineType({
   name: 'richText',
   title: 'Body',
@@ -75,6 +90,9 @@ export const richText = defineType({
         { title: 'Subheading', value: 'h3' },
         { title: 'Quote', value: 'blockquote' },
       ],
+      // Inline: the "How I work with AI" note, placed where AI played a part
+      // (usually right after a piece's Role line). See AiNote.
+      of: [defineArrayMember({ type: 'aiNote' })],
       marks: {
         annotations: [
           defineArrayMember({

@@ -15,14 +15,24 @@
 export declare const internalGroqTypeReferenceTo: unique symbol;
 
 // Source: schema.json
+export type AiNote = {
+  _type: "aiNote";
+  placed?: boolean;
+};
+
 export type RichText = Array<
   | {
-      children?: Array<{
-        marks?: Array<string>;
-        text?: string;
-        _type: "span";
-        _key: string;
-      }>;
+      children?: Array<
+        | {
+            marks?: Array<string>;
+            text?: string;
+            _type: "span";
+            _key: string;
+          }
+        | ({
+            _key: string;
+          } & AiNote)
+      >;
       style?: "normal" | "h2" | "h3" | "blockquote";
       listItem?: "bullet" | "number";
       markDefs?: Array<{
@@ -163,6 +173,10 @@ export type Page = {
   intro?: string;
   image?: ImageWithAlt;
   body?: RichText;
+  rail?: {
+    heading: string;
+    body?: RichText;
+  };
   cta?: Link;
   seoDescription?: string;
 };
@@ -252,6 +266,9 @@ export type SiteSettings = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  aiStatement?: RichText;
+  aiStatementHeading?: string;
+  aiNoteLabel?: string;
   siteTitle: string;
   siteDescription?: string;
   ownerName?: string;
@@ -594,6 +611,7 @@ export type Geopoint = {
 };
 
 export type AllSanitySchemaTypes =
+  | AiNote
   | RichText
   | Link
   | Metric
@@ -631,6 +649,9 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   _createdAt: string;
   _updatedAt: string;
   _rev: string;
+  aiStatement?: RichText;
+  aiStatementHeading?: string;
+  aiNoteLabel?: string;
   siteTitle: string;
   siteDescription?: string;
   ownerName?: string;
@@ -1195,13 +1216,17 @@ export type CREATIVE_WORK_PATHS_QUERY_RESULT = Array<{
 
 // Source: src/lib/queries.ts
 // Variable: PAGE_QUERY
-// Query: *[_type=="page" && slug.current==$slug][0]{  _id,title,intro,image,body,cta,seoDescription}
+// Query: *[_type=="page" && slug.current==$slug][0]{  _id,title,intro,image,body,rail,cta,seoDescription}
 export type PAGE_QUERY_RESULT = {
   _id: string;
   title: string;
   intro: string | null;
   image: ImageWithAlt | null;
   body: RichText | null;
+  rail: {
+    heading: string;
+    body?: RichText;
+  } | null;
   cta: Link | null;
   seoDescription: string | null;
 } | null;
@@ -1240,7 +1265,7 @@ declare module "@sanity/client" {
     '*[_type=="creativeWork" && defined(slug.current) && featured == true]|order(order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_FEATURED_QUERY_RESULT;
     '*[_type=="creativeWork" && slug.current==$slug && kind in $kinds][0]{\n  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,documentsHeading,externalUrl,\n  documents[]{_key,title,"file": file.asset->{url,originalFilename},\n  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},\n  "caseStudy": caseStudy->{title,"slug":slug.current}\n}': CREATIVE_WORK_QUERY_RESULT;
     '*[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{kind,"slug":slug.current}': CREATIVE_WORK_PATHS_QUERY_RESULT;
-    '*[_type=="page" && slug.current==$slug][0]{\n  _id,title,intro,image,body,cta,seoDescription\n}': PAGE_QUERY_RESULT;
+    '*[_type=="page" && slug.current==$slug][0]{\n  _id,title,intro,image,body,rail,cta,seoDescription\n}': PAGE_QUERY_RESULT;
     '*[_type=="page" && defined(slug.current)].slug.current': PAGE_SLUGS_QUERY_RESULT;
     '*[_type=="experience"]|order(start desc){\n  _id,role,organization,start,end,location,highlights,\n  "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}\n}': EXPERIENCE_QUERY_RESULT;
   }

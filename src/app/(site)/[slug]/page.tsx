@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { RichText } from '@/components/content'
+import { Rail } from '@/components/rail'
 import { PAGE_QUERY, PAGE_SLUGS_QUERY, safeFetch } from '@/lib/queries'
 import { urlFor } from '@/sanity/image'
 import type { PageDetail } from '@/lib/types'
@@ -37,16 +38,26 @@ export default async function CmsPage({ params }: PageProps<'/[slug]'>) {
           </div>
           <ButtonLink link={page.cta} className="mt-10" />
         </div>
-        {page.image?.asset && (
-          <Image
-            src={urlFor(page.image).width(800).url()}
-            alt={page.image.alt ?? ''}
-            width={800}
-            height={1000}
-            priority
-            sizes="(max-width: 1024px) 100vw, 320px"
-            className="h-auto w-full rounded-ui"
-          />
+        {(page.image?.asset || page.rail?.heading) && (
+          // Beside the page from lg; after it on phones, where the rail folds under its heading.
+          <div className="flex flex-col gap-8">
+            {page.image?.asset && (
+              <Image
+                src={urlFor(page.image).width(800).url()}
+                alt={page.image.alt ?? ''}
+                width={800}
+                height={1000}
+                priority
+                sizes="(max-width: 1024px) 100vw, 320px"
+                className="h-auto w-full rounded-ui"
+              />
+            )}
+            {page.rail?.heading && (
+              <Rail heading={page.rail.heading} className="self-stretch">
+                <RichText value={page.rail.body} compact />
+              </Rail>
+            )}
+          </div>
         )}
       </div>
     </Section>

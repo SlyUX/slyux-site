@@ -16,7 +16,7 @@ type Settings = NonNullable<SITE_SETTINGS_QUERY_RESULT>
  */
 const DEFAULTS = {
   siteTitle: 'Sly UX',
-  siteDescription: 'Stephen Fox — UX & CX leadership, design, code, and illustration.',
+  siteDescription: 'Stephen Fox — UX and CX leadership, design, code, and illustration.',
   ownerName: 'Stephen Fox',
   gridNav: [
     { _key: 'ux', _type: 'gridCell', label: 'UX', href: '/portfolio/ux', cell: 1 },
@@ -61,14 +61,14 @@ const DEFAULTS = {
   creativeSections: {
     data: 'Data analysis',
     audit: 'Site audits',
-    strategy: 'Research & strategy',
+    strategy: 'Research and strategy',
     designSystem: 'Design systems',
-    ux: 'Screens & prototypes',
+    ux: 'Screens and prototypes',
     uiAssets: 'UI assets',
     brand: 'Brand systems',
     illustration: 'Illustration',
     cover: 'Book covers',
-    book: 'Books & comics',
+    book: 'Books and comics',
     campaign: 'Campaigns',
     printAd: 'Print ads',
     graphic: 'Graphic design',
@@ -97,7 +97,9 @@ const DEFAULTS = {
   resumeDownloadLabel: 'Download PDF',
   experienceHeading: 'Experience',
   skillsHeading: 'Skills',
-  educationHeading: 'Education & training',
+  educationHeading: 'Education and training',
+  aiStatementHeading: 'How I work with AI',
+  aiNoteLabel: 'How I work with AI',
   contactTitle: 'Contact',
 } satisfies Partial<Settings>
 

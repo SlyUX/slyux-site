@@ -47,6 +47,17 @@ export default defineType({
       type: 'richText',
     }),
     defineField({
+      name: 'rail',
+      title: 'Rail',
+      type: 'object',
+      description:
+        'An optional card beside the page on wide screens, like "How it started" on case studies; on phones it folds under its heading at the end. About uses it for "Working with AI."',
+      fields: [
+        defineField({ name: 'heading', title: 'Heading', type: 'string', validation: (rule) => rule.required() }),
+        defineField({ name: 'body', title: 'Text', type: 'richText' }),
+      ],
+    }),
+    defineField({
       name: 'cta',
       title: 'Call to action',
       type: 'link',

@@ -26,10 +26,11 @@ export function Rail({
 }) {
   const [open, setOpen] = useState(false)
   const contentId = useId()
+  const headingId = useId()
 
   return (
-    <aside aria-labelledby="how-it-started" className={cn('bg-surface self-start rounded-ui', className)}>
-      <Heading id="how-it-started" className="font-display text-heading text-xl font-semibold">
+    <aside aria-labelledby={headingId} className={cn('bg-surface self-start rounded-ui', className)}>
+      <Heading id={headingId} className="font-display text-heading text-xl font-semibold">
         {/* One of these two shows at a time: the button folds the card on phones; beside the story it's a plain title. */}
         <button
           type="button"

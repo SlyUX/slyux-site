@@ -81,7 +81,7 @@ export const CREATIVE_WORK_PATHS_QUERY = defineQuery(
 )
 
 export const PAGE_QUERY = defineQuery(`*[_type=="page" && slug.current==$slug][0]{
-  _id,title,intro,image,body,cta,seoDescription
+  _id,title,intro,image,body,rail,cta,seoDescription
 }`)
 
 export const PAGE_SLUGS_QUERY = defineQuery(`*[_type=="page" && defined(slug.current)].slug.current`)
