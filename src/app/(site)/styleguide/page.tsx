@@ -40,6 +40,10 @@ const TOKENS: TokenGroup[] = [
         use: 'White ground for artwork: cards, images, galleries, documents.',
       },
       {
+        token: 'paper-black',
+        use: 'Black ground for artwork made for one, chosen per piece (Background: Black). No text sits on it.',
+      },
+      {
         token: 'foreground',
         use: 'Body text, and every heading below the page title.',
       },
@@ -287,7 +291,7 @@ const RULES = [
     'Corners are 7px.',
     'Every outermost element uses rounded-ui. An element nested a small inset inside another takes the parent’s radius minus the inset (rounded-ui-inner, 4px, inside a 3px track), so the corners stay concentric. Phone screenshots keep a device-like corner.',
   ],
-  ['Artwork sits on white.', 'Logos and brand marks show whole, never cropped. Other cards fill with the artwork, cropped around its focal point.'],
+  ['Artwork sits on white.', 'Or on black, for art made for a dark ground (a piece’s Background setting), on its card and in the viewer. Logos, brand marks, and UI assets show whole, never cropped. Other cards fill with the artwork, cropped around its focal point.'],
   ['No red for good news.', 'Red reads as urgent. Positive emphasis is burnt orange or navy; the one red is the document badge.'],
   ['Every image opens larger.', 'Cards, galleries, and story images all open the viewer. Each card is its own gallery: the viewer steps through that card’s images and stops.'],
   ['Featured pieces lead.', 'A piece marked Featured leads its page in a Featured band, image beside summary. Brand systems and UX projects sit side by side as equals instead.'],

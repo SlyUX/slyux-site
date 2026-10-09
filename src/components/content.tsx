@@ -118,6 +118,7 @@ export function lightboxItems(works: CreativeWorkCard[]): LightboxItem[] {
         src: urlFor(image).width(width).format('webp').quality(85).url(),
         width,
         height: Math.round((width * size.height) / size.width),
+        background: work.artworkBackground === 'black' ? ('paper-black' as const) : ('paper' as const),
       }]
     })
   })
@@ -373,7 +374,8 @@ export function CreativeTile({
   const frame = (
     <div
       className={cn(
-        'border-border bg-paper group-hover:border-primary @container relative overflow-hidden rounded-ui border transition-colors',
+        'border-border group-hover:border-primary @container relative overflow-hidden rounded-ui border transition-colors',
+        work.artworkBackground === 'black' ? 'bg-paper-black' : 'bg-paper',
         { wide: 'aspect-[3/2]', large: 'aspect-[4/3]', square: 'aspect-square' }[shape],
       )}
     >

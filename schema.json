@@ -1087,6 +1087,23 @@
         },
         "optional": true
       },
+      "artworkBackground": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "union",
+          "of": [
+            {
+              "type": "string",
+              "value": "white"
+            },
+            {
+              "type": "string",
+              "value": "black"
+            }
+          ]
+        },
+        "optional": true
+      },
       "client": {
         "type": "objectAttribute",
         "value": {
