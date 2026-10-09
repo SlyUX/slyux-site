@@ -1,7 +1,9 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 
+import { ContactForm } from '@/components/contact-form'
 import { PageHeader, Section } from '@/components/ui'
+import { contactFormReady } from '@/lib/contact'
 import { getSiteSettings } from '@/lib/site-settings'
 
 export async function generateMetadata(): Promise<Metadata> {
@@ -10,11 +12,27 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 /**
- * Contact without a form (for now): each inquiry option opens an email with
- * its subject prefilled, so hiring and project messages arrive pre-sorted.
+ * Contact through a form (ContactForm): pick a topic, write, send. The topics
+ * are the inquiry options in Site settings, and each message arrives with its
+ * topic's subject line, so hiring and project messages come in pre-sorted.
+ * The address never appears on the page.
+ *
+ * Until the form can send (Resend's keys in Vercel), each option opens an
+ * email instead, so contact never breaks.
  */
 export default async function ContactPage() {
   const s = await getSiteSettings()
+  if (contactFormReady() && s.inquiryTypes?.length) {
+    return (
+      <Section opener>
+        <PageHeader title={s.contactTitle} intro={s.contactForm.intro} />
+        <ContactForm
+          topics={s.inquiryTypes.map((t) => ({ key: t._key, label: t.label ?? '', description: t.description }))}
+          copy={s.contactForm}
+        />
+      </Section>
+    )
+  }
   const mailto = (subject?: string) =>
     `mailto:${s.contactEmail}${subject ? `?subject=${encodeURIComponent(subject)}` : ''}`
 

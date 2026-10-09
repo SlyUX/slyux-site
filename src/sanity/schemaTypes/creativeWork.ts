@@ -177,6 +177,29 @@ export default defineType({
       description:
         "A live project, such as a design system's styleguide: a button on the piece's page, or where its card goes if it has none. Artwork stays on this site; leave this empty and its card opens the image larger.",
     }),
+    defineField({
+      name: 'related',
+      group: 'links',
+      title: 'Related work',
+      type: 'array',
+      description:
+        'Up to three case studies or portfolio pieces, shown as cards at the bottom of this page. Each one also shows this piece at the bottom of its own page, if it has one, so set the link on either side.',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{ type: 'caseStudy' }, { type: 'creativeWork' }],
+          options: {
+            disableNew: true,
+            // Not itself, and only published pieces.
+            filter: ({ document }) => ({
+              filter: '_id != $id && !(_id in path("drafts.**"))',
+              params: { id: document._id.replace(/^drafts\./, '') },
+            }),
+          },
+        }),
+      ],
+      validation: (rule) => rule.max(3).unique(),
+    }),
     // Retired 2026-10-09: an ND Riot leftover (title and link only, no artwork).
     // Hidden, not deleted, so the value every piece stores doesn't surface as an
     // unknown field. Nothing reads it.

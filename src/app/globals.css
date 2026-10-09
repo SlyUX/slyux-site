@@ -25,6 +25,9 @@
     --visited on --background ............  5.98  (AA) — visited links
     --visited on --paper .................  6.25  (AA)
     --visited on --surface ...............  5.47  (AA) — visited links on gray bands
+    --error on --background ..............  4.97  (AA) — form errors
+    --error on --paper ...................  5.19  (AA)
+    --error on --surface .................  4.54  (AA)
     white on --primary ...................  4.88  (AA) — primary buttons
     white on --heading ................... 10.77  (AAA) — primary button hover
     --heading on --paper at 75% .......... 10.41  (AAA) — secondary buttons, worst case on --surface
@@ -66,6 +69,7 @@
   --footer-foreground: #faf8f5;
   --footer-muted: #c9d6e0;
   --pdf: #d7191f;
+  --error: #d7191f; /* form errors: the site's one red, as on the PDF badge; red is for bad news only */
   --project: #a8500f; /* burnt orange: warmer and darker than --primary, which reads as red */
   --project-foreground: #ffffff;
   --pdf-foreground: #ffffff;
@@ -89,6 +93,7 @@
   --color-heading: var(--heading);
   --color-brand: var(--brand);
   --color-visited: var(--visited);
+  --color-error: var(--error);
   --color-highlight: var(--highlight);
   --color-brand-muted: var(--brand-muted);
   --color-footer: var(--footer);
@@ -210,6 +215,57 @@
   animation: blind-shade-in var(--viewer-blind-duration) var(--blind-ease) both;
 }
 
+/*
+  Overlays (the image viewer, galleries, the document reader, the AI
+  statement): the whole overlay, backdrop and content together, slides down
+  from above the window like a blind, and back up when it closes.
+  blind-dialog.ts sets data-blind and closes the dialog when the slide ends.
+  Transform only, so the slide runs on the compositor.
+*/
+:root {
+  --overlay-duration: 420ms;
+}
+@keyframes overlay-blind-in {
+  from { transform: translateY(-100dvh); }
+}
+@keyframes overlay-blind-out {
+  to { transform: translateY(-100dvh); }
+}
+dialog[data-blind='in'],
+dialog[data-blind='in']::backdrop {
+  animation: overlay-blind-in var(--overlay-duration) var(--blind-ease) both;
+  will-change: transform;
+}
+dialog[data-blind='out'],
+dialog[data-blind='out']::backdrop {
+  animation: overlay-blind-out var(--overlay-duration) var(--blind-ease) both;
+  will-change: transform;
+}
+
+/*
+  Menus (the Portfolio sections, the phone menu): a blind that rolls down from
+  under its button and back up. Always rendered; closed, the clip shuts and
+  visibility goes hidden once it has, so closed links can't take focus or be
+  read. The clip extends past the edges so the shadow isn't cut off.
+*/
+:root {
+  --menu-duration: 260ms;
+}
+.menu-blind {
+  clip-path: inset(-1.5rem -1.5rem 100% -1.5rem);
+  visibility: hidden;
+  transition:
+    clip-path var(--menu-duration) var(--blind-ease),
+    visibility 0s linear var(--menu-duration);
+}
+.menu-blind[data-open='true'] {
+  clip-path: inset(-1.5rem -1.5rem -2rem -1.5rem);
+  visibility: visible;
+  transition:
+    clip-path var(--menu-duration) var(--blind-ease),
+    visibility 0s;
+}
+
 /* The header is the fixed reference point: it never moves during a blind. */
 ::view-transition-group(site-header) {
   animation: none;
@@ -224,6 +280,14 @@
 
 /* Reduced motion: no travel, just a quick crossfade. */
 @media (prefers-reduced-motion: reduce) {
+  dialog[data-blind],
+  dialog[data-blind]::backdrop {
+    animation: none;
+  }
+  .menu-blind,
+  .menu-blind[data-open='true'] {
+    transition: none;
+  }
   .viewer-blind-next,
   .viewer-blind-prev {
     animation: none;

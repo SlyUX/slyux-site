@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { ChevronLeft, ChevronRight, X } from 'lucide-react'
 
+import { cancelAsBlind, closeBlind, openBlind } from '@/components/blind-dialog'
 import { cn } from '@/lib/utils'
 
 export interface GalleryLabels {
@@ -33,7 +34,7 @@ export function useViewer(count: number) {
   const openAt = (i: number) => {
     setIndex(i)
     setIsOpen(true)
-    dialogRef.current?.showModal()
+    openBlind(dialogRef.current)
     dialogRef.current?.scrollTo({ top: 0 })
   }
   const go = (delta: number) => {
@@ -47,7 +48,7 @@ export function useViewer(count: number) {
     setIndex(next)
     dialogRef.current?.scrollTo({ top: 0 })
   }
-  const close = () => dialogRef.current?.close()
+  const close = () => closeBlind(dialogRef.current)
 
   // ← / → while the viewer is open, wherever focus sits inside it.
   useEffect(() => {
@@ -69,6 +70,7 @@ export type Viewer = ReturnType<typeof useViewer>
 
 /**
  * The viewer itself: a native <dialog> (showModal), so Escape closes it,
+ * sliding down and back up like a blind (blind-dialog.ts),
  * focus moves in, and the page behind is inert. The dialog is the scroll
  * container — one scroll, never a scroll inside a scroll. A horizontal swipe
  * or the buttons step through items; vertical scrolling is left alone.
@@ -105,6 +107,7 @@ export function ViewerDialog({
     <dialog
       ref={dialogRef}
       aria-label={label}
+      onCancel={cancelAsBlind}
       onClose={() => {
         setIsOpen(false)
         onClosed(index)

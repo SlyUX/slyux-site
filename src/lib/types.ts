@@ -4,6 +4,8 @@ import type {
   PORTFOLIO_SECTION_QUERY_RESULT,
   CREATIVE_WORK_QUERY_RESULT,
   EXPERIENCE_QUERY_RESULT,
+  LLMS_QUERY_RESULT,
+  SITEMAP_QUERY_RESULT,
   ImageWithAlt,
   Link,
   Metric,
@@ -25,3 +27,5 @@ export type CreativeWorkCard = PORTFOLIO_SECTION_QUERY_RESULT[number]
 export type CreativeWorkDetail = NonNullable<CREATIVE_WORK_QUERY_RESULT>
 export type PageDetail = NonNullable<PAGE_QUERY_RESULT>
 export type ExperienceEntry = EXPERIENCE_QUERY_RESULT[number]
+export type SitemapData = SITEMAP_QUERY_RESULT
+export type LlmsData = LLMS_QUERY_RESULT

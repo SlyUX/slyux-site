@@ -100,7 +100,27 @@ const DEFAULTS = {
   educationHeading: 'Education and training',
   aiStatementHeading: 'How I work with AI',
   aiNoteLabel: 'How I work with AI',
+  relatedHeading: 'Related work',
   contactTitle: 'Contact',
+  contactForm: {
+    intro: "Pick what fits and send a note. I'll get back to you.",
+    topicLegend: "What's this about?",
+    nameLabel: 'Your name',
+    emailLabel: 'Your email',
+    messageLabel: 'Message',
+    sendLabel: 'Send',
+    sendingLabel: 'Sending…',
+    successHeading: 'Thanks. Your message is on its way.',
+    successText: "I'll get back to you soon.",
+    errorText: "Something went wrong on our end, and your message wasn't sent. Please try again in a few minutes.",
+    nameRequired: 'Please add your name.',
+    emailRequired: 'Please add an email so I can reply.',
+    emailInvalid: "That email doesn't look right.",
+    messageRequired: 'Please write a message.',
+    messageShort: 'A little more detail, please.',
+    messageLong: 'That message is very long. Please trim it.',
+    rateLimited: 'Too many messages just now. Please try again in a few minutes.',
+  },
 } satisfies Partial<Settings>
 
 type SectionCopy = { title: string; intro?: string }
@@ -133,6 +153,10 @@ export const getSiteSettings = cache(async (): Promise<SiteSettings> => {
       const copy = fetched?.portfolioSections?.[key]
       return [key, { title: copy?.title || DEFAULTS.portfolioSections[key].title, intro: copy?.intro }]
     }),
+  )
+  // Contact form wording: a cleared field falls back to its default.
+  merged.contactForm = Object.fromEntries(
+    Object.entries(DEFAULTS.contactForm).map(([key, text]) => [key, fetched?.contactForm?.[key as keyof typeof DEFAULTS.contactForm] || text]),
   )
   return merged as SiteSettings
 })

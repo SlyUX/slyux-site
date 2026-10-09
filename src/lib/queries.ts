@@ -28,6 +28,11 @@ const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,cardFit,artwork
 
 const CASE_STUDY_CARD = `_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics`
 
+/** Related work: this page's picks, then pieces that picked it (see RelatedWork). */
+const RELATED_CARD = `_type,_type=="caseStudy"=>{${CASE_STUDY_CARD}},_type=="creativeWork"=>{${PORTFOLIO_CARD}}`
+const RELATED = `"relatedPicks": related[]->{${RELATED_CARD}},
+  "relatedBack": *[_type in ["caseStudy","creativeWork"] && ^._id in related[]._ref]|order(_type asc, order asc){${RELATED_CARD}}`
+
 export const SITE_SETTINGS_QUERY = defineQuery(`*[_type=="siteSettings" && _id=="siteSettings"][0]{
   ...,
   "resumePdfUrl": resumePdf.asset->url,
@@ -46,7 +51,7 @@ export const CASE_STUDIES_QUERY = defineQuery(
 )
 
 export const CASE_STUDY_QUERY = defineQuery(`*[_type=="caseStudy" && slug.current==$slug][0]{
-  ${CASE_STUDY_CARD},body,links,seoDescription,heroBackground,personasIntro,aiNote,
+  ${CASE_STUDY_CARD},body,links,seoDescription,heroBackground,personasIntro,aiNote,${RELATED},
   personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},
   galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}
 }`)
@@ -72,7 +77,7 @@ export const PORTFOLIO_FEATURED_QUERY = defineQuery(
 
 export const CREATIVE_WORK_QUERY = defineQuery(`*[_type=="creativeWork" && slug.current==$slug && kind in $kinds][0]{
   _id,title,"slug":slug.current,kind,image,client,year,credit,aiNote,summary,gallery,howItStarted,body,documentsHeading,externalUrl,
-  documents[]{${PDF_DOCUMENT}},
+  documents[]{${PDF_DOCUMENT}},${RELATED},
   "caseStudy": caseStudy->{title,"slug":slug.current}
 }`)
 
@@ -89,4 +94,23 @@ export const PAGE_SLUGS_QUERY = defineQuery(`*[_type=="page" && defined(slug.cur
 export const EXPERIENCE_QUERY = defineQuery(`*[_type=="experience"]|order(start desc){
   _id,role,organization,start,end,location,highlights,
   "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}
+}`)
+
+/** Every public URL and when it last changed, for sitemap.xml. */
+export const SITEMAP_QUERY = defineQuery(`{
+  "pages": *[_type=="page" && defined(slug.current)]{"slug": slug.current, _updatedAt},
+  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]{"slug": slug.current, _updatedAt},
+  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{"slug": slug.current, kind, _updatedAt},
+  "settingsUpdated": *[_id=="siteSettings"][0]._updatedAt
+}`)
+
+/** The site as text for AI tools (/llms.txt and /llms-full.txt): summaries, and the full stories. */
+export const LLMS_QUERY = defineQuery(`{
+  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){
+    title, "slug": slug.current, summary, organization, role, years, skills, "text": pt::text(body)
+  },
+  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]|order(order asc, title asc){
+    title, "slug": slug.current, kind, summary, client, year, credit, "text": pt::text(body)
+  },
+  "pages": *[_type=="page" && defined(slug.current)]|order(title asc){title, "slug": slug.current, intro, "text": pt::text(body), "rail": rail{heading, "text": pt::text(body)}}
 }`)

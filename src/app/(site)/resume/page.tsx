@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { stegaClean } from 'next-sanity'
 
+import { AiNote } from '@/components/ai-statement'
 import { TransitionLink } from '@/components/transition-link'
 import { buttonVariants, PageHeader, Section, SectionHeading } from '@/components/ui'
 import { EXPERIENCE_QUERY, safeFetch } from '@/lib/queries'
@@ -95,7 +96,9 @@ export default async function ResumePage() {
         <aside className="space-y-12">
           {!!s.skillGroups?.length && (
             <section aria-labelledby="skills-heading">
-              <SectionHeading id="skills-heading">{s.skillsHeading}</SectionHeading>
+              <SectionHeading id="skills-heading" intro={<AiNote className="ml-0" />}>
+                {s.skillsHeading}
+              </SectionHeading>
               <div className="space-y-6">
                 {s.skillGroups.map((group) => (
                   <div key={group._key}>
