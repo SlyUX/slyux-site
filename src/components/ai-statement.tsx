@@ -6,9 +6,10 @@ import { Sparkles, X } from 'lucide-react'
 import { returnFocus } from '@/components/return-focus'
 
 /**
- * "How I work with AI": one statement (Site settings), opened from an AI note
- * placed in any story where AI played a part, usually right after its Role
- * line. The layout renders the dialog once; each note's button opens it.
+ * "How I work with AI": one statement (Site settings), opened from the AI note
+ * on any piece or case study where AI played a part (its "AI note" toggle),
+ * at the end of the credit line, or the role line on case studies. The layout
+ * renders the dialog once; each note's button opens it.
  * Without a statement in Site settings, notes render nothing.
  */
 const AiStatementContext = createContext<{ label: string; open: (from: HTMLButtonElement) => void } | null>(null)

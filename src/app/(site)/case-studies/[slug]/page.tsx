@@ -3,6 +3,7 @@ import { stegaClean } from 'next-sanity'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
+import { AiNote } from '@/components/ai-statement'
 import { Breadcrumb } from '@/components/breadcrumb'
 import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { MetricStrip, WorkStory } from '@/components/content'
@@ -55,8 +56,11 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
           eyebrow={study.organization}
           breadcrumb={<Breadcrumb trail={[{ label: s.workTitle, href: '/case-studies' }]} page={study.title} />}
         />
-        {facts.length > 1 && (
-          <p className="text-muted-foreground mt-6 text-sm">{facts.slice(1).join(' · ')}</p>
+        {(facts.length > 1 || study.aiNote) && (
+          <p className="text-muted-foreground mt-6 text-sm">
+            {facts.slice(1).join(' · ')}
+            {study.aiNote && <AiNote />}
+          </p>
         )}
         {!!study.skills?.length && (
           <ul className="mt-5 flex flex-wrap gap-2">

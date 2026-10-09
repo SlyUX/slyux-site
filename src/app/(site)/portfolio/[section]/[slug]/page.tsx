@@ -3,6 +3,7 @@ import { stegaClean } from 'next-sanity'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 
+import { AiNote } from '@/components/ai-statement'
 import { TransitionLink } from '@/components/transition-link'
 import { buttonVariants, PageHeader, Section } from '@/components/ui'
 import { imageSize, RichText, WorkStory } from '@/components/content'
@@ -84,7 +85,12 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
             />
           }
         />
-        {work.credit && <p className="text-muted-foreground mt-4 text-sm">{work.credit}</p>}
+        {(work.credit || work.aiNote) && (
+          <p className="text-muted-foreground mt-4 text-sm">
+            {work.credit}
+            {work.aiNote && <AiNote />}
+          </p>
+        )}
       </Section>
       {/*
         The improved state up front: the piece's main image, whole on white and

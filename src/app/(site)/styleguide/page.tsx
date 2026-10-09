@@ -302,7 +302,7 @@ const RULES = [
   ['Every image opens larger.', 'Cards, galleries, and story images all open the viewer. Each card is its own gallery: the viewer steps through that card’s images and stops.'],
   ['Featured pieces lead.', 'A piece marked Featured leads its page in a Featured band, image beside summary. Brand systems and UX projects sit side by side as equals instead.'],
   ['Phones see phones first.', 'Case studies show their mobile galleries before desktop ones on narrow screens, and desktop captures swipe in one row.'],
-  ['AI is disclosed where it helped.', 'A story where AI played a part carries an AI note, usually right after its Role line. Every note opens the same statement, edited once in Site settings.'],
+  ['AI is disclosed where it helped.', 'A piece or case study where AI played a part turns on its AI note, which ends the credit line (or the role line on case studies). Every note opens the same statement, edited once in Site settings.'],
   ['Navigation recedes.', 'The breadcrumb is a plain trail; switching sections happens in the header. Choose the lighter option before adding boxes around navigation.'],
   ['Links show where you’ve been.', 'Hover turns a link orange. Once visited, card titles and links in stories turn the lighter blue; navigation and buttons don’t change. The orange focus ring is for keyboard users: when a viewer or menu opened with a click closes, focus returns without it.'],
   [
@@ -559,13 +559,13 @@ export default async function StyleguidePage() {
             file="src/components/ai-statement.tsx"
             stage="background"
             notes={[
-              'Inserted in a story’s text in the Studio (“AI note”), usually right after the Role line, so the disclosure sits where readers judge the role.',
+              'Turned on per piece (“AI note”). It ends the credit line on portfolio pages and the role line on case studies, so the explanation sits beside the credit, in the header.',
               'Opens one statement, “How I work with AI,” written once in Site settings. With no statement there, notes don’t show.',
               'Styled like a link in the text; Escape or the close button returns focus to it, without a ring after a click.',
             ]}
           >
-            <p className="leading-relaxed">
-              <span className="font-semibold">Role:</span> co-authored with two colleagues.
+            <p className="text-muted-foreground text-sm">
+              Data Analysis, UX Research, User Interviews; Research and presentation with assistance from Claude (Anthropic).
               <AiNote />
             </p>
           </Specimen>

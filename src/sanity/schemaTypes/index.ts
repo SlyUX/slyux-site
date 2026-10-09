@@ -7,7 +7,7 @@ import imageWithAlt from './imageWithAlt'
 import galleryScreen from './galleryScreen'
 import persona from './persona'
 import pdfDocument from './pdfDocument'
-import { aiNote, metric, link, richText } from './objects'
+import { metric, link, richText } from './objects'
 
 export const schemaTypes = [
   siteSettings,
@@ -22,5 +22,4 @@ export const schemaTypes = [
   metric,
   link,
   richText,
-  aiNote,
 ]
