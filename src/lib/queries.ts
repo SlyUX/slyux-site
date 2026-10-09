@@ -22,7 +22,7 @@ export async function safeFetch<T>(
   }
 }
 
-const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,
+const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,
   "hasPage": count(body) > 0 || count(documents) > 0,
   "caseStudySlug": caseStudy->slug.current`
 

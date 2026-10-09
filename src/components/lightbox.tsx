@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState } from 'react'
 
+import { cn } from '@/lib/utils'
 import { returnFocus } from '@/components/return-focus'
 import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
@@ -14,6 +15,8 @@ export interface LightboxItem {
   src: string
   width: number
   height: number
+  /** The ground behind a transparent image; white unless the piece asks for black. */
+  background?: 'paper' | 'paper-black'
 }
 
 type Open = (pieceKey: string, at?: number) => void
@@ -92,7 +95,7 @@ export function Lightbox({
                   width={shown[i].width}
                   height={shown[i].height}
                   decoding="async"
-                  className="bg-paper h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-ui shadow-2xl"
+                  className={cn(shown[i].background === 'paper-black' ? 'bg-paper-black' : 'bg-paper', 'h-auto max-h-[calc(100svh-5.5rem)] w-auto max-w-full rounded-ui shadow-2xl')}
                 />
                 )
               }

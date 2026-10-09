@@ -69,6 +69,22 @@ export default defineType({
         "Fill crops the image to the card's shape around its focal point (set it with the crop tool on the image). Use Show the whole image for banners or covers that mustn't be cut. Transparent images always show whole, on white.",
     }),
     defineField({
+      name: 'artworkBackground',
+      group: 'card',
+      title: 'Background',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'White', value: 'white' },
+          { title: 'Black', value: 'black' },
+        ],
+        layout: 'radio',
+        direction: 'horizontal',
+      },
+      description:
+        "Behind the artwork wherever it shows whole: on its card and in the viewer. White suits most work; Black suits art made for a dark ground, like ND Riot's logo. A card that fills with its image doesn't show it.",
+    }),
+    defineField({
       name: 'client',
       group: 'card',
       title: 'Client or publisher',

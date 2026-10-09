@@ -47,6 +47,7 @@
   --foreground: #171e24;
   --surface: #eef0f3;
   --paper: #ffffff; /* white ground for artwork: cards, story images, galleries, document pages */
+  --paper-black: #000000; /* black ground for artwork made for one (ND Riot's logo); a piece's Background setting. No text sits on it. */
   --muted-foreground: #52595e;
   --caption: #3d4449; /* dark gray: between --muted-foreground and --foreground */
   --border: #dbdee2;
@@ -75,6 +76,7 @@
   --color-foreground: var(--foreground);
   --color-surface: var(--surface);
   --color-paper: var(--paper);
+  --color-paper-black: var(--paper-black);
   --color-muted-foreground: var(--muted-foreground);
   --color-caption: var(--caption);
   --color-border: var(--border);
