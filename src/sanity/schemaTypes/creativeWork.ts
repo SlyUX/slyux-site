@@ -177,7 +177,8 @@ export default defineType({
       title: 'Order',
       type: 'number',
       initialValue: 100,
-      description: 'Lower numbers come first within each kind.',
+      description:
+        'Lower numbers come first: within its row on its section page (after featured pieces), and in its section’s preview on the Portfolio page (after pieces with their own page, then featured pieces).',
     }),
   ],
   orderings: [{ title: 'Order', name: 'order', by: [{ field: 'order', direction: 'asc' }] }],

@@ -22,6 +22,9 @@
     --heading on --background ............ 10.31  (AAA) — page titles
     --primary on --background ............  4.67  (AA)
     --primary on --surface ...............  4.27  large text only (≥3) — big numbers OK
+    --visited on --background ............  5.98  (AA) — visited links
+    --visited on --paper .................  6.25  (AA)
+    --visited on --surface ...............  5.47  (AA) — visited links on gray bands
     white on --primary ...................  4.88  (AA) — primary buttons
     white on --heading ................... 10.77  (AAA) — primary button hover
     --heading on --paper at 75% .......... 10.41  (AAA) — secondary buttons, worst case on --surface
@@ -55,6 +58,7 @@
   --ink-muted: #a7b0b8;
   --heading: #0b4163;
   --brand: #006699;
+  --visited: #006699; /* visited links: the lighter blue, its own token so it can diverge from --brand */
   --highlight: #ffffff;
   --brand-muted: #d6e3eb;
   --footer: #1a3b53; /* #26577A, 10% darker */
@@ -82,6 +86,7 @@
   --color-ink-muted: var(--ink-muted);
   --color-heading: var(--heading);
   --color-brand: var(--brand);
+  --color-visited: var(--visited);
   --color-highlight: var(--highlight);
   --color-brand-muted: var(--brand-muted);
   --color-footer: var(--footer);
@@ -262,6 +267,10 @@
   :focus-visible {
     outline: 2px solid var(--primary);
     outline-offset: 3px;
+  }
+  /* Focus returned after a click-opened dialog or menu closes: no ring until it moves (see return-focus.ts). */
+  [data-quiet-focus]:focus-visible {
+    outline: none;
   }
   @media (prefers-reduced-motion: reduce) {
     *, *::before, *::after {

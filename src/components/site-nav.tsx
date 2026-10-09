@@ -5,6 +5,7 @@ import { useCallback, useEffect, useId, useRef, useState } from 'react'
 
 import { ChevronDown, Menu, X } from 'lucide-react'
 
+import { returnFocus } from '@/components/return-focus'
 import { TransitionLink } from '@/components/transition-link'
 import { cn } from '@/lib/utils'
 import { PORTFOLIO_SECTIONS } from '@/sanity/portfolio'
@@ -68,7 +69,7 @@ function useDismiss(open: boolean, close: () => void, wrapRef: React.RefObject<H
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         close()
-        buttonRef.current?.focus()
+        returnFocus(buttonRef.current)
       }
     }
     const onPointer = (e: PointerEvent) => {

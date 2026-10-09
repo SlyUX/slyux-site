@@ -164,7 +164,7 @@ export function CaseStudyTile({
         <CardAction action="page" />
       </div>
       <Heading className={cn('font-semibold', details ? 'mt-4 text-xl' : 'mt-3')}>
-        <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
+        <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 visited:text-visited group-hover:text-primary hover:text-primary">
           {study.title}
         </TransitionLink>
       </Heading>
@@ -229,7 +229,7 @@ export function CaseStudyRow({
       <div className="flex flex-col gap-2">
         {meta && <p className="text-muted-foreground text-sm">{meta}</p>}
         <Heading className="font-display text-2xl font-semibold">
-          <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 group-hover:text-primary">
+          <TransitionLink href={`/case-studies/${study.slug}`} className="after:absolute after:inset-0 visited:text-visited group-hover:text-primary hover:text-primary">
             {study.title}
           </TransitionLink>
         </Heading>
@@ -367,7 +367,7 @@ export function CreativeTile({
 
   // A card that opens its own gallery shows how many images it holds.
   const imageCount = !href && image ? 1 + (work.gallery ?? []).filter((g) => g?.asset).length : 0
-  const stretch = 'after:absolute after:inset-0 group-hover:text-primary'
+  const stretch = 'after:absolute after:inset-0 visited:text-visited group-hover:text-primary hover:text-primary'
   // A container, so the chip can move by the card's width (see below), not the screen's.
   const frame = (
     <div
@@ -451,7 +451,7 @@ const richTextComponents: PortableTextComponents = {
       const href = externalHref(value?.href)
       if (!href) return <>{children}</>
       return (
-        <a href={href} className="text-primary underline underline-offset-4 hover:no-underline" {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
+        <a href={href} className="text-primary visited:text-visited hover:text-primary underline underline-offset-4 hover:no-underline" {...(href.startsWith('http') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}>
           {children}
         </a>
       )

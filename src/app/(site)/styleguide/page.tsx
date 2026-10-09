@@ -72,6 +72,7 @@ const TOKENS: TokenGroup[] = [
       },
       { token: 'brand', use: 'The blue Highlights band on the home page.' },
       { token: 'brand-muted', use: 'Labels on the blue band.' },
+      { token: 'visited', use: 'Visited links: card titles and links in stories. Navigation and buttons don’t change.' },
     ],
   },
   {
@@ -132,6 +133,9 @@ const PAIRS: ContrastPair[] = [
     use: 'Big stat numbers on gray bands',
     need: 'large',
   },
+  { fg: 'visited', bg: 'background', use: 'Visited links', need: 'text' },
+  { fg: 'visited', bg: 'paper', use: 'Visited links on white', need: 'text' },
+  { fg: 'visited', bg: 'surface', use: 'Visited links on gray bands', need: 'text' },
   { fg: 'white', bg: 'primary', use: 'Primary buttons', need: 'text' },
   { fg: 'white', bg: 'heading', use: 'Primary button, hovered', need: 'text' },
   {
@@ -289,6 +293,7 @@ const RULES = [
   ['Featured pieces lead.', 'A piece marked Featured leads its page in a Featured band, image beside summary. Brand systems and UX projects sit side by side as equals instead.'],
   ['Phones see phones first.', 'Case studies show their mobile galleries before desktop ones on narrow screens, and desktop captures swipe in one row.'],
   ['Navigation recedes.', 'The breadcrumb is a plain trail; switching sections happens in the header. Choose the lighter option before adding boxes around navigation.'],
+  ['Links show where you’ve been.', 'Hover turns a link orange. Once visited, card titles and links in stories turn the lighter blue; navigation and buttons don’t change. The orange focus ring is for keyboard users: when a viewer or menu opened with a click closes, focus returns without it.'],
   [
     'Content lives in Sanity.',
     'Display copy is edited in the Studio, with defaults in src/lib/site-settings.ts. Exceptions are text only assistive technology hears, and this page.',

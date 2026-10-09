@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState } from 'react'
 
+import { returnFocus } from '@/components/return-focus'
 import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
 export interface LightboxItem {
@@ -69,7 +70,7 @@ export function Lightbox({
           srText={item && (item.alt === item.title ? item.title : `${item.title} — ${item.alt}`)}
           labels={labels}
           // Back to the thumbnail of the image last shown, or the card that opened the piece.
-          onClosed={(i) => pieceKey && (buttons.get(`${pieceKey}#${i}`) ?? buttons.get(`${pieceKey}#0`))?.focus()}
+          onClosed={(i) => pieceKey && returnFocus(buttons.get(`${pieceKey}#${i}`) ?? buttons.get(`${pieceKey}#0`))}
         >
           <div
             // The dim space around the image closes the lightbox, as elsewhere.

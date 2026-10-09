@@ -5,6 +5,7 @@ import { useRef } from 'react'
 import { Maximize2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { returnFocus } from '@/components/return-focus'
 import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
 export type { GalleryLabels }
@@ -133,7 +134,7 @@ export function GalleryViewer({
         }
         srText={`${item?.caption ? `${item.caption} — ` : ''}${item?.alt ?? ''}`}
         labels={labels}
-        onClosed={(i) => thumbRefs.current[i]?.focus()}
+        onClosed={(i) => returnFocus(thumbRefs.current[i])}
       >
         <ViewerStage
           index={index}
