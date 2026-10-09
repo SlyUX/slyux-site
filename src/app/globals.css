@@ -266,6 +266,18 @@ dialog[data-blind='out']::backdrop {
     visibility 0s;
 }
 
+/*
+  The site header is sticky. --header-h is its height: the built default here,
+  then measured live (HeaderHeight). Jump links and keyboard focus scroll to
+  just below it, never underneath, and sticky story headings pin below it.
+*/
+:root {
+  --header-h: 69px;
+}
+html {
+  scroll-padding-top: calc(var(--header-h) + 1rem);
+}
+
 /* The header is the fixed reference point: it never moves during a blind. */
 ::view-transition-group(site-header) {
   animation: none;

@@ -3,6 +3,7 @@ import { draftMode } from 'next/headers'
 import { stegaClean } from 'next-sanity'
 
 import { AiStatementProvider } from '@/components/ai-statement'
+import { HeaderHeight } from '@/components/header-height'
 import { RichText } from '@/components/content'
 import { JsonLd, personId } from '@/components/json-ld'
 import { SiteNav } from '@/components/site-nav'
@@ -66,7 +67,9 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         {/* a11y-only text; not CMS-managed. */}
         Skip to content
       </a>
-      <header className="border-border bg-background relative z-40 border-b px-4 sm:px-6" style={{ viewTransitionName: 'site-header' }}>
+      {/* Sticky: pinned to the top once the page scrolls (offsets use --header-h, see HeaderHeight). */}
+      <header data-site-header className="border-border bg-background sticky top-0 z-40 border-b px-4 sm:px-6" style={{ viewTransitionName: 'site-header' }}>
+        <HeaderHeight />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-x-8 py-3">
           <TransitionLink href="/" className="font-display shrink-0 text-xl font-semibold">
             {settings.headerLogo?.asset && settings.headerLogoSize ? (
