@@ -67,7 +67,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
         {/* a11y-only text; not CMS-managed. */}
         Skip to content
       </a>
-      {/* Sticky: pinned to the top once the page scrolls (offsets use --header-h, see HeaderHeight). */}
+      {/* Sticky: pinned to the top once the page scrolls; on phones it steps aside while scrolling down (see HeaderHeight). */}
       <header data-site-header className="border-border bg-background sticky top-0 z-40 border-b px-4 sm:px-6" style={{ viewTransitionName: 'site-header' }}>
         <HeaderHeight />
         <div className="mx-auto flex max-w-6xl items-center justify-between gap-x-8 py-3">
