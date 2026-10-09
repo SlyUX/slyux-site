@@ -46,7 +46,7 @@ export const CASE_STUDIES_QUERY = defineQuery(
 )
 
 export const CASE_STUDY_QUERY = defineQuery(`*[_type=="caseStudy" && slug.current==$slug][0]{
-  ${CASE_STUDY_CARD},body,links,seoDescription,heroBackground,personasIntro,
+  ${CASE_STUDY_CARD},body,links,seoDescription,heroBackground,personasIntro,aiNote,
   personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},
   galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}
 }`)
@@ -71,7 +71,7 @@ export const PORTFOLIO_FEATURED_QUERY = defineQuery(
 )
 
 export const CREATIVE_WORK_QUERY = defineQuery(`*[_type=="creativeWork" && slug.current==$slug && kind in $kinds][0]{
-  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,documentsHeading,externalUrl,
+  _id,title,"slug":slug.current,kind,image,client,year,credit,aiNote,summary,gallery,howItStarted,body,documentsHeading,externalUrl,
   documents[]{${PDF_DOCUMENT}},
   "caseStudy": caseStudy->{title,"slug":slug.current}
 }`)

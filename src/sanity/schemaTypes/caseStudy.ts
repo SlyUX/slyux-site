@@ -68,6 +68,14 @@ export default defineType({
       validation: (rule) => rule.custom(todoCheck).warning(),
     }),
     defineField({
+      name: 'aiNote',
+      group: 'overview',
+      title: 'AI note',
+      type: 'boolean',
+      description:
+        'Turn on wherever AI played a part. Adds "How I work with AI" at the end of the role and years line on this case study\'s page, opening the statement in Site settings.',
+    }),
+    defineField({
       name: 'skills',
       title: 'Skills shown',
       type: 'array',

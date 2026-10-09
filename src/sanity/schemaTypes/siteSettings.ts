@@ -28,7 +28,7 @@ export default defineType({
       type: 'richText',
       group: 'general',
       description:
-        'Opens from each AI note placed in a story (insert "AI note" in the text, usually right after the Role line). Leave empty and the notes don\'t show.',
+        'Opens from the AI note on any piece or case study where it\'s turned on (the "AI note" toggle). Leave empty and the notes don\'t show.',
     }),
     defineField({ name: 'aiStatementHeading', title: 'AI statement heading', type: 'string', group: 'general' }),
     defineField({ name: 'aiNoteLabel', title: 'AI note button text', type: 'string', group: 'general' }),

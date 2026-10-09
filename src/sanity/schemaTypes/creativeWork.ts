@@ -106,6 +106,14 @@ export default defineType({
         'Clarifies your role when others contributed, e.g. "Campaign design. Cover illustration by Ela Smietanka."',
     }),
     defineField({
+      name: 'aiNote',
+      group: 'card',
+      title: 'AI note',
+      type: 'boolean',
+      description:
+        'Turn on wherever AI played a part. Adds "How I work with AI" at the end of the credit note on this piece\'s page, opening the statement in Site settings.',
+    }),
+    defineField({
       name: 'summary',
       group: 'card',
       title: 'Summary',
