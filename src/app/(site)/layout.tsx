@@ -8,7 +8,6 @@ import { TransitionLink } from '@/components/transition-link'
 import { PreviewTools } from '@/components/preview-tools'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { ViewerLabelsProvider } from '@/components/viewer-labels'
-import { externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 
 /**
@@ -17,14 +16,14 @@ import { urlFor } from '@/sanity/image'
  */
 export const revalidate = 60
 
-/** Site chrome: header, main, footer. Kept off the full-screen Studio. */
+/** Site chrome: the header, and the providers every page shares. Kept off the full-screen Studio. Main and the footer are in the page template, so they move with each page (see template.tsx). */
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSiteSettings()
   const { isEnabled: preview } = await draftMode()
-  const linkedin = externalHref(settings.linkedinUrl)
 
-  // Footer sits on the bottom edge of short pages, and below the content on
-  // tall ones: the wrapper is at least one (small) viewport tall and main grows.
+  // The wrapper is at least one (small) viewport tall; each page's panel
+  // (template.tsx) fills what the header leaves, so short pages put the footer
+  // on the bottom edge and tall ones put it below the content.
   return (
     <>
     <div className="flex min-h-svh flex-col">
@@ -55,37 +54,16 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
           <SiteNav entries={settings.gridNav} label="Main" portfolio={{ label: settings.creativeTitle, href: '/portfolio' }} />
         </div>
       </header>
-      <main id="main" className="flex-1">
-        <ViewerLabelsProvider labels={galleryLabels(settings)}>
-          <AiStatementProvider
-            label={settings.aiNoteLabel}
-            heading={settings.aiStatementHeading}
-            closeLabel={settings.closeLabel}
-            statement={settings.aiStatement?.length ? <RichText value={settings.aiStatement} /> : undefined}
-          >
-            {children}
-          </AiStatementProvider>
-        </ViewerLabelsProvider>
-      </main>
-      <footer className="bg-footer text-footer-foreground px-4 py-10 sm:px-6">
-        <div className="mx-auto flex max-w-6xl flex-col gap-4 text-sm md:flex-row md:items-center md:justify-between">
-          <p className="text-footer-muted">{settings.footerLine ?? `© ${new Date().getFullYear()} ${settings.ownerName}`}</p>
-          <ul className="flex gap-5">
-            <li>
-              <a href={`mailto:${settings.contactEmail}`} className="decoration-fox underline-offset-4 hover:underline hover:decoration-2">
-                {settings.contactEmail}
-              </a>
-            </li>
-            {linkedin && (
-              <li>
-                <a href={linkedin} target="_blank" rel="noopener noreferrer" className="decoration-fox underline-offset-4 hover:underline hover:decoration-2">
-                  LinkedIn
-                </a>
-              </li>
-            )}
-          </ul>
-        </div>
-      </footer>
+      <ViewerLabelsProvider labels={galleryLabels(settings)}>
+        <AiStatementProvider
+          label={settings.aiNoteLabel}
+          heading={settings.aiStatementHeading}
+          closeLabel={settings.closeLabel}
+          statement={settings.aiStatement?.length ? <RichText value={settings.aiStatement} /> : undefined}
+        >
+          {children}
+        </AiStatementProvider>
+      </ViewerLabelsProvider>
     </div>
     {preview && <PreviewTools />}
     </>

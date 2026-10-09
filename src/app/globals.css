@@ -210,6 +210,57 @@
   animation: blind-shade-in var(--viewer-blind-duration) var(--blind-ease) both;
 }
 
+/*
+  Overlays (the image viewer, galleries, the document reader, the AI
+  statement): the whole overlay, backdrop and content together, slides down
+  from above the window like a blind, and back up when it closes.
+  blind-dialog.ts sets data-blind and closes the dialog when the slide ends.
+  Transform only, so the slide runs on the compositor.
+*/
+:root {
+  --overlay-duration: 420ms;
+}
+@keyframes overlay-blind-in {
+  from { transform: translateY(-100dvh); }
+}
+@keyframes overlay-blind-out {
+  to { transform: translateY(-100dvh); }
+}
+dialog[data-blind='in'],
+dialog[data-blind='in']::backdrop {
+  animation: overlay-blind-in var(--overlay-duration) var(--blind-ease) both;
+  will-change: transform;
+}
+dialog[data-blind='out'],
+dialog[data-blind='out']::backdrop {
+  animation: overlay-blind-out var(--overlay-duration) var(--blind-ease) both;
+  will-change: transform;
+}
+
+/*
+  Menus (the Portfolio sections, the phone menu): a blind that rolls down from
+  under its button and back up. Always rendered; closed, the clip shuts and
+  visibility goes hidden once it has, so closed links can't take focus or be
+  read. The clip extends past the edges so the shadow isn't cut off.
+*/
+:root {
+  --menu-duration: 260ms;
+}
+.menu-blind {
+  clip-path: inset(-1.5rem -1.5rem 100% -1.5rem);
+  visibility: hidden;
+  transition:
+    clip-path var(--menu-duration) var(--blind-ease),
+    visibility 0s linear var(--menu-duration);
+}
+.menu-blind[data-open='true'] {
+  clip-path: inset(-1.5rem -1.5rem -2rem -1.5rem);
+  visibility: visible;
+  transition:
+    clip-path var(--menu-duration) var(--blind-ease),
+    visibility 0s;
+}
+
 /* The header is the fixed reference point: it never moves during a blind. */
 ::view-transition-group(site-header) {
   animation: none;
@@ -224,6 +275,14 @@
 
 /* Reduced motion: no travel, just a quick crossfade. */
 @media (prefers-reduced-motion: reduce) {
+  dialog[data-blind],
+  dialog[data-blind]::backdrop {
+    animation: none;
+  }
+  .menu-blind,
+  .menu-blind[data-open='true'] {
+    transition: none;
+  }
   .viewer-blind-next,
   .viewer-blind-prev {
     animation: none;

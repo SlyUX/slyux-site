@@ -303,6 +303,7 @@ const RULES = [
   ['Featured pieces lead.', 'A piece marked Featured leads its page in a Featured band, image beside summary. Brand systems and UX projects sit side by side as equals instead.'],
   ['Phones see phones first.', 'Case studies show their mobile galleries before desktop ones on narrow screens, and desktop captures swipe in one row.'],
   ['AI is disclosed where it helped.', 'A piece or case study where AI played a part turns on its AI note, which ends the credit line (or the role line on case studies). Every note opens the same statement, edited once in Site settings.'],
+  ['Everything moves as a blind.', 'Pages draw over the page you’re on, everything below the header as one full-height panel. Overlays (the viewer, the document reader, the AI statement) slide down from the top and back up; menus roll down from their button. Transform or clip only, so motion stays smooth, and reduced motion skips the travel.'],
   ['Navigation recedes.', 'The breadcrumb is a plain trail; switching sections happens in the header. Choose the lighter option before adding boxes around navigation.'],
   ['Links show where you’ve been.', 'Hover turns a link orange. Once visited, card titles and links in stories turn the lighter blue; navigation and buttons don’t change. The orange focus ring is for keyboard users: when a viewer or menu opened with a click closes, focus returns without it.'],
   [

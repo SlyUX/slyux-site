@@ -122,8 +122,8 @@ function PortfolioNav({ label, href, sections, current }: { label: string; href:
       >
         <ChevronDown aria-hidden className={cn('size-5 transition-transform', open && 'rotate-180')} />
       </button>
-      {open && (
-        <ul id={menuId} className="bg-background border-border rounded-ui absolute top-full left-0 z-50 mt-3 min-w-48 border p-[3px] shadow-lg">
+      {/* Always rendered so it can roll back up; closed, it's hidden (no focus, no reading). See .menu-blind. */}
+      <ul id={menuId} data-open={open} className="menu-blind bg-background border-border rounded-ui absolute top-full left-0 z-50 mt-3 min-w-48 border p-[3px] shadow-lg">
           {sections.map((e) => (
             <li key={e._key}>
               <TransitionLink
@@ -139,8 +139,7 @@ function PortfolioNav({ label, href, sections, current }: { label: string; href:
               </TransitionLink>
             </li>
           ))}
-        </ul>
-      )}
+      </ul>
     </div>
   )
 }
@@ -185,10 +184,11 @@ function MobileMenu({ items, portfolio, current }: { items: NavItem[]; portfolio
       >
         <Icon aria-hidden className="size-5" />
       </button>
-      {open && (
-        <ul
+      {/* Always rendered so it can roll back up (see .menu-blind). */}
+      <ul
           id={panelId}
-          className="bg-background border-border rounded-ui absolute top-full right-0 z-50 mt-3 w-[min(18rem,calc(100vw-2rem))] border p-[3px] font-medium shadow-xl"
+          data-open={open}
+          className="menu-blind bg-background border-border rounded-ui absolute top-full right-0 z-50 mt-3 w-[min(18rem,calc(100vw-2rem))] border p-[3px] font-medium shadow-xl"
         >
           {items.map((item) =>
             item.kind === 'portfolio' ? (
@@ -204,8 +204,7 @@ function MobileMenu({ items, portfolio, current }: { items: NavItem[]; portfolio
               <li key={item.entry._key}>{link(item.entry.href, item.entry.label, current?._key === item.entry._key)}</li>
             ),
           )}
-        </ul>
-      )}
+      </ul>
     </div>
   )
 }

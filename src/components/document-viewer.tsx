@@ -3,6 +3,7 @@
 import { useRef, useSyncExternalStore } from 'react'
 import { Download, Maximize, Minimize } from 'lucide-react'
 
+import { preloadImage } from '@/components/blind-dialog'
 import { returnFocus } from '@/components/return-focus'
 import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
@@ -70,7 +71,16 @@ export function DocumentViewer({
 
   return (
     <>
-      <button ref={triggerRef} type="button" onClick={() => openAt(0)} aria-label={triggerLabel} className={className}>
+      <button
+        ref={triggerRef}
+        type="button"
+        onClick={() => openAt(0)}
+        // The first page loads on hover or focus, ahead of the reader's slide.
+        onPointerEnter={() => preloadImage(pages[0]?.src)}
+        onFocus={() => preloadImage(pages[0]?.src)}
+        aria-label={triggerLabel}
+        className={className}
+      >
         {children}
       </button>
       <ViewerDialog

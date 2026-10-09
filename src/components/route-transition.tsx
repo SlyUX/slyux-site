@@ -31,13 +31,15 @@ const EXIT = {
  *
  * Types come from `TransitionLink` (grid-nav.tsx); first load and browser
  * back/forward carry none, so they don't animate. The wrapper is opaque so a
- * moving page never shows the page behind it.
+ * moving page never shows the page behind it, and it fills the height the
+ * header leaves (with main and the footer inside, see template.tsx), so even
+ * a short page moves as a full-height panel.
  */
 export function RouteTransition({ children }: { children: React.ReactNode }) {
   const pathname = usePathname()
   return (
     <ViewTransition key={pathname} enter={ENTER} exit={EXIT} default="none">
-      <div className="bg-background">{children}</div>
+      <div className="bg-background flex flex-1 flex-col">{children}</div>
     </ViewTransition>
   )
 }

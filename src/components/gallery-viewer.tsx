@@ -5,6 +5,7 @@ import { useRef } from 'react'
 import { Maximize2 } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
+import { preloadImage } from '@/components/blind-dialog'
 import { returnFocus } from '@/components/return-focus'
 import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
@@ -78,6 +79,9 @@ export function GalleryViewer({
               }}
               type="button"
               onClick={() => openAt(i)}
+              // Loads the first view slice on hover or focus, ahead of the viewer’s slide.
+              onPointerEnter={() => preloadImage(it.view.slices[0]?.src)}
+              onFocus={() => preloadImage(it.view.slices[0]?.src)}
               aria-label={`${it.fullPage ? labels.fullPage : labels.enlarge}: ${it.caption ? `${it.caption} — ` : ''}${it.alt}`}
               className="group block w-full text-left"
             >

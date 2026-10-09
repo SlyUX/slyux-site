@@ -3,6 +3,7 @@
 import { createContext, useContext, useState } from 'react'
 
 import { cn } from '@/lib/utils'
+import { preloadImage } from '@/components/blind-dialog'
 import { returnFocus } from '@/components/return-focus'
 import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
@@ -21,7 +22,7 @@ export interface LightboxItem {
 
 type Open = (pieceKey: string, at?: number) => void
 
-const LightboxContext = createContext<{ open: Open; buttons: Map<string, HTMLButtonElement> } | null>(null)
+const LightboxContext = createContext<{ open: Open; preload: Open; buttons: Map<string, HTMLButtonElement> } | null>(null)
 
 /**
  * Cards that don't link anywhere open their artwork here, larger. Each card is
@@ -54,9 +55,11 @@ export function Lightbox({
     setPieceKey(key)
     openAt(at)
   }
+  // On hover or focus, so the image is usually loaded before the viewer finishes sliding in.
+  const preload: Open = (key, at = 0) => preloadImage(items.filter((it) => it.pieceKey === key)[at]?.src)
 
   return (
-    <LightboxContext value={items.length ? { open, buttons } : null}>
+    <LightboxContext value={items.length ? { open, preload, buttons } : null}>
       {children}
       {items.length > 0 && (
         <ViewerDialog
@@ -138,6 +141,8 @@ export function LightboxButton({
       type="button"
       aria-label={label}
       onClick={() => lightbox.open(pieceKey, at)}
+      onPointerEnter={() => lightbox.preload(pieceKey, at)}
+      onFocus={() => lightbox.preload(pieceKey, at)}
       className={className}
     >
       {children}
