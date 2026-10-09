@@ -595,7 +595,8 @@ export default async function StyleguidePage() {
             file="src/components/site-nav.tsx"
             stage="background"
             notes={[
-              'The header above is the live example. Wide screens list the pages, with the portfolio sections behind the chevron beside “Portfolio.”',
+              'The header above is the live example, sticky at the top of the window. Wide screens list the pages, with the portfolio sections behind the chevron beside “Portfolio.”',
+              'Its height is --header-h: jump links, keyboard focus, and pinned story headings all sit below it, never underneath.',
               'Narrower screens show a menu button that opens the same pages, sections indented under Portfolio.',
               'Pages and their order come from Site settings → Navigation; sections follow the Portfolio page’s order.',
             ]}

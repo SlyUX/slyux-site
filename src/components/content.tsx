@@ -551,7 +551,8 @@ function StorySections({ sections, beside = false }: { sections: StorySection[];
               id={`story-${section.key}`}
               className={cn(
                 'font-display text-3xl font-semibold text-balance',
-                beside ? 'xl:sticky xl:top-6 xl:self-start xl:text-2xl' : 'lg:sticky lg:top-6 lg:self-start',
+                // Pinned 24px below the sticky site header.
+                beside ? 'xl:sticky xl:top-[calc(var(--header-h)+1.5rem)] xl:self-start xl:text-2xl' : 'lg:sticky lg:top-[calc(var(--header-h)+1.5rem)] lg:self-start',
               )}
             >
               {section.heading}
