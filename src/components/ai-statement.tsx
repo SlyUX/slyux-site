@@ -4,6 +4,7 @@ import { createContext, useCallback, useContext, useId, useRef } from 'react'
 import { Sparkles, X } from 'lucide-react'
 
 import { returnFocus } from '@/components/return-focus'
+import { cn } from '@/lib/utils'
 
 /**
  * "How I work with AI": one statement (Site settings), opened from the AI note
@@ -72,15 +73,15 @@ export function AiStatementProvider({
   )
 }
 
-/** The note itself: Sparkles and the label, inline in the story's text. */
-export function AiNote() {
+/** The note itself: Sparkles and the label, after a credit line or on its own. */
+export function AiNote({ className }: { className?: string }) {
   const context = useContext(AiStatementContext)
   if (!context) return null
   return (
     <button
       type="button"
       onClick={(e) => context.open(e.currentTarget)}
-      className="text-primary ml-1 inline-flex items-baseline gap-1 font-semibold underline underline-offset-4 hover:no-underline"
+      className={cn('text-primary ml-1 inline-flex items-baseline gap-1 font-semibold underline underline-offset-4 hover:no-underline', className)}
     >
       <Sparkles aria-hidden className="size-[0.95em] shrink-0 self-center" strokeWidth={2} />
       {context.label}
