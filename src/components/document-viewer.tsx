@@ -3,6 +3,7 @@
 import { useRef, useSyncExternalStore } from 'react'
 import { Download, Maximize, Minimize } from 'lucide-react'
 
+import { returnFocus } from '@/components/return-focus'
 import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
 
 export interface DocumentPage {
@@ -85,7 +86,7 @@ export function DocumentViewer({
         labels={labels}
         onClosed={() => {
           if (document.fullscreenElement) void document.exitFullscreen()
-          triggerRef.current?.focus()
+          returnFocus(triggerRef.current)
         }}
         actions={
           <>
