@@ -365,7 +365,7 @@ export default defineType({
           type: 'reference',
           to: [{ type: 'creativeWork' }],
           // Only pieces from the UX section can be picked.
-          options: { filter: 'kind in $kinds && mature != true', filterParams: { kinds: kindsInSection('ux') }, disableNew: true },
+          options: { filter: 'kind in $kinds', filterParams: { kinds: kindsInSection('ux') }, disableNew: true },
         }),
       ],
       group: 'creative',
@@ -387,12 +387,14 @@ export default defineType({
       group: 'creative',
       description: 'The chip on the case study card in the UX row of the Portfolio page.',
     }),
+    // Retired 2026-10-09 with creativeWork's `mature`: hidden, not deleted, so the
+    // stored value doesn't surface as an unknown field. Nothing reads it.
     defineField({
       name: 'matureLabel',
-      title: 'Mature content label',
+      title: 'Mature content label (retired)',
       type: 'string',
       group: 'creative',
-      description: 'Shown on mature pieces in place of artwork, e.g. "Mature horror — view on ND Riot".',
+      hidden: true,
     }),
 
     // Résumé

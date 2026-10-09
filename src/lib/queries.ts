@@ -22,7 +22,7 @@ export async function safeFetch<T>(
   }
 }
 
-const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,
+const PORTFOLIO_CARD = `_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,
   "hasPage": count(body) > 0 || count(documents) > 0,
   "caseStudySlug": caseStudy->slug.current`
 
@@ -65,19 +65,19 @@ export const PORTFOLIO_SECTION_QUERY = defineQuery(
   `*[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){${PORTFOLIO_CARD}}`,
 )
 
-/** Featured, non-mature pieces for the /portfolio landing page. */
+/** Featured pieces for the /portfolio landing page. */
 export const PORTFOLIO_FEATURED_QUERY = defineQuery(
-  `*[_type=="creativeWork" && defined(slug.current) && featured == true && mature != true]|order(order asc, title asc){${PORTFOLIO_CARD}}`,
+  `*[_type=="creativeWork" && defined(slug.current) && featured == true]|order(order asc, title asc){${PORTFOLIO_CARD}}`,
 )
 
-export const CREATIVE_WORK_QUERY = defineQuery(`*[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{
+export const CREATIVE_WORK_QUERY = defineQuery(`*[_type=="creativeWork" && slug.current==$slug && kind in $kinds][0]{
   _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,documentsHeading,externalUrl,
   documents[]{${PDF_DOCUMENT}},
   "caseStudy": caseStudy->{title,"slug":slug.current}
 }`)
 
 export const CREATIVE_WORK_PATHS_QUERY = defineQuery(
-  `*[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0) && mature != true]{kind,"slug":slug.current}`,
+  `*[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{kind,"slug":slug.current}`,
 )
 
 export const PAGE_QUERY = defineQuery(`*[_type=="page" && slug.current==$slug][0]{

@@ -87,13 +87,12 @@ export function imageSize(image: Pick<CardImage, 'asset' | 'crop'>) {
 
 /**
  * Where a piece's card goes: its own page (a story or PDFs), else its case
- * study, else off-site. Mature pieces only ever link out. `undefined` means
+ * study, else off-site. `undefined` means
  * the card opens its artwork in the lightbox instead.
  */
 export function cardHref(work: CreativeWorkCard): string | undefined {
   const outbound = externalHref(work.externalUrl)
   const section = sectionOfKind(work.kind)
-  if (work.mature) return outbound
   if (work.hasPage && section) return `/portfolio/${section}/${work.slug}`
   if (work.caseStudySlug) return `/case-studies/${work.caseStudySlug}`
   return outbound
@@ -105,7 +104,7 @@ export function cardHref(work: CreativeWorkCard): string | undefined {
  */
 export function lightboxItems(works: CreativeWorkCard[]): LightboxItem[] {
   return works.flatMap((work) => {
-    if (work.mature || cardHref(work)) return []
+    if (cardHref(work)) return []
     return [work.image, ...(work.gallery ?? [])].flatMap((image, i) => {
       const size = image?.asset ? imageSize(image) : undefined
       if (!image || !size) return []
@@ -298,13 +297,11 @@ function KindChip({ label, deep, className }: { label: string; deep: boolean; cl
  * focal point. It shows whole, on white, for brand and logo work (logos are
  * never cropped), transparent images, and pieces set to "Show the whole
  * image". A chip names the kind of piece; cards with a full page behind them
- * get it in burnt orange under a navy top edge. Mature pieces show no artwork:
- * just the title and an outbound link, so the visitor chooses to go further.
+ * get it in burnt orange under a navy top edge.
  * Cards that don't link anywhere open their artwork larger (see Lightbox).
  */
 export function CreativeTile({
   work,
-  matureLabel,
   enlargeLabel,
   imageCountLabel,
   kindLabels,
@@ -313,7 +310,6 @@ export function CreativeTile({
   headingLevel: Heading = 'h3',
 }: {
   work: CreativeWorkCard
-  matureLabel: string
   /** Names the lightbox button, e.g. "View larger". */
   enlargeLabel: string
   /** Adds the image count to that name when the card opens several, e.g. "{count} images". */
@@ -325,26 +321,10 @@ export function CreativeTile({
   feature?: boolean
   headingLevel?: 'h2' | 'h3' | 'h4'
 }) {
-  const outbound = externalHref(work.externalUrl)
   const href = cardHref(work)
   const deep = !!href?.startsWith('/')
   const kindLabel = work.kind ? kindLabels?.[work.kind] : undefined
   const meta = [work.client, work.year].filter(Boolean).join(' · ')
-
-  if (work.mature) {
-    return (
-      <article className="border-border flex flex-col justify-between rounded-ui border p-6">
-        {kindLabel && <KindChip label={kindLabel} deep={false} className="mb-3 self-start" />}
-        <Heading className="font-display text-xl font-semibold">{work.title}</Heading>
-        {work.summary && <p className="text-muted-foreground mt-2 text-sm">{work.summary}</p>}
-        {outbound && (
-          <a href={outbound} target="_blank" rel="noopener noreferrer" className="text-primary mt-4 text-sm font-semibold underline underline-offset-4">
-            {matureLabel}
-          </a>
-        )}
-      </article>
-    )
-  }
 
   // UX pieces are documents and slides, so their cards are wide (3:2) everywhere,
   // as is a featured row's image; other cards are 4:3 when large and square in grids.

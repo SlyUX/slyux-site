@@ -16,7 +16,7 @@ Stephen Fox's portfolio. Primary audience: hiring managers for director/lead UX/
 
 ## Content model (`src/sanity/schemaTypes`)
 - `siteSettings` (singleton): all chrome copy, home page, section headings, résumé skills, contact inquiry options
-- `caseStudy` → `/work/[slug]` · `creativeWork` → `/creative` (+ `/creative/[slug]` when it has a Story; mature pieces are link-only) · `page` → `/[slug]` (about, work-with-me) · `experience` → `/resume`
+- `caseStudy` → `/work/[slug]` · `creativeWork` → `/creative` (+ `/creative/[slug]` when it has a Story) · `page` → `/[slug]` (about, work-with-me) · `experience` → `/resume`
 
 ## Rules (adapted from ND Riot's AGENTS.md)
 1. **Verify APIs** in `node_modules/next/dist/docs/` or Context7 before use — never from memory.

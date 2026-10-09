@@ -91,7 +91,6 @@ const DEFAULTS = {
   caseStudiesRowHeading: 'Case studies',
   portfolioFeaturedHeading: 'Featured',
   caseStudyLabel: 'Case study',
-  matureLabel: 'Mature content — view off-site',
   resumeTitle: 'Résumé',
   resumeDownloadLabel: 'Download PDF',
   experienceHeading: 'Experience',
