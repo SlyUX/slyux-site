@@ -3,6 +3,7 @@ import { PortableText, toPlainText, type PortableTextComponents } from '@portabl
 import type { PortableTextBlock, TypedObject } from '@portabletext/types'
 import { ExternalLink, FolderOpen, Images, Maximize2 } from 'lucide-react'
 
+import { AiNote } from '@/components/ai-statement'
 import { TransitionLink } from '@/components/transition-link'
 import { LightboxButton, type LightboxItem } from '@/components/lightbox'
 import { Rail } from '@/components/rail'
@@ -461,6 +462,7 @@ const richTextComponents: PortableTextComponents = {
     },
   },
   types: {
+    aiNote: () => <AiNote />,
     imageWithAlt: ({ value }: { value: SanityImage }) => {
       if (!value?.asset) return null
       // Asset IDs carry the source size ("image-<hash>-431x81-jpg"). Never

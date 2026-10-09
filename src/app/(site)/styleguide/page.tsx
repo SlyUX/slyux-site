@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
-import { ChevronRight, ExternalLink, FolderOpen, Images, Maximize2, Menu, type LucideIcon } from 'lucide-react'
+import { ChevronRight, ExternalLink, FolderOpen, Images, Maximize2, Menu, Sparkles, type LucideIcon } from 'lucide-react'
 
+import { AiNote } from '@/components/ai-statement'
 import { Breadcrumb } from '@/components/breadcrumb'
 import { CaseStudyRow, CaseStudyTile, CreativeTile, lightboxItems, MetricStrip } from '@/components/content'
 import { Lightbox } from '@/components/lightbox'
@@ -279,6 +280,11 @@ const ICONS: { icon: LucideIcon; name: string; use: string }[] = [
     name: 'Menu',
     use: 'Opens the navigation on narrower screens.',
   },
+  {
+    icon: Sparkles,
+    name: 'Sparkles',
+    use: 'The AI note: where AI played a part, it opens “How I work with AI.”',
+  },
 ]
 
 const RULES = [
@@ -296,6 +302,7 @@ const RULES = [
   ['Every image opens larger.', 'Cards, galleries, and story images all open the viewer. Each card is its own gallery: the viewer steps through that card’s images and stops.'],
   ['Featured pieces lead.', 'A piece marked Featured leads its page in a Featured band, image beside summary. Brand systems and UX projects sit side by side as equals instead.'],
   ['Phones see phones first.', 'Case studies show their mobile galleries before desktop ones on narrow screens, and desktop captures swipe in one row.'],
+  ['AI is disclosed where it helped.', 'A story where AI played a part carries an AI note, usually right after its Role line. Every note opens the same statement, edited once in Site settings.'],
   ['Navigation recedes.', 'The breadcrumb is a plain trail; switching sections happens in the header. Choose the lighter option before adding boxes around navigation.'],
   ['Links show where you’ve been.', 'Hover turns a link orange. Once visited, card titles and links in stories turn the lighter blue; navigation and buttons don’t change. The orange focus ring is for keyboard users: when a viewer or menu opened with a click closes, focus returns without it.'],
   [
@@ -312,6 +319,7 @@ const VOICE: [string, React.ReactNode][] = [
   ['Let results carry the praise.', 'No self-assessment or adjectives doing a number’s job. Numbers keep their baseline and source.'],
   ['First person for my calls, we for the team’s.', 'Be clear which is which.'],
   ['Short and concrete.', 'Short declarative sentences, concrete nouns, no hype words (leveraged, seamless, robust, holistic).'],
+  ['Spell out “and.”', '“Research and strategy,” not “Research & strategy.” Keep “&” only where it’s part of a name (Barnes & Noble) or a fixed abbreviation (Q&A, R&D).'],
   ['Sentence case for headings.', '“Research-led redesigns,” not “Research-Led Redesigns.” Page names follow the navigation.'],
   ['Lowercase after a label.', '“Scope: research and design,” not “Scope: Research and design.” Proper nouns, job titles, and “I” keep their capitals.'],
   [
@@ -545,6 +553,21 @@ export default async function StyleguidePage() {
                 Section heading
               </SectionHeading>
             </div>
+          </Specimen>
+          <Specimen
+            name="AI note"
+            file="src/components/ai-statement.tsx"
+            stage="background"
+            notes={[
+              'Inserted in a story’s text in the Studio (“AI note”), usually right after the Role line, so the disclosure sits where readers judge the role.',
+              'Opens one statement, “How I work with AI,” written once in Site settings. With no statement there, notes don’t show.',
+              'Styled like a link in the text; Escape or the close button returns focus to it, without a ring after a click.',
+            ]}
+          >
+            <p className="leading-relaxed">
+              <span className="font-semibold">Role:</span> co-authored with two colleagues.
+              <AiNote />
+            </p>
           </Specimen>
           <Specimen
             name="Breadcrumb"

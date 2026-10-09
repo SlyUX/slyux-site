@@ -20,10 +20,10 @@ export const PORTFOLIO_SECTION_TITLES: Record<PortfolioSection, string> = {
 /** `title` labels the Kind field; `list` names the kind's list in the Studio sidebar. */
 export const PORTFOLIO_KINDS = [
   { title: 'UX — design system', list: 'Design systems', value: 'designSystem', section: 'ux' },
-  { title: 'UX — research & strategy', list: 'Research & strategy', value: 'strategy', section: 'ux' },
+  { title: 'UX — research and strategy', list: 'Research and strategy', value: 'strategy', section: 'ux' },
   { title: 'UX — site audit', list: 'Site audits', value: 'audit', section: 'ux' },
   { title: 'UX — data analysis', list: 'Data analysis', value: 'data', section: 'ux' },
-  { title: 'UX — screens & prototypes', list: 'Screens & prototypes', value: 'ux', section: 'ux' },
+  { title: 'UX — screens and prototypes', list: 'Screens and prototypes', value: 'ux', section: 'ux' },
   { title: 'UX — UI assets', list: 'UI assets', value: 'uiAssets', section: 'ux' },
   { title: 'Brand — brand system', list: 'Brand systems', value: 'brand', section: 'brand' },
   { title: 'Brand — logo', list: 'Logos', value: 'logo', section: 'brand' },
@@ -32,7 +32,7 @@ export const PORTFOLIO_KINDS = [
   { title: 'Design — graphic / print / web', list: 'Graphic design', value: 'graphic', section: 'design' },
   { title: 'Illustration', list: 'Illustration', value: 'illustration', section: 'illustration' },
   { title: 'Illustration — book cover', list: 'Book covers', value: 'cover', section: 'illustration' },
-  { title: 'Illustration — book / comic', list: 'Books & comics', value: 'book', section: 'illustration' },
+  { title: 'Illustration — book / comic', list: 'Books and comics', value: 'book', section: 'illustration' },
 ] as const satisfies readonly { title: string; list: string; value: string; section: PortfolioSection }[]
 
 export type PortfolioKind = (typeof PORTFOLIO_KINDS)[number]['value']
