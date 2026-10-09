@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 
 import { AiNote } from '@/components/ai-statement'
 import { Breadcrumb } from '@/components/breadcrumb'
+import { breadcrumbLd, JsonLd, personId } from '@/components/json-ld'
 import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { MetricStrip, WorkStory } from '@/components/content'
 import { Gallery, GalleryStack } from '@/components/gallery'
@@ -12,6 +13,7 @@ import { Personas } from '@/components/personas'
 import { RelatedWork } from '@/components/related-work'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
+import { absoluteUrl, SITE_URL } from '@/lib/site-url'
 import { urlFor } from '@/sanity/image'
 import type { CaseStudyDetail } from '@/lib/types'
 
@@ -41,8 +43,27 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
   const after = galleries.filter((g) => g.placement !== 'before')
   const labels = galleryLabels(s)
 
+  const path = `/case-studies/${study.slug}`
+  const structured = stegaClean([
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      '@id': `${absoluteUrl(path)}#work`,
+      url: absoluteUrl(path),
+      name: study.title,
+      description: study.summary,
+      image: study.heroImage?.asset ? urlFor(study.heroImage).width(1200).url() : undefined,
+      author: { '@id': personId(SITE_URL) },
+      sourceOrganization: study.organization ? { '@type': 'Organization', name: study.organization } : undefined,
+      temporalCoverage: study.years ?? undefined,
+      keywords: study.skills?.join(', '),
+    },
+    breadcrumbLd(SITE_URL, [{ label: s.workTitle, href: '/case-studies' }], { label: study.title ?? '', href: path }),
+  ])
+
   return (
     <article>
+      <JsonLd data={structured} />
       <Section opener className="relative isolate overflow-hidden pb-8 md:pb-10">
         {heroBg && (
           <>

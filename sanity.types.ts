@@ -1484,6 +1484,90 @@ export type EXPERIENCE_QUERY_RESULT = Array<{
   }> | null;
 }>;
 
+// Source: src/lib/queries.ts
+// Variable: SITEMAP_QUERY
+// Query: {  "pages": *[_type=="page" && defined(slug.current)]{"slug": slug.current, _updatedAt},  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]{"slug": slug.current, _updatedAt},  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{"slug": slug.current, kind, _updatedAt},  "settingsUpdated": *[_id=="siteSettings"][0]._updatedAt}
+export type SITEMAP_QUERY_RESULT = {
+  pages: Array<{
+    slug: string;
+    _updatedAt: string;
+  }>;
+  caseStudies: Array<{
+    slug: string;
+    _updatedAt: string;
+  }>;
+  pieces: Array<{
+    slug: string;
+    kind:
+      | "audit"
+      | "book"
+      | "brand"
+      | "campaign"
+      | "cover"
+      | "data"
+      | "designSystem"
+      | "graphic"
+      | "illustration"
+      | "logo"
+      | "printAd"
+      | "strategy"
+      | "uiAssets"
+      | "ux";
+    _updatedAt: string;
+  }>;
+  settingsUpdated: string | null;
+};
+
+// Source: src/lib/queries.ts
+// Variable: LLMS_QUERY
+// Query: {  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){    title, "slug": slug.current, summary, organization, role, years, skills, "text": pt::text(body)  },  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]|order(order asc, title asc){    title, "slug": slug.current, kind, summary, client, year, credit, "text": pt::text(body)  },  "pages": *[_type=="page" && defined(slug.current)]|order(title asc){title, "slug": slug.current, intro, "text": pt::text(body), "rail": rail{heading, "text": pt::text(body)}}}
+export type LLMS_QUERY_RESULT = {
+  caseStudies: Array<{
+    title: string;
+    slug: string;
+    summary: string;
+    organization: string | null;
+    role: string | null;
+    years: string | null;
+    skills: Array<string> | null;
+    text: string;
+  }>;
+  pieces: Array<{
+    title: string;
+    slug: string;
+    kind:
+      | "audit"
+      | "book"
+      | "brand"
+      | "campaign"
+      | "cover"
+      | "data"
+      | "designSystem"
+      | "graphic"
+      | "illustration"
+      | "logo"
+      | "printAd"
+      | "strategy"
+      | "uiAssets"
+      | "ux";
+    summary: string | null;
+    client: string | null;
+    year: string | null;
+    credit: string | null;
+    text: string;
+  }>;
+  pages: Array<{
+    title: string;
+    slug: string;
+    intro: string | null;
+    text: string;
+    rail: {
+      heading: string;
+      text: string;
+    } | null;
+  }>;
+};
+
 // Query TypeMap
 import "@sanity/client";
 declare module "@sanity/client" {
@@ -1499,5 +1583,7 @@ declare module "@sanity/client" {
     '*[_type=="page" && slug.current==$slug][0]{\n  _id,title,intro,image,body,rail,cta,seoDescription\n}': PAGE_QUERY_RESULT;
     '*[_type=="page" && defined(slug.current)].slug.current': PAGE_SLUGS_QUERY_RESULT;
     '*[_type=="experience"]|order(start desc){\n  _id,role,organization,start,end,location,highlights,\n  "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}\n}': EXPERIENCE_QUERY_RESULT;
+    '{\n  "pages": *[_type=="page" && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{"slug": slug.current, kind, _updatedAt},\n  "settingsUpdated": *[_id=="siteSettings"][0]._updatedAt\n}': SITEMAP_QUERY_RESULT;
+    '{\n  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){\n    title, "slug": slug.current, summary, organization, role, years, skills, "text": pt::text(body)\n  },\n  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]|order(order asc, title asc){\n    title, "slug": slug.current, kind, summary, client, year, credit, "text": pt::text(body)\n  },\n  "pages": *[_type=="page" && defined(slug.current)]|order(title asc){title, "slug": slug.current, intro, "text": pt::text(body), "rail": rail{heading, "text": pt::text(body)}}\n}': LLMS_QUERY_RESULT;
   }
 }

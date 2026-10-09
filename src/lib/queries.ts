@@ -95,3 +95,22 @@ export const EXPERIENCE_QUERY = defineQuery(`*[_type=="experience"]|order(start 
   _id,role,organization,start,end,location,highlights,
   "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}
 }`)
+
+/** Every public URL and when it last changed, for sitemap.xml. */
+export const SITEMAP_QUERY = defineQuery(`{
+  "pages": *[_type=="page" && defined(slug.current)]{"slug": slug.current, _updatedAt},
+  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]{"slug": slug.current, _updatedAt},
+  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{"slug": slug.current, kind, _updatedAt},
+  "settingsUpdated": *[_id=="siteSettings"][0]._updatedAt
+}`)
+
+/** The site as text for AI tools (/llms.txt and /llms-full.txt): summaries, and the full stories. */
+export const LLMS_QUERY = defineQuery(`{
+  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){
+    title, "slug": slug.current, summary, organization, role, years, skills, "text": pt::text(body)
+  },
+  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]|order(order asc, title asc){
+    title, "slug": slug.current, kind, summary, client, year, credit, "text": pt::text(body)
+  },
+  "pages": *[_type=="page" && defined(slug.current)]|order(title asc){title, "slug": slug.current, intro, "text": pt::text(body), "rail": rail{heading, "text": pt::text(body)}}
+}`)

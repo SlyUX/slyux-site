@@ -1,12 +1,18 @@
 import Image from 'next/image'
 import { draftMode } from 'next/headers'
+import { stegaClean } from 'next-sanity'
 
 import { AiStatementProvider } from '@/components/ai-statement'
 import { RichText } from '@/components/content'
+import { JsonLd, personId } from '@/components/json-ld'
 import { SiteNav } from '@/components/site-nav'
 import { TransitionLink } from '@/components/transition-link'
 import { PreviewTools } from '@/components/preview-tools'
+import { EXPERIENCE_QUERY, safeFetch } from '@/lib/queries'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
+import { SITE_URL } from '@/lib/site-url'
+import { externalHref } from '@/lib/utils'
+import type { ExperienceEntry } from '@/lib/types'
 import { ViewerLabelsProvider } from '@/components/viewer-labels'
 import { urlFor } from '@/sanity/image'
 
@@ -18,8 +24,36 @@ export const revalidate = 60
 
 /** Site chrome: the header, and the providers every page shares. Kept off the full-screen Studio. Main and the footer are in the page template, so they move with each page (see template.tsx). */
 export default async function SiteLayout({ children }: { children: React.ReactNode }) {
-  const settings = await getSiteSettings()
+  const [settings, experience] = await Promise.all([getSiteSettings(), safeFetch<ExperienceEntry[]>(EXPERIENCE_QUERY, {}, [])])
   const { isEnabled: preview } = await draftMode()
+
+  // Who Stephen is, for search engines and AI tools (schema.org). The current
+  // role is the résumé's open-ended entry; skills are the résumé's skills.
+  const current = experience.find((e) => !e.end) ?? experience[0]
+  const linkedin = externalHref(settings.linkedinUrl)
+  const structured = stegaClean([
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Person',
+      '@id': personId(SITE_URL),
+      name: settings.ownerName,
+      url: SITE_URL,
+      description: settings.siteDescription,
+      jobTitle: current?.role ?? undefined,
+      worksFor: current?.organization ? { '@type': 'Organization', name: current.organization } : undefined,
+      sameAs: linkedin ? [linkedin] : undefined,
+      knowsAbout: settings.skillGroups?.flatMap((group) => group.skills ?? []),
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      '@id': `${SITE_URL}/#website`,
+      url: SITE_URL,
+      name: settings.siteTitle,
+      description: settings.siteDescription,
+      author: { '@id': personId(SITE_URL) },
+    },
+  ])
 
   // The wrapper is at least one (small) viewport tall; each page's panel
   // (template.tsx) fills what the header leaves, so short pages put the footer
@@ -27,6 +61,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   return (
     <>
     <div className="flex min-h-svh flex-col">
+      <JsonLd data={structured} />
       <a href="#main" className="bg-primary text-primary-foreground sr-only z-50 px-4 py-2 focus:not-sr-only focus:fixed focus:top-2 focus:left-2">
         {/* a11y-only text; not CMS-managed. */}
         Skip to content

@@ -8,11 +8,13 @@ import { TransitionLink } from '@/components/transition-link'
 import { buttonVariants, PageHeader, Section } from '@/components/ui'
 import { imageSize, RichText, WorkStory } from '@/components/content'
 import { Breadcrumb } from '@/components/breadcrumb'
+import { breadcrumbLd, JsonLd, personId } from '@/components/json-ld'
 import { DocumentGrid, readableDocuments } from '@/components/documents'
 import { Lightbox, LightboxButton, type LightboxItem } from '@/components/lightbox'
 import { RelatedWork } from '@/components/related-work'
 import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib/queries'
 import { documentSettings, galleryLabels, getSiteSettings } from '@/lib/site-settings'
+import { absoluteUrl, SITE_URL } from '@/lib/site-url'
 import { externalHref } from '@/lib/utils'
 import { urlFor } from '@/sanity/image'
 import { isPortfolioSection, kindsInSection, sectionOfKind } from '@/sanity/portfolio'
@@ -69,8 +71,35 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
   const hasLinks = !!(work.caseStudy?.slug || outbound)
   const heroSize = work.image?.asset ? imageSize(work.image) : undefined
 
+  const path = `/portfolio/${section}/${work.slug}`
+  const structured = stegaClean([
+    {
+      '@context': 'https://schema.org',
+      '@type': 'CreativeWork',
+      '@id': `${absoluteUrl(path)}#work`,
+      url: absoluteUrl(path),
+      name: work.title,
+      description: work.summary,
+      image: work.image?.asset ? urlFor(work.image).width(1200).url() : undefined,
+      creator: { '@id': personId(SITE_URL) },
+      genre: work.kind ? s.kindLabels[work.kind as keyof typeof s.kindLabels] : undefined,
+      sourceOrganization: work.client ? { '@type': 'Organization', name: work.client } : undefined,
+      temporalCoverage: work.year ?? undefined,
+      creditText: work.credit ?? undefined,
+    },
+    breadcrumbLd(
+      SITE_URL,
+      [
+        { label: s.creativeTitle, href: '/portfolio' },
+        { label: s.portfolioSections[section].title, href: `/portfolio/${section}` },
+      ],
+      { label: work.title ?? '', href: path },
+    ),
+  ])
+
   return (
     <article>
+      <JsonLd data={structured} />
       <Section opener className="pb-6 md:pb-8">
         <PageHeader
           title={work.title}
