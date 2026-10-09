@@ -332,7 +332,6 @@ export default async function StyleguidePage() {
     <CreativeTile
       key={work._id}
       work={work}
-      matureLabel={s.matureLabel}
       enlargeLabel={labels.enlarge}
       imageCountLabel={labels.imageCount}
       kindLabels={s.kindLabels}

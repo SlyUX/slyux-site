@@ -72,7 +72,6 @@ export default async function PortfolioSectionPage({ params }: PageProps<'/portf
         <PortfolioGrid
           works={works}
           headings={s.creativeSections}
-          matureLabel={s.matureLabel}
           labels={galleryLabels(s)}
           lead={lead}
           pageTitle={copy.title}

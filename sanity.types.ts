@@ -620,7 +620,7 @@ export type AllSanitySchemaTypes =
 
 // Source: src/lib/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_type=="siteSettings" && _id=="siteSettings"][0]{  ...,  "resumePdfUrl": resumePdf.asset->url,  "heroVideoUrl": heroVideo.asset->url,  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},  "heroVideoType": heroVideo.asset->mimeType,  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}}
+// Query: *[_type=="siteSettings" && _id=="siteSettings"][0]{  ...,  "resumePdfUrl": resumePdf.asset->url,  "heroVideoUrl": heroVideo.asset->url,  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},  "heroVideoType": heroVideo.asset->mimeType,  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}}
 export type SITE_SETTINGS_QUERY_RESULT = {
   _id: "siteSettings";
   _type: "siteSettings";
@@ -852,7 +852,6 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     credit: string | null;
     summary: string | null;
     externalUrl: string | null;
-    mature: boolean | null;
     featured: boolean | null;
     hasPage: boolean | true | null;
     caseStudySlug: string | null;
@@ -1026,7 +1025,7 @@ export type CASE_STUDY_SLUGS_QUERY_RESULT = Array<string>;
 
 // Source: src/lib/queries.ts
 // Variable: PORTFOLIO_SECTION_QUERY
-// Query: *[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}
+// Query: *[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}
 export type PORTFOLIO_SECTION_QUERY_RESULT = Array<{
   _id: string;
   title: string;
@@ -1058,7 +1057,6 @@ export type PORTFOLIO_SECTION_QUERY_RESULT = Array<{
   credit: string | null;
   summary: string | null;
   externalUrl: string | null;
-  mature: boolean | null;
   featured: boolean | null;
   hasPage: boolean | true | null;
   caseStudySlug: string | null;
@@ -1066,7 +1064,7 @@ export type PORTFOLIO_SECTION_QUERY_RESULT = Array<{
 
 // Source: src/lib/queries.ts
 // Variable: PORTFOLIO_FEATURED_QUERY
-// Query: *[_type=="creativeWork" && defined(slug.current) && featured == true && mature != true]|order(order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}
+// Query: *[_type=="creativeWork" && defined(slug.current) && featured == true]|order(order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}
 export type PORTFOLIO_FEATURED_QUERY_RESULT = Array<{
   _id: string;
   title: string;
@@ -1098,15 +1096,14 @@ export type PORTFOLIO_FEATURED_QUERY_RESULT = Array<{
   credit: string | null;
   summary: string | null;
   externalUrl: string | null;
-  mature: boolean | null;
-  featured: boolean | null;
+  featured: true;
   hasPage: boolean | true | null;
   caseStudySlug: string | null;
 }>;
 
 // Source: src/lib/queries.ts
 // Variable: CREATIVE_WORK_QUERY
-// Query: *[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,documentsHeading,externalUrl,  documents[]{_key,title,"file": file.asset->{url,originalFilename},  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},  "caseStudy": caseStudy->{title,"slug":slug.current}}
+// Query: *[_type=="creativeWork" && slug.current==$slug && kind in $kinds][0]{  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,documentsHeading,externalUrl,  documents[]{_key,title,"file": file.asset->{url,originalFilename},  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},  "caseStudy": caseStudy->{title,"slug":slug.current}}
 export type CREATIVE_WORK_QUERY_RESULT = {
   _id: string;
   title: string;
@@ -1163,7 +1160,7 @@ export type CREATIVE_WORK_QUERY_RESULT = {
 
 // Source: src/lib/queries.ts
 // Variable: CREATIVE_WORK_PATHS_QUERY
-// Query: *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0) && mature != true]{kind,"slug":slug.current}
+// Query: *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{kind,"slug":slug.current}
 export type CREATIVE_WORK_PATHS_QUERY_RESULT = Array<{
   kind:
     | "audit"
@@ -1221,14 +1218,14 @@ export type EXPERIENCE_QUERY_RESULT = Array<{
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "resumePdfUrl": resumePdf.asset->url,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},\n  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}\n}': SITE_SETTINGS_QUERY_RESULT;
+    '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "resumePdfUrl": resumePdf.asset->url,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},\n  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}\n}': SITE_SETTINGS_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}': CASE_STUDIES_QUERY_RESULT;
     '*[_type=="caseStudy" && slug.current==$slug][0]{\n  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,personasIntro,\n  personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},\n  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}\n}': CASE_STUDY_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)].slug.current': CASE_STUDY_SLUGS_QUERY_RESULT;
-    '*[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_SECTION_QUERY_RESULT;
-    '*[_type=="creativeWork" && defined(slug.current) && featured == true && mature != true]|order(order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,mature,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_FEATURED_QUERY_RESULT;
-    '*[_type=="creativeWork" && slug.current==$slug && kind in $kinds && mature != true][0]{\n  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,documentsHeading,externalUrl,\n  documents[]{_key,title,"file": file.asset->{url,originalFilename},\n  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},\n  "caseStudy": caseStudy->{title,"slug":slug.current}\n}': CREATIVE_WORK_QUERY_RESULT;
-    '*[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0) && mature != true]{kind,"slug":slug.current}': CREATIVE_WORK_PATHS_QUERY_RESULT;
+    '*[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_SECTION_QUERY_RESULT;
+    '*[_type=="creativeWork" && defined(slug.current) && featured == true]|order(order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_FEATURED_QUERY_RESULT;
+    '*[_type=="creativeWork" && slug.current==$slug && kind in $kinds][0]{\n  _id,title,"slug":slug.current,kind,image,client,year,credit,summary,gallery,howItStarted,body,documentsHeading,externalUrl,\n  documents[]{_key,title,"file": file.asset->{url,originalFilename},\n  pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}},\n  "caseStudy": caseStudy->{title,"slug":slug.current}\n}': CREATIVE_WORK_QUERY_RESULT;
+    '*[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{kind,"slug":slug.current}': CREATIVE_WORK_PATHS_QUERY_RESULT;
     '*[_type=="page" && slug.current==$slug][0]{\n  _id,title,intro,image,body,cta,seoDescription\n}': PAGE_QUERY_RESULT;
     '*[_type=="page" && defined(slug.current)].slug.current': PAGE_SLUGS_QUERY_RESULT;
     '*[_type=="experience"]|order(start desc){\n  _id,role,organization,start,end,location,highlights,\n  "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}\n}': EXPERIENCE_QUERY_RESULT;

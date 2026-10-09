@@ -19,7 +19,6 @@ type Row = { key: string; heading: string; content: React.ReactNode; action?: Re
 export function PortfolioGrid({
   works,
   headings,
-  matureLabel,
   labels,
   lead,
   pageTitle,
@@ -27,7 +26,6 @@ export function PortfolioGrid({
 }: {
   works: CreativeWorkCard[]
   headings: SiteSettings['creativeSections']
-  matureLabel: string
   labels: ReturnType<typeof galleryLabels>
   /** A row before the kinds, e.g. the UX page's case studies, with an optional action beside its heading. */
   lead?: Row
@@ -39,7 +37,7 @@ export function PortfolioGrid({
   // Featured pieces lead the page in a band of their own, each a row like the
   // Case Studies featured row, and leave their kind's row. Projects (brand
   // systems, UX pieces) sit side by side as equals, featured or not.
-  const isFeatured = (w: CreativeWorkCard) => !!w.featured && !w.mature && !PROJECT_KINDS.includes(w.kind as PortfolioKind)
+  const isFeatured = (w: CreativeWorkCard) => !!w.featured && !PROJECT_KINDS.includes(w.kind as PortfolioKind)
   const featured = works.filter(isFeatured)
   const groups = PORTFOLIO_KINDS.map((kind) => ({
     kind: kind.value,
@@ -53,7 +51,6 @@ export function PortfolioGrid({
     <CreativeTile
       key={work._id}
       work={work}
-      matureLabel={matureLabel}
       enlargeLabel={labels.enlarge}
       imageCountLabel={labels.imageCount}
       large={shape === 'large'}

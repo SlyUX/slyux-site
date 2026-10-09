@@ -28,9 +28,9 @@ async function uxPreview(s: Awaited<ReturnType<typeof getSiteSettings>>, works: 
   const study: CaseStudyCardData | undefined = s.portfolioUxCaseStudy?.slug
     ? s.portfolioUxCaseStudy
     : (s.uxCaseStudies?.[0] ?? (await safeFetch<CaseStudyCardData[]>(CASE_STUDIES_QUERY, {}, []))[0])
-  const usable = (w: CreativeWorkCard) => sectionOfKind(w.kind) === 'ux' && !w.mature
+  const usable = (w: CreativeWorkCard) => sectionOfKind(w.kind) === 'ux'
   const picked = (s.portfolioUxPieces ?? []).filter(usable)
-  const rowFirsts = kindsInSection('ux').flatMap((kind) => works.find((w) => w.kind === kind && !w.mature) ?? [])
+  const rowFirsts = kindsInSection('ux').flatMap((kind) => works.find((w) => w.kind === kind) ?? [])
   const pieces = [...picked, ...rowFirsts.filter((w) => !picked.some((p) => p._id === w._id))].slice(0, previewCount('ux') - (study ? 1 : 0))
   return { study, pieces }
 }
@@ -46,11 +46,10 @@ export default async function PortfolioPage() {
   ])
 
   // Pieces with a full page behind them lead each row, then featured pieces
-  // (the query orders them so). Mature pieces are never previewed here —
-  // they live on their section page as links only.
+  // (the query orders them so).
   const ux = await uxPreview(s, works)
   const sections = PORTFOLIO_SECTIONS.map((section) => {
-    const pieces = works.filter((w) => sectionOfKind(w.kind) === section && !w.mature)
+    const pieces = works.filter((w) => sectionOfKind(w.kind) === section)
     return {
       section,
       copy: s.portfolioSections[section],
@@ -93,7 +92,6 @@ export default async function PortfolioPage() {
                 <CreativeTile
                   key={work._id}
                   work={work}
-                  matureLabel={s.matureLabel}
                   enlargeLabel={labels.enlarge}
                   imageCountLabel={labels.imageCount}
                   kindLabels={s.kindLabels}

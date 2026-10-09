@@ -47,13 +47,7 @@ export default defineType({
       group: 'card',
       title: 'Main image',
       type: 'imageWithAlt',
-      description: 'Required unless the piece is marked mature (mature pieces show no artwork).',
-      validation: (rule) =>
-        rule.custom((value, context) =>
-          (value as { asset?: unknown } | undefined)?.asset || (context.document as { mature?: boolean } | undefined)?.mature
-            ? true
-            : 'Add an image, or mark the piece as mature.',
-        ),
+      validation: (rule) => rule.custom((value) => ((value as { asset?: unknown } | undefined)?.asset ? true : 'Add an image.')),
     }),
     defineField({
       name: 'cardFit',
@@ -156,16 +150,18 @@ export default defineType({
       group: 'links',
       title: 'External link',
       type: 'url',
-      description: 'e.g. the book on ndriot.com or foxstorytelling.com.',
+      description:
+        "A live project, such as a design system's styleguide: a button on the piece's page, or where its card goes if it has none. Artwork stays on this site; leave this empty and its card opens the image larger.",
     }),
+    // Retired 2026-10-09: an ND Riot leftover (title and link only, no artwork).
+    // Hidden, not deleted, so the value every piece stores doesn't surface as an
+    // unknown field. Nothing reads it.
     defineField({
       name: 'mature',
       group: 'card',
-      title: 'Mature content',
+      title: 'Mature content (retired)',
       type: 'boolean',
-      initialValue: false,
-      description:
-        'Mature pieces show as a title and outbound link only — no artwork on this site. Visitors choose whether to go further.',
+      hidden: true,
     }),
     defineField({
       name: 'featured',
@@ -195,20 +191,17 @@ export default defineType({
       pdf: 'documents.0._key',
       caseStudy: 'caseStudy._ref',
       externalUrl: 'externalUrl',
-      mature: 'mature',
       featured: 'featured',
     },
-    prepare: ({ title, kind, media, story, pdf, caseStudy, externalUrl, mature, featured }) => {
+    prepare: ({ title, kind, media, story, pdf, caseStudy, externalUrl, featured }) => {
       const kindTitle = PORTFOLIO_KINDS.find((k) => k.value === kind)?.title ?? 'No kind yet'
-      const card = mature
-        ? 'Mature: title and link only'
-        : story || pdf
-          ? 'Project page'
-          : caseStudy
-            ? 'Links to a case study'
-            : externalUrl
-              ? 'Links out'
-              : 'Single image, opens larger'
+      const card = story || pdf
+        ? 'Project page'
+        : caseStudy
+          ? 'Links to a case study'
+          : externalUrl
+            ? 'Links out'
+            : 'Single image, opens larger'
       return { title, media, subtitle: [kindTitle, card, featured && 'Featured'].filter(Boolean).join(' · ') }
     },
   },
