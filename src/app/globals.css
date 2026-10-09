@@ -277,6 +277,15 @@ dialog[data-blind='out']::backdrop {
 html {
   scroll-padding-top: calc(var(--header-h) + 1rem);
 }
+/* Phones: the header slides away while scrolling down, back on the way up (HeaderHeight). */
+@media (max-width: 767px) {
+  [data-site-header] {
+    transition: transform 250ms var(--blind-ease);
+  }
+  [data-site-header][data-hidden='true']:not(:focus-within) {
+    transform: translateY(-100%);
+  }
+}
 
 /* The header is the fixed reference point: it never moves during a blind. */
 ::view-transition-group(site-header) {
@@ -292,6 +301,9 @@ html {
 
 /* Reduced motion: no travel, just a quick crossfade. */
 @media (prefers-reduced-motion: reduce) {
+  [data-site-header] {
+    transition: none;
+  }
   dialog[data-blind],
   dialog[data-blind]::backdrop {
     animation: none;
