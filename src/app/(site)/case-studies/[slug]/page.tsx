@@ -9,6 +9,7 @@ import { ButtonLink, PageHeader, Section } from '@/components/ui'
 import { MetricStrip, WorkStory } from '@/components/content'
 import { Gallery, GalleryStack } from '@/components/gallery'
 import { Personas } from '@/components/personas'
+import { RelatedWork } from '@/components/related-work'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { urlFor } from '@/sanity/image'
@@ -153,6 +154,15 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
           </GalleryStack>
         </Section>
       )}
+
+      <RelatedWork
+        picks={study.relatedPicks}
+        back={study.relatedBack}
+        heading={s.relatedHeading}
+        caseStudyLabel={s.caseStudyLabel}
+        kindLabels={s.kindLabels}
+        labels={labels}
+      />
     </article>
   )
 }

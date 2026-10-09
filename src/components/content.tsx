@@ -309,6 +309,7 @@ export function CreativeTile({
   kindLabels,
   large = false,
   feature = false,
+  wide = false,
   headingLevel: Heading = 'h3',
 }: {
   work: CreativeWorkCard
@@ -321,6 +322,8 @@ export function CreativeTile({
   large?: boolean
   /** A row's featured lead: the image beside its summary, like the Case Studies featured row. */
   feature?: boolean
+  /** 3:2 like a case study card, so mixed rows (Related work) line up. */
+  wide?: boolean
   headingLevel?: 'h2' | 'h3' | 'h4'
 }) {
   const href = cardHref(work)
@@ -330,7 +333,7 @@ export function CreativeTile({
 
   // UX pieces are documents and slides, so their cards are wide (3:2) everywhere,
   // as is a featured row's image; other cards are 4:3 when large and square in grids.
-  const shape = sectionOfKind(work.kind) === 'ux' || feature ? 'wide' : large ? 'large' : 'square'
+  const shape = sectionOfKind(work.kind) === 'ux' || feature || wide ? 'wide' : large ? 'large' : 'square'
   const card = { wide: { width: 1500, height: 1000 }, large: { width: 1400, height: 1050 }, square: { width: 800, height: 800 } }[shape]
   const sizes = shape === 'square' ? '(max-width: 768px) 50vw, 25vw' : large || feature ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'
   const size = work.image?.asset ? imageSize(work.image) : undefined

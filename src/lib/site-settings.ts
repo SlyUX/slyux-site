@@ -100,6 +100,7 @@ const DEFAULTS = {
   educationHeading: 'Education and training',
   aiStatementHeading: 'How I work with AI',
   aiNoteLabel: 'How I work with AI',
+  relatedHeading: 'Related work',
   contactTitle: 'Contact',
 } satisfies Partial<Settings>
 

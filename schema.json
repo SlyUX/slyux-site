@@ -972,6 +972,36 @@
     }
   },
   {
+    "type": "type",
+    "name": "creativeWork.reference",
+    "value": {
+      "type": "object",
+      "attributes": {
+        "_ref": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string"
+          }
+        },
+        "_type": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "string",
+            "value": "reference"
+          }
+        },
+        "_weak": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
+          },
+          "optional": true
+        }
+      },
+      "dereferencesTo": "creativeWork"
+    }
+  },
+  {
     "name": "creativeWork",
     "type": "document",
     "attributes": {
@@ -1245,6 +1275,26 @@
         },
         "optional": true
       },
+      "related": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "union",
+            "of": [
+              {
+                "type": "inline",
+                "name": "caseStudy.reference"
+              },
+              {
+                "type": "inline",
+                "name": "creativeWork.reference"
+              }
+            ]
+          }
+        },
+        "optional": true
+      },
       "mature": {
         "type": "objectAttribute",
         "value": {
@@ -1357,36 +1407,6 @@
     }
   },
   {
-    "type": "type",
-    "name": "creativeWork.reference",
-    "value": {
-      "type": "object",
-      "attributes": {
-        "_ref": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string"
-          }
-        },
-        "_type": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "string",
-            "value": "reference"
-          }
-        },
-        "_weak": {
-          "type": "objectAttribute",
-          "value": {
-            "type": "boolean"
-          },
-          "optional": true
-        }
-      },
-      "dereferencesTo": "creativeWork"
-    }
-  },
-  {
     "name": "siteSettings",
     "type": "document",
     "attributes": {
@@ -1437,6 +1457,13 @@
         "optional": true
       },
       "aiNoteLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "relatedHeading": {
         "type": "objectAttribute",
         "value": {
           "type": "string"
@@ -3009,6 +3036,26 @@
               "type": "inline",
               "name": "link"
             }
+          }
+        },
+        "optional": true
+      },
+      "related": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "array",
+          "of": {
+            "type": "union",
+            "of": [
+              {
+                "type": "inline",
+                "name": "caseStudy.reference"
+              },
+              {
+                "type": "inline",
+                "name": "creativeWork.reference"
+              }
+            ]
           }
         },
         "optional": true

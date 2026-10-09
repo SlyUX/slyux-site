@@ -202,6 +202,29 @@ export default defineType({
       description: 'Live site, prototype, press, etc.',
     }),
     defineField({
+      name: 'related',
+      group: 'story',
+      title: 'Related work',
+      type: 'array',
+      description:
+        'Up to three case studies or portfolio pieces, shown as cards at the bottom of this page. Each one also shows this case study at the bottom of its own page, if it has one, so set the link on either side.',
+      of: [
+        defineArrayMember({
+          type: 'reference',
+          to: [{ type: 'caseStudy' }, { type: 'creativeWork' }],
+          options: {
+            disableNew: true,
+            // Not itself, and only published pieces.
+            filter: ({ document }) => ({
+              filter: '_id != $id && !(_id in path("drafts.**"))',
+              params: { id: document._id.replace(/^drafts\./, '') },
+            }),
+          },
+        }),
+      ],
+      validation: (rule) => rule.max(3).unique(),
+    }),
+    defineField({
       name: 'order',
       title: 'Order on the Work page',
       type: 'number',

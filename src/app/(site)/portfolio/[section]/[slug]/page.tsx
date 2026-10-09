@@ -10,6 +10,7 @@ import { imageSize, RichText, WorkStory } from '@/components/content'
 import { Breadcrumb } from '@/components/breadcrumb'
 import { DocumentGrid, readableDocuments } from '@/components/documents'
 import { Lightbox, LightboxButton, type LightboxItem } from '@/components/lightbox'
+import { RelatedWork } from '@/components/related-work'
 import { CREATIVE_WORK_PATHS_QUERY, CREATIVE_WORK_QUERY, safeFetch } from '@/lib/queries'
 import { documentSettings, galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { externalHref } from '@/lib/utils'
@@ -183,6 +184,15 @@ export default async function PortfolioPiecePage({ params }: PageProps<'/portfol
           </Lightbox>
         )}
       </Section>
+
+      <RelatedWork
+        picks={work.relatedPicks}
+        back={work.relatedBack}
+        heading={s.relatedHeading}
+        caseStudyLabel={s.caseStudyLabel}
+        kindLabels={s.kindLabels}
+        labels={labels}
+      />
     </article>
   )
 }

@@ -33,6 +33,13 @@ export default defineType({
     defineField({ name: 'aiStatementHeading', title: 'AI statement heading', type: 'string', group: 'general' }),
     defineField({ name: 'aiNoteLabel', title: 'AI note button text', type: 'string', group: 'general' }),
     defineField({
+      name: 'relatedHeading',
+      title: 'Related work heading',
+      type: 'string',
+      group: 'general',
+      description: 'Above the cards at the bottom of case studies and portfolio pages.',
+    }),
+    defineField({
       name: 'siteTitle',
       title: 'Site title',
       type: 'string',
