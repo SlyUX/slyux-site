@@ -295,10 +295,11 @@ function KindChip({ label, deep, className }: { label: string; deep: boolean; cl
 /**
  * A portfolio card. The artwork fills the card, cropped around the image's
  * focal point. It shows whole, on white, for brand and logo work (logos are
- * never cropped), transparent images, and pieces set to "Show the whole
- * image". A chip names the kind of piece; cards with a full page behind them
- * get it in burnt orange under a navy top edge.
- * Cards that don't link anywhere open their artwork larger (see Lightbox).
+ * never cropped), UI assets (cropping an icon sheet cuts icons in half),
+ * transparent images, and pieces set to "Show the whole image". A chip names
+ * the kind of piece; cards with a full page behind them get it in burnt
+ * orange under a navy top edge. Cards that don't link anywhere open their
+ * artwork larger (see Lightbox).
  */
 export function CreativeTile({
   work,
@@ -332,7 +333,7 @@ export function CreativeTile({
   const card = { wide: { width: 1500, height: 1000 }, large: { width: 1400, height: 1050 }, square: { width: 800, height: 800 } }[shape]
   const sizes = shape === 'square' ? '(max-width: 768px) 50vw, 25vw' : large || feature ? '(max-width: 768px) 100vw, 50vw' : '(max-width: 768px) 100vw, 33vw'
   const size = work.image?.asset ? imageSize(work.image) : undefined
-  const whole = sectionOfKind(work.kind) === 'brand' || work.cardFit === 'whole' || work.opaque === false
+  const whole = sectionOfKind(work.kind) === 'brand' || work.kind === 'uiAssets' || work.cardFit === 'whole' || work.opaque === false
   let image: React.ReactNode = null
   if (work.image && size) {
     if (whole) {

@@ -24,6 +24,7 @@ export const PORTFOLIO_KINDS = [
   { title: 'UX — site audit', list: 'Site audits', value: 'audit', section: 'ux' },
   { title: 'UX — data analysis', list: 'Data analysis', value: 'data', section: 'ux' },
   { title: 'UX — screens & prototypes', list: 'Screens & prototypes', value: 'ux', section: 'ux' },
+  { title: 'UX — UI assets', list: 'UI assets', value: 'uiAssets', section: 'ux' },
   { title: 'Brand — brand system', list: 'Brand systems', value: 'brand', section: 'brand' },
   { title: 'Brand — logo', list: 'Logos', value: 'logo', section: 'brand' },
   { title: 'Design — campaign', list: 'Campaigns', value: 'campaign', section: 'design' },
