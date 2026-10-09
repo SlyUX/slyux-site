@@ -1024,6 +1024,10 @@
             },
             {
               "type": "string",
+              "value": "uiAssets"
+            },
+            {
+              "type": "string",
               "value": "brand"
             },
             {
@@ -2137,6 +2141,13 @@
               },
               "optional": true
             },
+            "uiAssets": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
             "brand": {
               "type": "objectAttribute",
               "value": {
@@ -2231,6 +2242,13 @@
               "optional": true
             },
             "ux": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "string"
+              },
+              "optional": true
+            },
+            "uiAssets": {
               "type": "objectAttribute",
               "value": {
                 "type": "string"

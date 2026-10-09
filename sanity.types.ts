@@ -187,6 +187,7 @@ export type CreativeWork = {
     | "audit"
     | "data"
     | "ux"
+    | "uiAssets"
     | "brand"
     | "logo"
     | "campaign"
@@ -366,6 +367,7 @@ export type SiteSettings = {
     strategy?: string;
     designSystem?: string;
     ux?: string;
+    uiAssets?: string;
     brand?: string;
     illustration?: string;
     cover?: string;
@@ -381,6 +383,7 @@ export type SiteSettings = {
     strategy?: string;
     designSystem?: string;
     ux?: string;
+    uiAssets?: string;
     brand?: string;
     logo?: string;
     campaign?: string;
@@ -764,6 +767,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     strategy?: string;
     designSystem?: string;
     ux?: string;
+    uiAssets?: string;
     brand?: string;
     illustration?: string;
     cover?: string;
@@ -779,6 +783,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     strategy?: string;
     designSystem?: string;
     ux?: string;
+    uiAssets?: string;
     brand?: string;
     logo?: string;
     campaign?: string;
@@ -838,6 +843,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
       | "logo"
       | "printAd"
       | "strategy"
+      | "uiAssets"
       | "ux";
     image: ImageWithAlt | null;
     cardFit: "fill" | "whole" | null;
@@ -1043,6 +1049,7 @@ export type PORTFOLIO_SECTION_QUERY_RESULT = Array<{
     | "logo"
     | "printAd"
     | "strategy"
+    | "uiAssets"
     | "ux";
   image: ImageWithAlt | null;
   cardFit: "fill" | "whole" | null;
@@ -1082,6 +1089,7 @@ export type PORTFOLIO_FEATURED_QUERY_RESULT = Array<{
     | "logo"
     | "printAd"
     | "strategy"
+    | "uiAssets"
     | "ux";
   image: ImageWithAlt | null;
   cardFit: "fill" | "whole" | null;
@@ -1121,6 +1129,7 @@ export type CREATIVE_WORK_QUERY_RESULT = {
     | "logo"
     | "printAd"
     | "strategy"
+    | "uiAssets"
     | "ux";
   image: ImageWithAlt | null;
   client: string | null;
@@ -1175,6 +1184,7 @@ export type CREATIVE_WORK_PATHS_QUERY_RESULT = Array<{
     | "logo"
     | "printAd"
     | "strategy"
+    | "uiAssets"
     | "ux";
   slug: string;
 }>;
