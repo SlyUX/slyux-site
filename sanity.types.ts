@@ -452,6 +452,25 @@ export type SiteSettings = {
     _type: "inquiryType";
     _key: string;
   }>;
+  contactForm?: {
+    intro?: string;
+    topicLegend?: string;
+    nameLabel?: string;
+    emailLabel?: string;
+    messageLabel?: string;
+    sendLabel?: string;
+    sendingLabel?: string;
+    successHeading?: string;
+    successText?: string;
+    errorText?: string;
+    nameRequired?: string;
+    emailRequired?: string;
+    emailInvalid?: string;
+    messageRequired?: string;
+    messageShort?: string;
+    messageLong?: string;
+    rateLimited?: string;
+  };
 };
 
 export type CaseStudy = {
@@ -916,6 +935,25 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     _type: "inquiryType";
     _key: string;
   }>;
+  contactForm?: {
+    intro?: string;
+    topicLegend?: string;
+    nameLabel?: string;
+    emailLabel?: string;
+    messageLabel?: string;
+    sendLabel?: string;
+    sendingLabel?: string;
+    successHeading?: string;
+    successText?: string;
+    errorText?: string;
+    nameRequired?: string;
+    emailRequired?: string;
+    emailInvalid?: string;
+    messageRequired?: string;
+    messageShort?: string;
+    messageLong?: string;
+    rateLimited?: string;
+  };
   resumePdfUrl: string | null;
   heroVideoUrl: string | null;
   headerLogoSize: {

@@ -1,3 +1,4 @@
+import { TransitionLink } from '@/components/transition-link'
 import type { SiteSettings } from '@/lib/site-settings'
 import { externalHref } from '@/lib/utils'
 
@@ -13,10 +14,11 @@ export function SiteFooter({ settings }: { settings: SiteSettings }) {
       <div className="mx-auto flex max-w-6xl flex-col gap-4 text-sm md:flex-row md:items-center md:justify-between">
         <p className="text-footer-muted">{settings.footerLine ?? `© ${new Date().getFullYear()} ${settings.ownerName}`}</p>
         <ul className="flex gap-5">
+          {/* The contact page, not an address: the form keeps the inbox off the site. */}
           <li>
-            <a href={`mailto:${settings.contactEmail}`} className="decoration-fox underline-offset-4 hover:underline hover:decoration-2">
-              {settings.contactEmail}
-            </a>
+            <TransitionLink href="/contact" className="decoration-fox underline-offset-4 hover:underline hover:decoration-2">
+              {settings.contactTitle}
+            </TransitionLink>
           </li>
           {linkedin && (
             <li>

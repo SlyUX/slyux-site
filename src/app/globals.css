@@ -25,6 +25,9 @@
     --visited on --background ............  5.98  (AA) — visited links
     --visited on --paper .................  6.25  (AA)
     --visited on --surface ...............  5.47  (AA) — visited links on gray bands
+    --error on --background ..............  4.97  (AA) — form errors
+    --error on --paper ...................  5.19  (AA)
+    --error on --surface .................  4.54  (AA)
     white on --primary ...................  4.88  (AA) — primary buttons
     white on --heading ................... 10.77  (AAA) — primary button hover
     --heading on --paper at 75% .......... 10.41  (AAA) — secondary buttons, worst case on --surface
@@ -66,6 +69,7 @@
   --footer-foreground: #faf8f5;
   --footer-muted: #c9d6e0;
   --pdf: #d7191f;
+  --error: #d7191f; /* form errors: the site's one red, as on the PDF badge; red is for bad news only */
   --project: #a8500f; /* burnt orange: warmer and darker than --primary, which reads as red */
   --project-foreground: #ffffff;
   --pdf-foreground: #ffffff;
@@ -89,6 +93,7 @@
   --color-heading: var(--heading);
   --color-brand: var(--brand);
   --color-visited: var(--visited);
+  --color-error: var(--error);
   --color-highlight: var(--highlight);
   --color-brand-muted: var(--brand-muted);
   --color-footer: var(--footer);
