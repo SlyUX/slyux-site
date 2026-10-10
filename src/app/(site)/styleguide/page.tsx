@@ -24,7 +24,7 @@ import type { CaseStudyCard as CaseStudyCardData, CreativeWorkCard } from '@/lib
 
 export const metadata: Metadata = {
   title: 'Styleguide',
-  description: 'The design system behind slyux.com: foundations, components, and the rules that keep them consistent.',
+  description: 'The design system behind SlyUX.com: foundations, components, and the rules that keep them consistent.',
 }
 
 const TOKENS: TokenGroup[] = [
