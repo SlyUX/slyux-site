@@ -90,7 +90,7 @@ export async function submitContact(_prev: ContactState, formData: FormData): Pr
 
   // The topic's subject line, so messages arrive sorted (Site settings → Contact).
   const topic = stegaClean(s.inquiryTypes?.find((t) => t._key === values.topic))
-  const subject = topic?.subject ?? 'Message from slyux.com'
+  const subject = topic?.subject ?? 'Message from SlyUX.com'
 
   try {
     const res = await fetch('https://api.resend.com/emails', {
