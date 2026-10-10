@@ -19,13 +19,15 @@ export default defineType({
       description: 'Shown under the thumbnail and in the reader, e.g. "Brand manual".',
       validation: (rule) => rule.required(),
     }),
+    // Retired 2026-10-10: documents are read on the site, never downloaded, and
+    // an attached file is publicly reachable even without a link to it. Hidden,
+    // not deleted, until every document's file is cleared.
     defineField({
       name: 'file',
-      title: 'PDF',
+      title: 'PDF (retired)',
       type: 'file',
       options: { accept: 'application/pdf' },
-      description:
-        "Optional. The original, offered as a download from the reader. Leave it empty when the pages shouldn't be downloadable, e.g. a client's published book.",
+      hidden: true,
     }),
     defineField({
       name: 'pages',
