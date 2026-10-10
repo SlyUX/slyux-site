@@ -330,7 +330,17 @@ const VOICE: [string, React.ReactNode][] = [
       Italics in body text (<em>Jesus Calling</em>); quotation marks where italics can’t go, like summaries and alt text.
     </>,
   ],
-  ['American English.', 'Including Studio labels.'],
+  ['American English.', 'Including Studio labels. State names are spelled out in sentences (Nashville, Tennessee); postal abbreviations belong only to résumé locations.'],
+  [
+    'Numbers follow AP style.',
+    'Spell out one through nine, numerals from 10: “three of eight,” “13 partner organizations.” Percentages, money, and measurements are always numerals (3%, $1,200, 3 inches). “More than,” not “over,” with quantities.',
+  ],
+  ['Ranges and separators.', 'An unspaced en dash for ranges (2014–2017, 3–5%), and a middle dot between items on a meta line (Clearly Media · 2017).'],
+  [
+    'Credit lines in sentence case.',
+    'Commas between roles and no final period; other contributors and AI help follow a semicolon: “Data analysis, UX research; research with assistance from Claude (Anthropic).”',
+  ],
+  ['Bold leads match their list.', 'Within one list, every bold lead ends the same way: a period for a lead sentence, a colon for a label.'],
   ['Alt text says what the image shows and why it matters,', 'in one sentence.'],
 ]
 
