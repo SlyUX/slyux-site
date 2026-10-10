@@ -47,7 +47,6 @@ const DEFAULTS = {
   nextLabel: 'Next image',
   pdfBadge: 'Look inside',
   pdfPageCounter: 'Page {page} of {pages}',
-  pdfDownloadLabel: 'Download PDF',
   fullscreenLabel: 'Fullscreen',
   exitFullscreenLabel: 'Exit fullscreen',
   creativeTitle: 'Portfolio',
@@ -176,7 +175,6 @@ export const documentSettings = (s: SiteSettings) => ({
   badge: s.pdfBadge,
   labels: {
     counter: s.pdfPageCounter,
-    download: s.pdfDownloadLabel,
     fullscreen: s.fullscreenLabel,
     exitFullscreen: s.exitFullscreenLabel,
     close: s.closeLabel,

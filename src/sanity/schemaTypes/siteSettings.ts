@@ -283,7 +283,8 @@ export default defineType({
     defineField({ name: 'nextLabel', title: '"Next" button (screen reader)', type: 'string', group: 'work' }),
     defineField({ name: 'pdfBadge', title: 'Document badge', type: 'string', group: 'work', description: 'On document thumbnails, e.g. "Look inside". {pages} becomes the page count if you include it, e.g. "Look inside · {pages} pages".' }),
     defineField({ name: 'pdfPageCounter', title: 'PDF reader page counter', type: 'string', group: 'work', description: '{page} and {pages} are filled in, e.g. "Page {page} of {pages}".' }),
-    defineField({ name: 'pdfDownloadLabel', title: '"Download PDF" button', type: 'string', group: 'work' }),
+    // Retired 2026-10-10 with PDF downloads: hidden, not deleted, so a stored value doesn't surface as an unknown field.
+    defineField({ name: 'pdfDownloadLabel', title: '"Download PDF" button (retired)', type: 'string', group: 'work', hidden: true }),
     defineField({ name: 'fullscreenLabel', title: '"Fullscreen" button', type: 'string', group: 'work', description: 'In the PDF reader, where the browser supports it.' }),
     defineField({ name: 'exitFullscreenLabel', title: '"Exit fullscreen" button', type: 'string', group: 'work' }),
 

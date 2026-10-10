@@ -61,7 +61,7 @@ export const CASE_STUDY_SLUGS_QUERY = defineQuery(
 )
 
 /** A PDF shown as page images (see schemaTypes/pdfDocument.ts). */
-const PDF_DOCUMENT = `_key,title,"file": file.asset->{url,originalFilename},
+const PDF_DOCUMENT = `_key,title,
   pages[]{_key,asset,"size": asset->metadata.dimensions{width,height}}`
 
 

@@ -9,7 +9,7 @@ import type { CreativeWorkDetail } from '@/lib/types'
 export type PdfDocumentData = NonNullable<CreativeWorkDetail['documents']>[number]
 export type { DocumentLabels }
 
-/** Everything the site needs from a PDF document: page images, badge text, download link. */
+/** Everything the site needs from a PDF document: page images and badge text. Read on the site only; never offered as a download. */
 export function toDocument(doc: PdfDocumentData, badgeTemplate: string) {
   const pages: DocumentPage[] = (doc.pages ?? []).flatMap((p) =>
     p.asset && p.size?.width && p.size.height
@@ -24,10 +24,7 @@ export function toDocument(doc: PdfDocumentData, badgeTemplate: string) {
   )
   const cover = doc.pages?.[0]
   const badge = badgeTemplate.replace('{pages}', String(pages.length))
-  const downloadHref = doc.file?.url
-    ? `${doc.file.url}?dl=${encodeURIComponent(doc.file.originalFilename ?? `${doc.title ?? 'document'}.pdf`)}`
-    : undefined
-  return { title: doc.title ?? '', pages, cover, badge, downloadHref }
+  return { title: doc.title ?? '', pages, cover, badge }
 }
 
 /** The red "Look inside" chip over a document thumbnail. */
@@ -59,7 +56,6 @@ export function DocumentGrid({ docs, labels }: { docs: ReturnType<typeof readabl
           <DocumentViewer
             title={doc.title}
             pages={doc.pages}
-            downloadHref={doc.downloadHref}
             labels={labels}
             triggerLabel={`${doc.title}: ${doc.badge}`}
             className="group block w-full text-left"

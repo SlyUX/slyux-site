@@ -1,7 +1,7 @@
 'use client'
 
 import { useRef, useSyncExternalStore } from 'react'
-import { Download, Maximize, Minimize } from 'lucide-react'
+import { Maximize, Minimize } from 'lucide-react'
 
 import { preloadImage } from '@/components/blind-dialog'
 import { returnFocus } from '@/components/return-focus'
@@ -17,7 +17,6 @@ export interface DocumentPage {
 export interface DocumentLabels extends Pick<GalleryLabels, 'close' | 'previous' | 'next'> {
   /** e.g. "Page {page} of {pages}". */
   counter: string
-  download: string
   fullscreen: string
   exitFullscreen: string
 }
@@ -28,20 +27,17 @@ const onFullscreenChange = (cb: () => void) => {
   return () => document.removeEventListener('fullscreenchange', cb)
 }
 
-const pill =
-  'bg-background text-foreground hover:text-primary inline-flex h-10 items-center gap-1.5 rounded-ui px-3 text-sm font-semibold shadow-lg sm:px-4'
-
 /**
  * A PDF as a page-at-a-time reader: the trigger (a document thumbnail, or a
  * tile's title) opens the shared viewer at page 1. Each page is fitted to the
  * screen; ← / →, swipe, and the buttons turn pages, and the next page is
- * fetched ahead so turning is instant. The original PDF is a download, and
- * the reader can go fullscreen where the browser allows it (not iPhone).
+ * fetched ahead so turning is instant. Documents are read here, never
+ * downloaded (the page images are all the site has), and the reader can go
+ * fullscreen where the browser allows it (not iPhone).
  */
 export function DocumentViewer({
   title,
   pages,
-  downloadHref,
   labels,
   triggerLabel,
   className,
@@ -49,7 +45,6 @@ export function DocumentViewer({
 }: {
   title: string
   pages: DocumentPage[]
-  downloadHref?: string
   labels: DocumentLabels
   /** Accessible name for the trigger, e.g. "Brand manual (PDF, 13 pages)". */
   triggerLabel: string
@@ -100,14 +95,6 @@ export function DocumentViewer({
         }}
         actions={
           <>
-            {downloadHref && (
-              <a href={downloadHref} download aria-label={labels.download} className={pill}>
-                <Download aria-hidden className="size-4" />
-                <span aria-hidden className="hidden sm:inline">
-                  {labels.download}
-                </span>
-              </a>
-            )}
             {canFullscreen && (
               <button
                 type="button"
