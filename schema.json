@@ -793,6 +793,13 @@
         },
         "optional": true
       },
+      "venture": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "boolean"
+        },
+        "optional": true
+      },
       "highlights": {
         "type": "objectAttribute",
         "value": {
@@ -1851,6 +1858,13 @@
         "value": {
           "type": "object",
           "attributes": {
+            "hidden": {
+              "type": "objectAttribute",
+              "value": {
+                "type": "boolean"
+              },
+              "optional": true
+            },
             "heading": {
               "type": "objectAttribute",
               "value": {
@@ -2544,7 +2558,28 @@
         },
         "optional": true
       },
+      "resumeDocxLabel": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "resumePhone": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
       "experienceHeading": {
+        "type": "objectAttribute",
+        "value": {
+          "type": "string"
+        },
+        "optional": true
+      },
+      "venturesHeading": {
         "type": "objectAttribute",
         "value": {
           "type": "string"

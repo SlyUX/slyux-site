@@ -150,6 +150,7 @@ export type Experience = {
   start: string;
   end?: string;
   location?: string;
+  venture?: boolean;
   highlights?: Array<string>;
   caseStudies?: Array<
     {
@@ -323,6 +324,7 @@ export type SiteSettings = {
     cta?: Link;
   };
   clientTeaser?: {
+    hidden?: boolean;
     heading?: string;
     body?: string;
     cta?: Link;
@@ -433,7 +435,10 @@ export type SiteSettings = {
     _type: "file";
   };
   resumeDownloadLabel?: string;
+  resumeDocxLabel?: string;
+  resumePhone?: string;
   experienceHeading?: string;
+  venturesHeading?: string;
   skillsHeading?: string;
   skillGroups?: Array<{
     heading: string;
@@ -661,7 +666,7 @@ export type AllSanitySchemaTypes =
 
 // Source: src/lib/queries.ts
 // Variable: SITE_SETTINGS_QUERY
-// Query: *[_type=="siteSettings" && _id=="siteSettings"][0]{  ...,  "resumePdfUrl": resumePdf.asset->url,  "heroVideoUrl": heroVideo.asset->url,  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},  "heroVideoType": heroVideo.asset->mimeType,  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}}
+// Query: *[_type=="siteSettings" && _id=="siteSettings"][0]{  ...,  "heroVideoUrl": heroVideo.asset->url,  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},  "heroVideoType": heroVideo.asset->mimeType,  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}}
 export type SITE_SETTINGS_QUERY_RESULT = {
   _id: "siteSettings";
   _type: "siteSettings";
@@ -738,6 +743,7 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     cta?: Link;
   };
   clientTeaser?: {
+    hidden?: boolean;
     heading?: string;
     body?: string;
     cta?: Link;
@@ -916,7 +922,10 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     _type: "file";
   };
   resumeDownloadLabel?: string;
+  resumeDocxLabel?: string;
+  resumePhone?: string;
   experienceHeading?: string;
+  venturesHeading?: string;
   skillsHeading?: string;
   skillGroups?: Array<{
     heading: string;
@@ -954,7 +963,6 @@ export type SITE_SETTINGS_QUERY_RESULT = {
     messageLong?: string;
     rateLimited?: string;
   };
-  resumePdfUrl: string | null;
   heroVideoUrl: string | null;
   headerLogoSize: {
     width: number;
@@ -1503,7 +1511,7 @@ export type PAGE_SLUGS_QUERY_RESULT = Array<string>;
 
 // Source: src/lib/queries.ts
 // Variable: EXPERIENCE_QUERY
-// Query: *[_type=="experience"]|order(start desc){  _id,role,organization,start,end,location,highlights,  "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}}
+// Query: *[_type=="experience"]|order(start desc){  _id,role,organization,start,end,location,venture,highlights,  "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}}
 export type EXPERIENCE_QUERY_RESULT = Array<{
   _id: string;
   role: string;
@@ -1511,6 +1519,7 @@ export type EXPERIENCE_QUERY_RESULT = Array<{
   start: string;
   end: string | null;
   location: string | null;
+  venture: boolean | null;
   highlights: Array<string> | null;
   caseStudies: Array<{
     title: string;
@@ -1606,7 +1615,7 @@ export type LLMS_QUERY_RESULT = {
 import "@sanity/client";
 declare module "@sanity/client" {
   interface SanityQueries {
-    '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "resumePdfUrl": resumePdf.asset->url,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},\n  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}\n}': SITE_SETTINGS_QUERY_RESULT;
+    '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},\n  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}\n}': SITE_SETTINGS_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}': CASE_STUDIES_QUERY_RESULT;
     '*[_type=="caseStudy" && slug.current==$slug][0]{\n  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,personasIntro,aiNote,"relatedPicks": related[]->{_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}},\n  "relatedBack": *[_type in ["caseStudy","creativeWork"] && ^._id in related[]._ref]|order(_type asc, order asc){_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}},\n  personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},\n  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}\n}': CASE_STUDY_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)].slug.current': CASE_STUDY_SLUGS_QUERY_RESULT;
@@ -1616,7 +1625,7 @@ declare module "@sanity/client" {
     '*[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{kind,"slug":slug.current}': CREATIVE_WORK_PATHS_QUERY_RESULT;
     '*[_type=="page" && slug.current==$slug][0]{\n  _id,title,intro,image,body,rail,cta,seoDescription\n}': PAGE_QUERY_RESULT;
     '*[_type=="page" && defined(slug.current)].slug.current': PAGE_SLUGS_QUERY_RESULT;
-    '*[_type=="experience"]|order(start desc){\n  _id,role,organization,start,end,location,highlights,\n  "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}\n}': EXPERIENCE_QUERY_RESULT;
+    '*[_type=="experience"]|order(start desc){\n  _id,role,organization,start,end,location,venture,highlights,\n  "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}\n}': EXPERIENCE_QUERY_RESULT;
     '{\n  "pages": *[_type=="page" && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]{"slug": slug.current, _updatedAt},\n  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]{"slug": slug.current, kind, _updatedAt},\n  "settingsUpdated": *[_id=="siteSettings"][0]._updatedAt\n}': SITEMAP_QUERY_RESULT;
     '{\n  "caseStudies": *[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){\n    title, "slug": slug.current, summary, organization, role, years, skills, "text": pt::text(body)\n  },\n  "pieces": *[_type=="creativeWork" && defined(slug.current) && (count(body) > 0 || count(documents) > 0)]|order(order asc, title asc){\n    title, "slug": slug.current, kind, summary, client, year, credit, "text": pt::text(body)\n  },\n  "pages": *[_type=="page" && defined(slug.current)]|order(title asc){title, "slug": slug.current, intro, "text": pt::text(body), "rail": rail{heading, "text": pt::text(body)}}\n}': LLMS_QUERY_RESULT;
   }

@@ -39,7 +39,15 @@ export default defineType({
       name: 'location',
       title: 'Location',
       type: 'string',
-      description: 'e.g. "Nashville, TN · Hybrid".',
+      description: 'e.g. "Nashville, TN · Remote".',
+    }),
+    defineField({
+      name: 'venture',
+      title: 'Venture alongside employment',
+      type: 'boolean',
+      description:
+        "For work you do alongside your job, like ND Riot. It's listed after your employment history, under the Ventures heading, and never counts as your current title.",
+      initialValue: false,
     }),
     defineField({
       name: 'highlights',
