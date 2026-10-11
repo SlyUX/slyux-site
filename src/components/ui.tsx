@@ -116,11 +116,14 @@ export function SectionHeading({
 /** Title + optional intro at the top of a page. The page's only <h1>. */
 export function PageHeader({
   title,
+  subtitle,
   intro,
   eyebrow,
   breadcrumb,
 }: {
   title: string
+  /** A short line right under the title, e.g. a person's title and location. */
+  subtitle?: React.ReactNode
   intro?: string | null
   eyebrow?: string | null
   /** Where the page sits (a Breadcrumb), above the title. */
@@ -131,7 +134,8 @@ export function PageHeader({
       {breadcrumb}
       {eyebrow && <p className="text-primary mb-3 text-sm font-semibold tracking-wide uppercase"><TrackedText>{eyebrow}</TrackedText></p>}
       <h1 className="font-display text-heading text-4xl leading-tight font-semibold tracking-tight md:text-5xl">{title}</h1>
-      {intro && <p className="text-muted-foreground mt-5 text-lg leading-relaxed">{intro}</p>}
+      {subtitle && <p className="mt-3 text-lg font-semibold">{subtitle}</p>}
+      {intro && <p className={cn('text-muted-foreground text-lg leading-relaxed', subtitle ? 'mt-3' : 'mt-5')}>{intro}</p>}
     </header>
   )
 }

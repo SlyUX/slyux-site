@@ -10,6 +10,7 @@ import { SiteNav } from '@/components/site-nav'
 import { TransitionLink } from '@/components/transition-link'
 import { PreviewTools } from '@/components/preview-tools'
 import { EXPERIENCE_QUERY, safeFetch } from '@/lib/queries'
+import { currentRole } from '@/lib/resume'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { SITE_URL } from '@/lib/site-url'
 import { externalHref } from '@/lib/utils'
@@ -29,8 +30,10 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
   const { isEnabled: preview } = await draftMode()
 
   // Who Stephen is, for search engines and AI tools (schema.org). The current
-  // role is the résumé's open-ended entry; skills are the résumé's skills.
-  const current = experience.find((e) => !e.end) ?? experience[0]
+  // role is the résumé's open-ended job (not a venture); skills are the
+  // résumé's skills; the city is the start of that role's location.
+  const current = currentRole(experience)
+  const city = current?.location?.match(/^([^,·]+),\s*([A-Z]{2})\b/)
   const linkedin = externalHref(settings.linkedinUrl)
   const structured = stegaClean([
     {
@@ -42,6 +45,7 @@ export default async function SiteLayout({ children }: { children: React.ReactNo
       description: settings.siteDescription,
       jobTitle: current?.role ?? undefined,
       worksFor: current?.organization ? { '@type': 'Organization', name: current.organization } : undefined,
+      address: city ? { '@type': 'PostalAddress', addressLocality: city[1].trim(), addressRegion: city[2], addressCountry: 'US' } : undefined,
       sameAs: linkedin ? [linkedin] : undefined,
       knowsAbout: settings.skillGroups?.flatMap((group) => group.skills ?? []),
     },

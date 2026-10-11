@@ -22,10 +22,11 @@ export async function generateMetadata(): Promise<Metadata> {
   // Draft-mode edit markers don't belong in <title> or meta tags.
   return stegaClean({
     metadataBase: new URL(SITE_URL),
-    title: { default: settings.siteTitle, template: `%s · ${settings.siteTitle}` },
+    // His name in every tab and search result, so "Stephen Fox" and the site are one entity.
+    title: { default: `${settings.ownerName} · ${settings.siteTitle}`, template: `%s · ${settings.ownerName}` },
     description: settings.siteDescription,
     openGraph: {
-      title: settings.siteTitle,
+      title: `${settings.ownerName} · ${settings.siteTitle}`,
       description: settings.siteDescription,
       siteName: settings.siteTitle,
       url: SITE_URL,

@@ -35,7 +35,6 @@ const RELATED = `"relatedPicks": related[]->{${RELATED_CARD}},
 
 export const SITE_SETTINGS_QUERY = defineQuery(`*[_type=="siteSettings" && _id=="siteSettings"][0]{
   ...,
-  "resumePdfUrl": resumePdf.asset->url,
   "heroVideoUrl": heroVideo.asset->url,
   "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},
   "heroVideoType": heroVideo.asset->mimeType,
@@ -92,7 +91,7 @@ export const PAGE_QUERY = defineQuery(`*[_type=="page" && slug.current==$slug][0
 export const PAGE_SLUGS_QUERY = defineQuery(`*[_type=="page" && defined(slug.current)].slug.current`)
 
 export const EXPERIENCE_QUERY = defineQuery(`*[_type=="experience"]|order(start desc){
-  _id,role,organization,start,end,location,highlights,
+  _id,role,organization,start,end,location,venture,highlights,
   "caseStudies": caseStudies[defined(@->slug.current)]->{title,"slug":slug.current}
 }`)
 

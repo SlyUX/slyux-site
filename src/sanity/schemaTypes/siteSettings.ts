@@ -116,13 +116,8 @@ export default defineType({
     defineField({ name: 'footerLine', title: 'Footer line', type: 'string', group: 'general' }),
 
     // Home
-    defineField({
-      name: 'heroBrandmark',
-      title: 'Hero brandmark',
-      type: 'imageWithAlt',
-      group: 'home',
-      description: 'The reversed (light-on-dark) Sly UX logo. SVG or a large transparent PNG. Alt text: "Sly UX".',
-    }),
+    // Retired: the hero now leads with your name and title; the header carries the logo.
+    defineField({ name: 'heroBrandmark', title: 'Hero brandmark (retired)', type: 'imageWithAlt', group: 'home', hidden: true }),
     defineField({
       name: 'heroVideo',
       title: 'Hero background video',
@@ -184,7 +179,7 @@ export default defineType({
       title: 'Headline',
       type: 'string',
       group: 'home',
-      description: 'The positioning line — the first thing anyone reads.',
+      description: 'The positioning line, under your name. Your title and location come from your current Résumé role.',
     }),
     defineField({ name: 'intro', title: 'Intro', type: 'text', rows: 3, group: 'home' }),
     defineField({ name: 'primaryCta', title: 'Primary button', type: 'link', group: 'home' }),
@@ -224,6 +219,12 @@ export default defineType({
       group: 'home',
       description: 'The quieter path for potential clients.',
       fields: [
+        defineField({
+          name: 'hidden',
+          title: 'Hide on the home page',
+          type: 'boolean',
+          description: 'Keeps this copy for later. The Work with me page stays up either way.',
+        }),
         defineField({ name: 'heading', title: 'Heading', type: 'string' }),
         defineField({ name: 'body', title: 'Body', type: 'text', rows: 2 }),
         defineField({ name: 'cta', title: 'Link', type: 'link' }),
@@ -426,9 +427,26 @@ export default defineType({
     // Résumé
     defineField({ name: 'resumeTitle', title: 'Title', type: 'string', group: 'resume' }),
     defineField({ name: 'resumeIntro', title: 'Intro', type: 'text', rows: 3, group: 'resume' }),
-    defineField({ name: 'resumePdf', title: 'Résumé PDF', type: 'file', group: 'resume', options: { accept: 'application/pdf' } }),
-    defineField({ name: 'resumeDownloadLabel', title: 'Download button label', type: 'string', group: 'resume' }),
+    // Retired: the PDF and Word files are generated from this page's content (see src/lib/resume.ts).
+    defineField({ name: 'resumePdf', title: 'Résumé PDF (retired)', type: 'file', group: 'resume', hidden: true }),
+    defineField({
+      name: 'resumeDownloadLabel',
+      title: 'PDF download button',
+      type: 'string',
+      group: 'resume',
+      description: 'The PDF is built from this page, so it always matches: name, contact details, experience, ventures, skills, and education.',
+    }),
+    defineField({ name: 'resumeDocxLabel', title: 'Word download button', type: 'string', group: 'resume', description: 'The same résumé as a Word file, for recruiters who need to edit or resubmit it.' }),
+    defineField({
+      name: 'resumePhone',
+      title: 'Phone (downloads only)',
+      type: 'string',
+      group: 'resume',
+      description:
+        'Printed in the PDF and Word files, never on the page. Anyone who downloads them sees it, and this dataset is public, so leave it empty if you would rather not share it.',
+    }),
     defineField({ name: 'experienceHeading', title: 'Experience heading', type: 'string', group: 'resume' }),
+    defineField({ name: 'venturesHeading', title: 'Ventures heading', type: 'string', group: 'resume', description: 'Heads roles marked "Venture alongside employment", listed after Experience.' }),
     defineField({ name: 'skillsHeading', title: 'Skills heading', type: 'string', group: 'resume' }),
     defineField({
       name: 'skillGroups',
