@@ -12,7 +12,8 @@ import { Gallery, GalleryStack } from '@/components/gallery'
 import { Personas } from '@/components/personas'
 import { RelatedWork } from '@/components/related-work'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
-import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
+import { buildPrototype } from '@/lib/prototype'
+import { galleryLabels, getSiteSettings, prototypeLabels } from '@/lib/site-settings'
 import { absoluteUrl, SITE_URL } from '@/lib/site-url'
 import { urlFor } from '@/sanity/image'
 import type { CaseStudyDetail } from '@/lib/types'
@@ -42,6 +43,9 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
   const before = galleries.filter((g) => g.placement === 'before')
   const after = galleries.filter((g) => g.placement !== 'before')
   const labels = galleryLabels(s)
+  // A clickable prototype, when the case study has one: its screens' gallery images open it.
+  const prototype = buildPrototype(study.prototype)
+  const protoLabels = prototypeLabels(s)
 
   const path = `/case-studies/${study.slug}`
   const structured = stegaClean([
@@ -67,8 +71,11 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
       <Section opener className="relative isolate overflow-hidden pb-8 md:pb-10">
         {heroBg && (
           <>
-            {/* Decorative: a faded collage of the project behind the title. */}
-            <Image src={heroBg} alt="" fill priority sizes="100vw" className="-z-20 object-cover object-top" />
+            {/* Decorative: a faded collage of the project behind the title. Its own positioned layer, so
+                `fill` measures against the whole section rather than the content column. */}
+            <div aria-hidden className="absolute inset-0 -z-20">
+              <Image src={heroBg} alt="" fill priority sizes="100vw" className="object-cover object-top" />
+            </div>
             <div aria-hidden className="from-background/40 via-background/75 to-background absolute inset-0 -z-10 bg-gradient-to-b" />
           </>
         )}
@@ -139,6 +146,8 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
                     labels={labels}
                     rail
                     headingAs={before.length > 1 ? 'h3' : 'none'}
+                    prototype={prototype}
+                    prototypeLabels={protoLabels}
                   />
                 ))}
               </GalleryStack>
@@ -170,7 +179,14 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
         <Section className="pt-0 md:pt-0">
           <GalleryStack>
             {after.map((gallery) => (
-              <Gallery key={gallery._key} gallery={gallery} id={`gallery-${gallery._key}`} labels={labels} />
+              <Gallery
+                key={gallery._key}
+                gallery={gallery}
+                id={`gallery-${gallery._key}`}
+                labels={labels}
+                prototype={prototype}
+                prototypeLabels={protoLabels}
+              />
             ))}
           </GalleryStack>
         </Section>

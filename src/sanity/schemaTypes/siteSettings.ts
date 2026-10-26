@@ -286,6 +286,8 @@ export default defineType({
     defineField({ name: 'pdfPageCounter', title: 'PDF reader page counter', type: 'string', group: 'work', description: '{page} and {pages} are filled in, e.g. "Page {page} of {pages}".' }),
     // Retired 2026-10-10 with PDF downloads: hidden, not deleted, so a stored value doesn't surface as an unknown field.
     defineField({ name: 'pdfDownloadLabel', title: '"Download PDF" button (retired)', type: 'string', group: 'work', hidden: true }),
+    defineField({ name: 'prototypeLabel', title: '"Try the prototype" button', type: 'string', group: 'work', description: 'On galleries with a prototype, and on the screens that open it.' }),
+    defineField({ name: 'prototypeHint', title: 'Prototype hint', type: 'string', group: 'work', description: 'Under the phone, e.g. "Tap anywhere to show the links."' }),
     defineField({ name: 'fullscreenLabel', title: '"Fullscreen" button', type: 'string', group: 'work', description: 'In the PDF reader, where the browser supports it.' }),
     defineField({ name: 'exitFullscreenLabel', title: '"Exit fullscreen" button', type: 'string', group: 'work' }),
 

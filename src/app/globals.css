@@ -215,6 +215,14 @@
   animation: blind-shade-in var(--viewer-blind-duration) var(--blind-ease) both;
 }
 
+/* A prototype's screens dissolve into each other inside the phone, as they do in the design file. */
+@keyframes prototype-fade-in {
+  from { opacity: 0; }
+}
+.prototype-fade-in {
+  animation: prototype-fade-in 300ms ease-out backwards;
+}
+
 /*
   Overlays (the image viewer, galleries, the document reader, the AI
   statement): the whole overlay, backdrop and content together, slides down
@@ -317,6 +325,12 @@ html {
     animation: none;
   }
   .viewer-leaving {
+    display: none;
+  }
+  .prototype-fade-in {
+    animation: none;
+  }
+  .prototype-leaving {
     display: none;
   }
   ::view-transition-old(.blind-rise-out),

@@ -110,8 +110,8 @@ export function DocumentViewer({
       >
         {page && (
           <div
-            // The dim space around the page closes the reader, as elsewhere.
-            onClick={(e) => e.target === e.currentTarget && viewer.close()}
+            // The dim space around the page closes the reader (see ViewerDialog).
+            data-viewer-backdrop
             className="flex min-h-[calc(100svh-4.5rem)] items-center justify-center px-4 pb-6 sm:px-6"
           >
             <ViewerStage
@@ -120,7 +120,6 @@ export function DocumentViewer({
                 // Plain <img>: page images are pre-sized by Sanity; fitted to the screen, not the width.
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  onClick={(e) => e.stopPropagation()}
                   src={pages[i].src}
                   alt={leaving ? '' : `${title}, ${counterFor(i)}`}
                   width={pages[i].width}

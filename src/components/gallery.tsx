@@ -1,4 +1,6 @@
 import { GalleryViewer, type GalleryItem, type GalleryLabels, type ViewSlice } from '@/components/gallery-viewer'
+import type { PrototypeLabels } from '@/components/prototype-viewer'
+import { PHONE, type PrototypeView } from '@/lib/prototype'
 import { urlFor } from '@/sanity/image'
 import type { CaseStudyDetail } from '@/lib/types'
 
@@ -23,22 +25,25 @@ const hasSize = (s: { width?: number | null; height?: number | null } | null | u
   !!s?.width && !!s?.height
 
 /**
- * Stacked WebP slices of an image for the viewer, plus the largest width it
- * can display at without being stretched. Sanity crops each region (`rect`)
- * at full resolution, then resizes it, so a 27,000px page capture stays sharp.
+ * Stacked WebP slices of an image for the viewer, plus the width it displays
+ * at. Sanity crops each region (`rect`) at full resolution, then resizes it,
+ * so a 27,000px page capture stays sharp.
  *
- *  - Phone-width sources (≤1000px): served up to 780px. Retina captures
- *    (≥700px) display at half size — true phone width — and 1× screens at
- *    their native size, so nothing is scaled up.
+ *  - Phone galleries: every screen opens at an iPhone's width (393pt),
+ *    whatever its resolution, so 1×, 2×, and 3× captures match. Served at 2×.
+ *  - Other phone-width sources (≤1000px): served up to 780px. Retina captures
+ *    (≥700px) display at half size, and 1× screens at their native size.
  *  - Wider sources: served up to 2304px (retina at the 1152px content width)
  *    and displayed no wider than 1152px or their own width.
  */
-function slices(source: Source, size: Size): GalleryItem['view'] {
-  const narrow = size.width <= 1000
-  const outWidth = Math.min(narrow ? 780 : 2304, size.width)
-  const displayWidth = narrow
-    ? size.width >= 700 ? Math.round(outWidth / 2) : outWidth
-    : Math.min(1152, size.width >= 2000 ? Math.round(size.width / 2) : size.width)
+function slices(source: Source, size: Size, phone: boolean): GalleryItem['view'] {
+  const narrow = phone || size.width <= 1000
+  const outWidth = Math.min(phone ? PHONE.width * 2 : narrow ? 780 : 2304, size.width)
+  const displayWidth = phone
+    ? PHONE.width
+    : narrow
+      ? size.width >= 700 ? Math.round(outWidth / 2) : outWidth
+      : Math.min(1152, size.width >= 2000 ? Math.round(size.width / 2) : size.width)
   const scale = outWidth / size.width
   const step = Math.floor(MAX_SLICE / scale)
   const out: ViewSlice[] = []
@@ -66,6 +71,7 @@ function toItem(img: GalleryImage, phone: boolean, rail: boolean, fallbackAlt: s
   const thumbSource = foldHeight ? urlFor(img).rect(0, 0, img.size.width, foldHeight) : urlFor(img)
   return {
     key: img._key,
+    assetRef: img.asset._ref,
     alt: img.alt || fallbackAlt,
     caption: img.caption,
     fullPage: !!full || !!foldHeight,
@@ -74,7 +80,7 @@ function toItem(img: GalleryImage, phone: boolean, rail: boolean, fallbackAlt: s
       width: thumbWidth,
       height: Math.round((thumbWidth * (foldHeight ?? img.size.height)) / img.size.width),
     },
-    view: full ? slices(full, img.fullPageSize as Size) : slices(img, img.size),
+    view: full ? slices(full, img.fullPageSize as Size, phone) : slices(img, img.size, phone),
   }
 }
 
@@ -108,6 +114,8 @@ export function Gallery({
   labels,
   rail = false,
   headingAs = 'h2',
+  prototype,
+  prototypeLabels,
 }: {
   gallery: GalleryData
   id: string
@@ -115,10 +123,20 @@ export function Gallery({
   rail?: boolean
   /** Inside the "How it started…" rail: a subheading, or none when it's the rail's only gallery. */
   headingAs?: 'h2' | 'h3' | 'none'
+  /** The case study's prototype: images that are one of its screens open it there. */
+  prototype?: PrototypeView
+  prototypeLabels?: PrototypeLabels
 }) {
   const phone = gallery.layout === 'phone'
-  const items = (gallery.images ?? []).flatMap((img) => toItem(img, phone, rail, gallery.heading) ?? [])
+  const items = (gallery.images ?? []).flatMap((img) => {
+    const item = toItem(img, phone, rail, gallery.heading)
+    if (!item) return []
+    const screen = prototype?.screens.findIndex((s) => s.assetRef === item.assetRef) ?? -1
+    return [screen >= 0 ? { ...item, screen } : item]
+  })
   if (!items.length) return null
+  // Only a gallery showing the prototype's screens gets its button and viewer.
+  const playable = items.some((it) => it.screen !== undefined) ? prototype : undefined
 
   return (
     <section
@@ -138,7 +156,14 @@ export function Gallery({
       ) : null}
       {gallery.intro && <p className={rail ? 'text-muted-foreground mt-1 text-sm' : 'text-muted-foreground mt-2'}>{gallery.intro}</p>}
       <div className={rail ? 'mt-4' : 'mt-10'}>
-        <GalleryViewer items={items} layout={phone ? 'phone' : 'wide'} rail={rail} labels={labels} />
+        <GalleryViewer
+          items={items}
+          layout={phone ? 'phone' : 'wide'}
+          rail={rail}
+          labels={labels}
+          prototype={playable}
+          prototypeLabels={prototypeLabels}
+        />
       </div>
     </section>
   )

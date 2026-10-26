@@ -79,8 +79,8 @@ export function Lightbox({
           onClosed={(i) => pieceKey && returnFocus(buttons.get(`${pieceKey}#${i}`) ?? buttons.get(`${pieceKey}#0`))}
         >
           <div
-            // The dim space around the image closes the lightbox, as elsewhere.
-            onClick={(e) => e.target === e.currentTarget && viewer.close()}
+            // The dim space around the image closes the lightbox (see ViewerDialog).
+            data-viewer-backdrop
             className="flex min-h-[calc(100svh-4.5rem)] items-center justify-center px-4 pb-6 sm:px-6"
           >
             <ViewerStage
@@ -92,7 +92,6 @@ export function Lightbox({
                 // Plain <img>: pre-sized by Sanity, and fitted to the screen rather than the width.
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  onClick={(e) => e.stopPropagation()}
                   src={shown[i].src}
                   alt={leaving ? '' : shown[i].alt}
                   width={shown[i].width}
