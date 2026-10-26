@@ -94,12 +94,15 @@ function PrototypeStage({ prototype, index, onNavigate, hint }: { prototype: Pro
     // Around the phone is backdrop: a click there closes, as in any lightbox (see ViewerDialog).
     <div data-viewer-backdrop className="mx-auto mb-10 flex w-full flex-col items-center gap-4 px-4 sm:px-6">
       <PhoneFrame contentHeight={prototype.contentHeight}>
-        {leaving !== null && <ScreenLayer key={`out-${leaving}`} screen={prototype.screens[leaving]} contentHeight={prototype.contentHeight} leaving />}
+        {leaving !== null && (
+          <ScreenLayer key={`out-${leaving}`} screen={prototype.screens[leaving]} contentHeight={prototype.contentHeight} nav={prototype.nav} leaving />
+        )}
         {screen && (
           <ScreenLayer
             key={`in-${index}`}
             screen={screen}
             contentHeight={prototype.contentHeight}
+            nav={prototype.nav}
             entering={leaving !== null}
             onEntered={() => setLeaving(null)}
             hints={hints}
@@ -120,6 +123,7 @@ function PrototypeStage({ prototype, index, onNavigate, hint }: { prototype: Pro
 function ScreenLayer({
   screen,
   contentHeight,
+  nav,
   leaving = false,
   entering = false,
   onEntered,
@@ -131,6 +135,8 @@ function ScreenLayer({
 }: {
   screen: PrototypeScreen
   contentHeight: number
+  /** The prototype's floating nav, drawn when this screen asks for it. */
+  nav?: PrototypeView['nav']
   leaving?: boolean
   entering?: boolean
   onEntered?: () => void
@@ -170,6 +176,19 @@ function ScreenLayer({
     />
   )
   const full = screen.full
+  // The tab bar that floats over the app: above the content (which scrolls behind it), under the tab links.
+  const floatingNav =
+    screen.floatingNav && nav ? (
+      // eslint-disable-next-line @next/next/no-img-element
+      <img
+        src={nav.src}
+        alt=""
+        aria-hidden
+        draggable={false}
+        className="pointer-events-none absolute max-w-none"
+        style={{ left: pt(nav.x), top: pt(nav.y), width: pt(nav.w), height: pt(nav.h) }}
+      />
+    ) : null
   const scrolling = full ? screen.hotspots.filter((h) => !h.fixed) : screen.hotspots
   const pinned = full ? screen.hotspots.filter((h) => h.fixed) : []
 
@@ -216,12 +235,16 @@ function ScreenLayer({
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src={full.src} alt="" draggable={false} className="absolute bottom-0 block w-full" />
             </div>
-            <div className="pointer-events-none absolute inset-0">{pinned.map(hotspot)}</div>
+            <div className="pointer-events-none absolute inset-0">
+              {floatingNav}
+              {pinned.map(hotspot)}
+            </div>
           </>
         ) : (
           <>
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={screen.image.src} alt={screen.alt} draggable={false} className="block w-full" />
+            {floatingNav}
             {scrolling.map(hotspot)}
           </>
         )}
