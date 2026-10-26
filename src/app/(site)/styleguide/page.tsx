@@ -1,14 +1,16 @@
 import type { Metadata } from 'next'
-import { ChevronRight, ExternalLink, FolderOpen, Images, Maximize2, Menu, Sparkles, type LucideIcon } from 'lucide-react'
+import { ChevronRight, ExternalLink, FolderOpen, Images, Maximize2, Menu, Smartphone, Sparkles, type LucideIcon } from 'lucide-react'
 
 import { AiNote } from '@/components/ai-statement'
 import { Breadcrumb } from '@/components/breadcrumb'
 import { CaseStudyRow, CaseStudyTile, CreativeTile, lightboxItems, MetricStrip } from '@/components/content'
 import { Lightbox } from '@/components/lightbox'
 import { Rail } from '@/components/rail'
+import { HomeIndicator, PhoneFrame, pt, StatusBar } from '@/components/phone-frame'
 import { ColorTokens, ContrastTable, type ContrastPair, type TokenGroup } from '@/components/styleguide/color-tokens'
 import { Specimen } from '@/components/styleguide/specimen'
 import { ButtonLink, PageHeader, Section, SectionHeading } from '@/components/ui'
+import { PHONE } from '@/lib/prototype'
 import { CASE_STUDIES_QUERY, PORTFOLIO_SECTION_QUERY, safeFetch } from '@/lib/queries'
 import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
 import { PORTFOLIO_KINDS } from '@/sanity/portfolio'
@@ -270,6 +272,7 @@ const ICONS: { icon: LucideIcon; name: string; use: string }[] = [
     use: 'Paired with a count and the expand arrows when a card opens several images.',
   },
   { icon: ExternalLink, name: 'External', use: 'The card opens another site.' },
+  { icon: Smartphone, name: 'Prototype', use: 'The screen opens a clickable prototype in a phone, at itself.' },
   {
     icon: ChevronRight,
     name: 'Chevron',
@@ -714,9 +717,39 @@ export default async function StyleguidePage() {
               'One viewer behind every image: cards, case study galleries, story images, and the document reader. Try the cards above.',
               'Each card is its own gallery. A thumbnail in a gallery opens at itself.',
               'Images fit the screen, never wider than their real resolution. Tall page captures stream in slices so they stay sharp.',
+              'Phone galleries open every screen at an iPhone’s width (393pt), whatever its resolution, so 1×, 2×, and 3× captures match.',
             ]}
           >
             <p className="text-muted-foreground text-sm">Open any card in the Cards section above.</p>
+          </Specimen>
+          <Specimen
+            name="Prototype phone"
+            file="src/components/phone-frame.tsx · prototype-viewer.tsx · src/lib/prototype.ts"
+            stage="surface"
+            notes={[
+              'A Prototype document (Studio → Prototypes) plays in a current iPhone: Dynamic Island, today’s status bar, and the home indicator. The designs’ own status bar is cropped off.',
+              'A case study that points to a prototype gets a “Try the prototype” button on the gallery showing its screens, and those screens open the prototype at themselves.',
+              'Tap areas are real buttons with labels. Tapping outside them flashes them all, as the design tool does. Screens dissolve; ← / → still step through in order.',
+              'Full-length screens scroll inside the phone, with the header and tab bar pinned.',
+            ]}
+          >
+            <div className="w-56">
+              <PhoneFrame contentHeight={780}>
+                <div className="absolute inset-0">
+                  <div className="bg-heading absolute inset-x-0 top-0" style={{ height: pt(PHONE.safeTop) }} />
+                  <StatusBar dark />
+                  <div className="bg-paper absolute inset-x-0 bottom-0 flex flex-col" style={{ top: pt(PHONE.safeTop), gap: pt(16), padding: pt(24) }}>
+                    <div className="bg-heading rounded-ui" style={{ height: pt(120) }} />
+                    <div className="bg-border rounded-ui" style={{ height: pt(18), width: '70%' }} />
+                    <div className="bg-border rounded-ui" style={{ height: pt(18), width: '90%' }} />
+                    <div className="bg-border rounded-ui" style={{ height: pt(18), width: '55%' }} />
+                    {/* A tap area, shown as it flashes when a tap misses. */}
+                    <div className="bg-primary/20 outline-primary rounded-ui mt-auto outline-2" style={{ height: pt(56) }} />
+                  </div>
+                  <HomeIndicator dark={false} />
+                </div>
+              </PhoneFrame>
+            </div>
           </Specimen>
         </div>
       </Section>

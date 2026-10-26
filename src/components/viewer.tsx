@@ -48,6 +48,12 @@ export function useViewer(count: number) {
     setIndex(next)
     dialogRef.current?.scrollTo({ top: 0 })
   }
+  /** Straight to item `i` while open, e.g. a prototype's tap area. */
+  const goTo = (i: number) => {
+    if (i < 0 || i >= count) return
+    setIndex(i)
+    dialogRef.current?.scrollTo({ top: 0 })
+  }
   const close = () => closeBlind(dialogRef.current)
 
   // ← / → while the viewer is open, wherever focus sits inside it.
@@ -63,7 +69,7 @@ export function useViewer(count: number) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isOpen, index])
 
-  return { dialogRef, prevRef, nextRef, frameRef, index, isOpen, setIsOpen, openAt, go, close, count }
+  return { dialogRef, prevRef, nextRef, frameRef, index, isOpen, setIsOpen, openAt, go, goTo, close, count }
 }
 
 export type Viewer = ReturnType<typeof useViewer>

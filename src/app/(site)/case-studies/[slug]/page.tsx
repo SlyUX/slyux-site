@@ -12,7 +12,8 @@ import { Gallery, GalleryStack } from '@/components/gallery'
 import { Personas } from '@/components/personas'
 import { RelatedWork } from '@/components/related-work'
 import { CASE_STUDY_QUERY, CASE_STUDY_SLUGS_QUERY, safeFetch } from '@/lib/queries'
-import { galleryLabels, getSiteSettings } from '@/lib/site-settings'
+import { buildPrototype } from '@/lib/prototype'
+import { galleryLabels, getSiteSettings, prototypeLabels } from '@/lib/site-settings'
 import { absoluteUrl, SITE_URL } from '@/lib/site-url'
 import { urlFor } from '@/sanity/image'
 import type { CaseStudyDetail } from '@/lib/types'
@@ -42,6 +43,9 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
   const before = galleries.filter((g) => g.placement === 'before')
   const after = galleries.filter((g) => g.placement !== 'before')
   const labels = galleryLabels(s)
+  // A clickable prototype, when the case study has one: its screens' gallery images open it.
+  const prototype = buildPrototype(study.prototype)
+  const protoLabels = prototypeLabels(s)
 
   const path = `/case-studies/${study.slug}`
   const structured = stegaClean([
@@ -139,6 +143,8 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
                     labels={labels}
                     rail
                     headingAs={before.length > 1 ? 'h3' : 'none'}
+                    prototype={prototype}
+                    prototypeLabels={protoLabels}
                   />
                 ))}
               </GalleryStack>
@@ -170,7 +176,14 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
         <Section className="pt-0 md:pt-0">
           <GalleryStack>
             {after.map((gallery) => (
-              <Gallery key={gallery._key} gallery={gallery} id={`gallery-${gallery._key}`} labels={labels} />
+              <Gallery
+                key={gallery._key}
+                gallery={gallery}
+                id={`gallery-${gallery._key}`}
+                labels={labels}
+                prototype={prototype}
+                prototypeLabels={protoLabels}
+              />
             ))}
           </GalleryStack>
         </Section>

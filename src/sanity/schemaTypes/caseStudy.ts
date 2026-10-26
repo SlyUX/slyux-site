@@ -194,6 +194,15 @@ export default defineType({
       ],
     }),
     defineField({
+      name: 'prototype',
+      title: 'Prototype',
+      type: 'reference',
+      to: [{ type: 'prototype' }],
+      group: 'story',
+      description:
+        'Optional. Gallery images that use the same image as one of its screens open the prototype at that screen, and the gallery gets a "Try the prototype" button.',
+    }),
+    defineField({
       name: 'links',
       title: 'Links',
       type: 'array',

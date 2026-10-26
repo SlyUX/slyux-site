@@ -357,6 +357,8 @@ export type SiteSettings = {
   pdfBadge?: string;
   pdfPageCounter?: string;
   pdfDownloadLabel?: string;
+  prototypeLabel?: string;
+  prototypeHint?: string;
   fullscreenLabel?: string;
   exitFullscreenLabel?: string;
   creativeTitle?: string;
@@ -478,6 +480,13 @@ export type SiteSettings = {
   };
 };
 
+export type PrototypeReference = {
+  _ref: string;
+  _type: "reference";
+  _weak?: boolean;
+  [internalGroqTypeReferenceTo]?: "prototype";
+};
+
 export type CaseStudy = {
   _id: string;
   _type: "caseStudy";
@@ -528,6 +537,7 @@ export type CaseStudy = {
     _type: "gallery";
     _key: string;
   }>;
+  prototype?: PrototypeReference;
   links?: Array<
     {
       _key: string;
@@ -536,6 +546,51 @@ export type CaseStudy = {
   related?: ArrayOf<CaseStudyReference | CreativeWorkReference>;
   order?: number;
   seoDescription?: string;
+};
+
+export type Prototype = {
+  _id: string;
+  _type: "prototype";
+  _createdAt: string;
+  _updatedAt: string;
+  _rev: string;
+  title: string;
+  designWidth: number;
+  statusBarHeight?: number;
+  screens: Array<{
+    name: string;
+    image: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    alt: string;
+    fullPage?: {
+      asset?: SanityImageAssetReference;
+      media?: unknown;
+      hotspot?: SanityImageHotspot;
+      crop?: SanityImageCrop;
+      _type: "image";
+    };
+    pinnedTop?: number;
+    pinnedBottom?: number;
+    topColor?: string;
+    hotspots?: Array<{
+      label: string;
+      target: string;
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+      fixed?: boolean;
+      _type: "hotspot";
+      _key: string;
+    }>;
+    _type: "prototypeScreen";
+    _key: string;
+  }>;
 };
 
 export type SanityImagePaletteSwatch = {
@@ -654,7 +709,9 @@ export type AllSanitySchemaTypes =
   | SanityImageCrop
   | SanityImageHotspot
   | SiteSettings
+  | PrototypeReference
   | CaseStudy
+  | Prototype
   | SanityImagePaletteSwatch
   | SanityImagePalette
   | SanityImageDimensions
@@ -786,6 +843,8 @@ export type SITE_SETTINGS_QUERY_RESULT = {
   pdfBadge?: string;
   pdfPageCounter?: string;
   pdfDownloadLabel?: string;
+  prototypeLabel?: string;
+  prototypeHint?: string;
   fullscreenLabel?: string;
   exitFullscreenLabel?: string;
   creativeTitle?: string;
@@ -993,7 +1052,7 @@ export type CASE_STUDIES_QUERY_RESULT = Array<{
 
 // Source: src/lib/queries.ts
 // Variable: CASE_STUDY_QUERY
-// Query: *[_type=="caseStudy" && slug.current==$slug][0]{  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,personasIntro,aiNote,"relatedPicks": related[]->{_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}},  "relatedBack": *[_type in ["caseStudy","creativeWork"] && ^._id in related[]._ref]|order(_type asc, order asc){_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}},  personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}}
+// Query: *[_type=="caseStudy" && slug.current==$slug][0]{  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,personasIntro,aiNote,"relatedPicks": related[]->{_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}},  "relatedBack": *[_type in ["caseStudy","creativeWork"] && ^._id in related[]._ref]|order(_type asc, order asc){_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,  "hasPage": count(body) > 0 || count(documents) > 0,  "caseStudySlug": caseStudy->slug.current}},  personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}},  "prototype": prototype->{_id,title,designWidth,statusBarHeight,  screens[]{_key,name,alt,topColor,pinnedTop,pinnedBottom,    image{asset,"size": asset->metadata.dimensions{width,height}},    fullPage{asset,"size": asset->metadata.dimensions{width,height}},    hotspots[]{_key,label,target,x,y,width,height,fixed}}}}
 export type CASE_STUDY_QUERY_RESULT = {
   _id: string;
   title: string;
@@ -1207,6 +1266,44 @@ export type CASE_STUDY_QUERY_RESULT = {
         }
     > | null;
   }> | null;
+  prototype: {
+    _id: string;
+    title: string;
+    designWidth: number;
+    statusBarHeight: number | null;
+    screens: Array<{
+      _key: string;
+      name: string;
+      alt: string;
+      topColor: string | null;
+      pinnedTop: number | null;
+      pinnedBottom: number | null;
+      image: {
+        asset: SanityImageAssetReference | null;
+        size: {
+          width: number;
+          height: number;
+        } | null;
+      };
+      fullPage: {
+        asset: SanityImageAssetReference | null;
+        size: {
+          width: number;
+          height: number;
+        } | null;
+      } | null;
+      hotspots: Array<{
+        _key: string;
+        label: string;
+        target: string;
+        x: number;
+        y: number;
+        width: number;
+        height: number;
+        fixed: boolean | null;
+      }> | null;
+    }>;
+  } | null;
 } | null;
 
 // Source: src/lib/queries.ts
@@ -1617,7 +1714,7 @@ declare module "@sanity/client" {
   interface SanityQueries {
     '*[_type=="siteSettings" && _id=="siteSettings"][0]{\n  ...,\n  "heroVideoUrl": heroVideo.asset->url,\n  "headerLogoSize": headerLogo.asset->metadata.dimensions{width,height},\n  "heroVideoType": heroVideo.asset->mimeType,\n  "featuredCaseStudies": featuredCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "uxCaseStudies": uxCaseStudies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "caseStudyGroups": caseStudyGroups[]{_key,heading,"studies": studies[defined(@->slug.current)]->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}},\n  "portfolioUxCaseStudy": portfolioUxCaseStudy->{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},\n  "portfolioUxPieces": portfolioUxPieces[defined(@->slug.current)]->{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}\n}': SITE_SETTINGS_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)]|order(order asc, title asc){_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics}': CASE_STUDIES_QUERY_RESULT;
-    '*[_type=="caseStudy" && slug.current==$slug][0]{\n  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,personasIntro,aiNote,"relatedPicks": related[]->{_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}},\n  "relatedBack": *[_type in ["caseStudy","creativeWork"] && ^._id in related[]._ref]|order(_type asc, order asc){_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}},\n  personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},\n  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}\n}': CASE_STUDY_QUERY_RESULT;
+    '*[_type=="caseStudy" && slug.current==$slug][0]{\n  _id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics,body,links,seoDescription,heroBackground,personasIntro,aiNote,"relatedPicks": related[]->{_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}},\n  "relatedBack": *[_type in ["caseStudy","creativeWork"] && ^._id in related[]._ref]|order(_type asc, order asc){_type,_type=="caseStudy"=>{_id,title,"slug":slug.current,summary,organization,role,years,skills,heroImage,metrics},_type=="creativeWork"=>{_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}},\n  personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},\n  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}},\n  "prototype": prototype->{_id,title,designWidth,statusBarHeight,\n  screens[]{_key,name,alt,topColor,pinnedTop,pinnedBottom,\n    image{asset,"size": asset->metadata.dimensions{width,height}},\n    fullPage{asset,"size": asset->metadata.dimensions{width,height}},\n    hotspots[]{_key,label,target,x,y,width,height,fixed}}}\n}': CASE_STUDY_QUERY_RESULT;
     '*[_type=="caseStudy" && defined(slug.current)].slug.current': CASE_STUDY_SLUGS_QUERY_RESULT;
     '*[_type=="creativeWork" && defined(slug.current) && kind in $kinds]|order(featured desc, order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_SECTION_QUERY_RESULT;
     '*[_type=="creativeWork" && defined(slug.current) && featured == true]|order(order asc, title asc){_id,title,"slug":slug.current,kind,image,cardFit,artworkBackground,"opaque": image.asset->metadata.isOpaque,gallery,client,year,credit,summary,externalUrl,featured,\n  "hasPage": count(body) > 0 || count(documents) > 0,\n  "caseStudySlug": caseStudy->slug.current}': PORTFOLIO_FEATURED_QUERY_RESULT;

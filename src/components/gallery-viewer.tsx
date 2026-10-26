@@ -2,12 +2,15 @@
 
 import Image from 'next/image'
 import { useRef } from 'react'
-import { Maximize2 } from 'lucide-react'
+import { Maximize2, Smartphone } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { preloadImage } from '@/components/blind-dialog'
+import { PrototypeDialog, type PrototypeLabels } from '@/components/prototype-viewer'
 import { returnFocus } from '@/components/return-focus'
+import { buttonVariants } from '@/components/ui'
 import { useViewer, ViewerDialog, ViewerStage, type GalleryLabels } from '@/components/viewer'
+import type { PrototypeView } from '@/lib/prototype'
 
 export type { GalleryLabels }
 
@@ -19,6 +22,10 @@ export interface ViewSlice {
 
 export interface GalleryItem {
   key: string
+  /** The Sanity image behind it, to match prototype screens. */
+  assetRef?: string
+  /** The prototype screen this image is, when the case study has a prototype. */
+  screen?: number
   alt: string
   caption?: string | null
   /** True when the viewer shows a full-length capture rather than the thumbnail's image. */
@@ -30,22 +37,34 @@ export interface GalleryItem {
 
 /**
  * A gallery's thumbnails plus one viewer for all of them (see ViewerDialog:
- * ← / →, swipe, Escape; only the current item's image loads).
+ * ← / →, swipe, Escape; only the current item's image loads). With a
+ * prototype, its screens open the prototype instead, at that screen, and a
+ * "Try the prototype" button starts it from the beginning.
  */
 export function GalleryViewer({
   items,
   layout,
   rail = false,
   labels,
+  prototype,
+  prototypeLabels,
 }: {
   items: GalleryItem[]
   layout: 'phone' | 'wide'
   /** Compact thumbnails for the side rail. */
   rail?: boolean
   labels: GalleryLabels
+  prototype?: PrototypeView
+  prototypeLabels?: PrototypeLabels
 }) {
   const thumbRefs = useRef<(HTMLButtonElement | null)[]>([])
   const viewer = useViewer(items.length)
+  const proto = useViewer(prototype?.screens.length ?? 0)
+  /** What opened the prototype (a thumbnail or the button), to hand focus back on close. */
+  const protoOpener = useRef<HTMLElement | null>(null)
+  const playable = prototype && prototypeLabels ? { prototype, labels: prototypeLabels } : undefined
+  /** The prototype screen a thumbnail opens, if it opens the prototype. */
+  const screenSrc = (it: GalleryItem) => (playable && it.screen !== undefined ? playable.prototype.screens[it.screen]?.image.src : undefined)
   const { index, openAt } = viewer
   const phone = layout === 'phone'
   const item = items[index]
@@ -55,6 +74,20 @@ export function GalleryViewer({
 
   return (
     <>
+      {playable && (
+        <button
+          type="button"
+          onClick={(e) => {
+            protoOpener.current = e.currentTarget
+            proto.openAt(0)
+          }}
+          onPointerEnter={() => preloadImage(playable.prototype.screens[0]?.image.src)}
+          className={cn(buttonVariants({ variant: 'secondary' }), 'mb-8')}
+        >
+          <Smartphone aria-hidden className="size-4" />
+          {playable.labels.open}
+        </button>
+      )}
       <div
         className={cn(
           rail
@@ -78,11 +111,16 @@ export function GalleryViewer({
                 thumbRefs.current[i] = el
               }}
               type="button"
-              onClick={() => openAt(i)}
-              // Loads the first view slice on hover or focus, ahead of the viewer’s slide.
-              onPointerEnter={() => preloadImage(it.view.slices[0]?.src)}
-              onFocus={() => preloadImage(it.view.slices[0]?.src)}
-              aria-label={`${it.fullPage ? labels.fullPage : labels.enlarge}: ${it.caption ? `${it.caption} — ` : ''}${it.alt}`}
+              onClick={(e) => {
+                if (playable && it.screen !== undefined) {
+                  protoOpener.current = e.currentTarget
+                  proto.openAt(it.screen)
+                } else openAt(i)
+              }}
+              // Loads what the viewer will show first on hover or focus, ahead of its slide.
+              onPointerEnter={() => preloadImage(screenSrc(it) ?? it.view.slices[0]?.src)}
+              onFocus={() => preloadImage(screenSrc(it) ?? it.view.slices[0]?.src)}
+              aria-label={`${playable && it.screen !== undefined ? playable.labels.open : it.fullPage ? labels.fullPage : labels.enlarge}: ${it.caption ? `${it.caption} — ` : ''}${it.alt}`}
               className="group block w-full text-left"
             >
               <Image
@@ -109,7 +147,19 @@ export function GalleryViewer({
                   {it.caption}
                 </span>
               )}
-              {it.fullPage && (
+              {playable && it.screen !== undefined ? (
+                <span
+                  aria-hidden
+                  className={cn(
+                    'text-primary group-hover:text-foreground inline-flex items-center gap-1.5 font-semibold',
+                    it.caption ? 'mt-1' : 'mt-2',
+                    rail ? 'text-xs' : 'text-sm',
+                  )}
+                >
+                  <Smartphone className="size-3.5" />
+                  {playable.labels.open}
+                </span>
+              ) : it.fullPage && (
                 <span
                   aria-hidden
                   className={cn(
@@ -126,6 +176,16 @@ export function GalleryViewer({
           </div>
         ))}
       </div>
+
+      {playable && (
+        <PrototypeDialog
+          prototype={playable.prototype}
+          viewer={proto}
+          labels={labels}
+          hint={playable.labels.hint}
+          onClosed={() => returnFocus(protoOpener.current)}
+        />
+      )}
 
       <ViewerDialog
         viewer={viewer}

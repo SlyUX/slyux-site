@@ -7,6 +7,7 @@ import imageWithAlt from './imageWithAlt'
 import galleryScreen from './galleryScreen'
 import persona from './persona'
 import pdfDocument from './pdfDocument'
+import prototype from './prototype'
 import { metric, link, richText } from './objects'
 
 export const schemaTypes = [
@@ -15,6 +16,7 @@ export const schemaTypes = [
   creativeWork,
   page,
   experience,
+  prototype,
   imageWithAlt,
   galleryScreen,
   persona,

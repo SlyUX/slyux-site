@@ -33,6 +33,13 @@ const RELATED_CARD = `_type,_type=="caseStudy"=>{${CASE_STUDY_CARD}},_type=="cre
 const RELATED = `"relatedPicks": related[]->{${RELATED_CARD}},
   "relatedBack": *[_type in ["caseStudy","creativeWork"] && ^._id in related[]._ref]|order(_type asc, order asc){${RELATED_CARD}}`
 
+/** A clickable phone prototype (see schemaTypes/prototype.ts and components/prototype-viewer.tsx). */
+const PROTOTYPE = `_id,title,designWidth,statusBarHeight,
+  screens[]{_key,name,alt,topColor,pinnedTop,pinnedBottom,
+    image{asset,"size": asset->metadata.dimensions{width,height}},
+    fullPage{asset,"size": asset->metadata.dimensions{width,height}},
+    hotspots[]{_key,label,target,x,y,width,height,fixed}}`
+
 export const SITE_SETTINGS_QUERY = defineQuery(`*[_type=="siteSettings" && _id=="siteSettings"][0]{
   ...,
   "heroVideoUrl": heroVideo.asset->url,
@@ -52,7 +59,8 @@ export const CASE_STUDIES_QUERY = defineQuery(
 export const CASE_STUDY_QUERY = defineQuery(`*[_type=="caseStudy" && slug.current==$slug][0]{
   ${CASE_STUDY_CARD},body,links,seoDescription,heroBackground,personasIntro,aiNote,${RELATED},
   personas[]{_key,name,photo,traits,opportunitiesLead,opportunities,barriers,"photoSize": photo.asset->metadata.dimensions{width,height}},
-  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}}
+  galleries[]{_key,heading,intro,layout,placement,images[]{...,"size": asset->metadata.dimensions{width,height},"fullPageSize": fullPage.asset->metadata.dimensions{width,height}}},
+  "prototype": prototype->{${PROTOTYPE}}
 }`)
 
 export const CASE_STUDY_SLUGS_QUERY = defineQuery(

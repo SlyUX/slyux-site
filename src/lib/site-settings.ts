@@ -47,6 +47,8 @@ const DEFAULTS = {
   nextLabel: 'Next image',
   pdfBadge: 'Look inside',
   pdfPageCounter: 'Page {page} of {pages}',
+  prototypeLabel: 'Try the prototype',
+  prototypeHint: 'Tap anywhere to show the links.',
   fullscreenLabel: 'Fullscreen',
   exitFullscreenLabel: 'Exit fullscreen',
   creativeTitle: 'Portfolio',
@@ -171,6 +173,9 @@ export const galleryLabels = (s: SiteSettings) => ({
   previous: s.previousLabel,
   next: s.nextLabel,
 })
+
+/** The prototype's button and hint, from Site settings. */
+export const prototypeLabels = (s: SiteSettings) => ({ open: s.prototypeLabel, hint: s.prototypeHint })
 
 /** The PDF badge template and reader labels, from Site settings. */
 export const documentSettings = (s: SiteSettings) => ({

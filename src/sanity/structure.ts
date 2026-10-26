@@ -18,7 +18,7 @@ import { PORTFOLIO_KINDS, PORTFOLIO_SECTIONS, PORTFOLIO_SECTION_TITLES } from '.
 const SINGLETONS = ['siteSettings']
 
 /** Types placed by hand below; anything added later still appears at the end. */
-const PLACED = ['siteSettings', 'page', 'caseStudy', 'creativeWork', 'experience']
+const PLACED = ['siteSettings', 'page', 'caseStudy', 'prototype', 'creativeWork', 'experience']
 
 const byOrder = [{ field: 'order', direction: 'asc' as const }]
 
@@ -70,6 +70,7 @@ export const structure: StructureResolver = (S) =>
         .schemaType('caseStudy')
         .icon(statusIcon('caseStudy'))
         .child(S.documentTypeList('caseStudy').title('Case studies').defaultOrdering(byOrder)),
+      S.documentTypeListItem('prototype').title('Prototypes').icon(statusIcon('prototype')),
       S.listItem()
         .id('portfolio')
         .title('Portfolio')
