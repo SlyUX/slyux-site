@@ -1,4 +1,5 @@
-import { BatteryFull, Signal, Wifi } from 'lucide-react'
+import { Fragment } from 'react'
+import { ArrowBigUp, BatteryFull, Delete, Mic, Signal, Smile, Wifi } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 import { PHONE } from '@/lib/prototype'
@@ -65,6 +66,98 @@ export function StatusBar({ dark }: { dark: boolean }) {
         <BatteryFull style={{ width: pt(26), height: pt(26) }} strokeWidth={2} />
       </span>
     </div>
+  )
+}
+
+/**
+ * The iOS 26 keyboard's height on a Face ID iPhone, in points: 301 for the
+ * keys and the emoji and dictation row under them, plus 45 for the
+ * suggestion bar (reported by developers; Apple publishes no figure).
+ */
+const KEYBOARD = { height: 301, suggestions: 45 }
+const KEY = { width: 33.1, height: 43, gap: 6, radius: 8.5 }
+
+/** How much of the screen the keyboard covers, in points. */
+export const keyboardHeight = (suggestions: boolean) => KEYBOARD.height + (suggestions ? KEYBOARD.suggestions : 0)
+
+/**
+ * The iPhone keyboard, up as while typing: suggestions (when given), the
+ * letter keys, and the emoji and dictation buttons under them. Decorative
+ * device chrome, like the status bar: the key labels are the iPhone's, not
+ * content. The home indicator is drawn over it by the screen.
+ */
+export function Keyboard({ suggestions }: { suggestions: string[] }) {
+  const row = { gap: pt(KEY.gap) }
+  const icon = { width: pt(22), height: pt(22) }
+  const letters = (keys: string) => [...keys].map((l) => <Key key={l}>{l}</Key>)
+  return (
+    <div
+      aria-hidden
+      className="bg-keyboard text-foreground pointer-events-none absolute inset-x-0 bottom-0 select-none"
+      style={{
+        height: pt(keyboardHeight(suggestions.length > 0)),
+        borderTopLeftRadius: pt(27),
+        borderTopRightRadius: pt(27),
+        paddingInline: pt(4),
+        fontSize: pt(23),
+        lineHeight: 1,
+      }}
+    >
+      {suggestions.length > 0 && (
+        <div className="flex items-center" style={{ height: pt(KEYBOARD.suggestions), fontSize: pt(17) }}>
+          {suggestions.map((s, i) => (
+            <Fragment key={i}>
+              {i > 0 && <span className="bg-keyboard-key-alt shrink-0" style={{ width: pt(1), height: pt(25) }} />}
+              <span className="flex-1 truncate text-center">{s}</span>
+            </Fragment>
+          ))}
+        </div>
+      )}
+      <div className="flex flex-col" style={{ gap: pt(11), paddingTop: pt(10) }}>
+        <div className="flex justify-center" style={row}>
+          {letters('qwertyuiop')}
+        </div>
+        <div className="flex justify-center" style={row}>
+          {letters('asdfghjkl')}
+        </div>
+        <div className="flex justify-between">
+          <Key alt width={44}>
+            <ArrowBigUp style={icon} strokeWidth={1.75} />
+          </Key>
+          <div className="flex" style={row}>
+            {letters('zxcvbnm')}
+          </div>
+          <Key alt width={44}>
+            <Delete style={icon} strokeWidth={1.75} />
+          </Key>
+        </div>
+        <div className="flex" style={{ ...row, fontSize: pt(16) }}>
+          <Key alt width={88}>
+            123
+          </Key>
+          <Key width="grow">space</Key>
+          <Key alt width={88}>
+            return
+          </Key>
+        </div>
+      </div>
+      <div className="text-muted-foreground flex justify-between" style={{ paddingInline: pt(18), paddingTop: pt(12) }}>
+        <Smile style={{ width: pt(27), height: pt(27) }} strokeWidth={1.5} />
+        <Mic style={{ width: pt(27), height: pt(27) }} strokeWidth={1.5} />
+      </div>
+    </div>
+  )
+}
+
+/** One key: white for letters, gray (`alt`) for shift, delete, 123, and return. */
+function Key({ alt = false, width = KEY.width, children }: { alt?: boolean; width?: number | 'grow'; children: React.ReactNode }) {
+  return (
+    <span
+      className={cn('flex shrink-0 items-center justify-center', alt ? 'bg-keyboard-key-alt' : 'bg-keyboard-key', width === 'grow' && 'grow')}
+      style={{ height: pt(KEY.height), borderRadius: pt(KEY.radius), width: width === 'grow' ? undefined : pt(width) }}
+    >
+      {children}
+    </span>
   )
 }
 

@@ -3560,6 +3560,23 @@
                 },
                 "optional": true
               },
+              "showKeyboard": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "boolean"
+                },
+                "optional": true
+              },
+              "keyboardSuggestions": {
+                "type": "objectAttribute",
+                "value": {
+                  "type": "array",
+                  "of": {
+                    "type": "string"
+                  }
+                },
+                "optional": true
+              },
               "topColor": {
                 "type": "objectAttribute",
                 "value": {

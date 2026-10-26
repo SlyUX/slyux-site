@@ -45,6 +45,8 @@ export interface PrototypeScreen {
   full?: { src: string; height: number; pinnedTop: number; pinnedBottom: number }
   /** Draw the prototype's floating nav on top. */
   floatingNav: boolean
+  /** The iPhone keyboard is up, with these words in its suggestion bar (none: no bar). */
+  keyboard?: { suggestions: string[] }
   hotspots: PrototypeHotspot[]
 }
 
@@ -108,6 +110,7 @@ export function buildPrototype(doc: PrototypeDoc | null | undefined): PrototypeV
       image: { src: cropped(s.image, s.image.size, Math.round(status * perPt)), height: toPhone(s.image.size.height / perPt - status) },
       full,
       floatingNav: !!s.showFloatingNav,
+      keyboard: s.showKeyboard ? { suggestions: (s.keyboardSuggestions ?? []).slice(0, 3) } : undefined,
       hotspots: (s.hotspots ?? []).flatMap((h) => {
         const target = names.indexOf(stegaClean(h.target))
         if (target < 0) return []

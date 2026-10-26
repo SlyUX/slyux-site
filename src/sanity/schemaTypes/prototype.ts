@@ -116,6 +116,22 @@ export default defineType({
               description: 'Draws the floating nav on top. Use it when the screen image doesn’t include the nav, e.g. a full-length screen that scrolls behind it.',
             }),
             defineField({
+              name: 'showKeyboard',
+              title: 'Show the keyboard',
+              type: 'boolean',
+              description:
+                'Draws the iPhone keyboard along the bottom, as while typing. The screen above it shortens: a full-length screen’s pinned bottom (a message field) sits on the keyboard, and the screen opens scrolled to its end, as a chat does.',
+            }),
+            defineField({
+              name: 'keyboardSuggestions',
+              title: 'Keyboard suggestions',
+              type: 'array',
+              of: [defineArrayMember({ type: 'string' })],
+              description: 'Optional: up to three words in the bar above the keys, as iOS predicts them from what’s typed, e.g. “Des” (in quotes, as typed), Design, Desk. Empty: no bar.',
+              hidden: ({ parent }) => !parent?.showKeyboard,
+              validation: (rule) => rule.max(3),
+            }),
+            defineField({
               name: 'topColor',
               title: 'Color behind the Dynamic Island',
               type: 'string',
