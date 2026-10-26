@@ -190,9 +190,17 @@ function ScreenLayer({
           <>
             <div className="absolute inset-0 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div className="relative" style={{ height: pt(full.height) }}>
-                {/* Plain <img>: sized by the phone, not by next/image. */}
+                {/* Plain <img>: sized by the phone, not by next/image. Its own header and tab bar are
+                    clipped away: the pinned copies below stand in for them, so a bounce past either end
+                    shows background, not a second header. */}
                 {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img src={full.src} alt={screen.alt} draggable={false} className="block w-full" />
+                <img
+                  src={full.src}
+                  alt={screen.alt}
+                  draggable={false}
+                  className="block w-full"
+                  style={{ clipPath: `inset(${pt(full.pinnedTop)} 0 ${pt(full.pinnedBottom)} 0)` }}
+                />
                 {scrolling.map(hotspot)}
               </div>
             </div>

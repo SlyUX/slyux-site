@@ -71,8 +71,11 @@ export default async function CaseStudyPage({ params }: PageProps<'/case-studies
       <Section opener className="relative isolate overflow-hidden pb-8 md:pb-10">
         {heroBg && (
           <>
-            {/* Decorative: a faded collage of the project behind the title. */}
-            <Image src={heroBg} alt="" fill priority sizes="100vw" className="-z-20 object-cover object-top" />
+            {/* Decorative: a faded collage of the project behind the title. Its own positioned layer, so
+                `fill` measures against the whole section rather than the content column. */}
+            <div aria-hidden className="absolute inset-0 -z-20">
+              <Image src={heroBg} alt="" fill priority sizes="100vw" className="object-cover object-top" />
+            </div>
             <div aria-hidden className="from-background/40 via-background/75 to-background absolute inset-0 -z-10 bg-gradient-to-b" />
           </>
         )}
