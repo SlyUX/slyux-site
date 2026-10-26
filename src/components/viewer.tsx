@@ -130,13 +130,18 @@ export function ViewerDialog({
         // Horizontal and deliberate only — vertical drags are the page scrolling.
         if (Math.abs(dx) > SWIPE && Math.abs(dx) > Math.abs(dy) * 1.5) go(dx < 0 ? 1 : -1)
       }}
-      // Clicking the dim area around the item closes; clicks on the item don't.
-      onClick={(e) => (e.target === e.currentTarget || e.target === frameRef.current) && close()}
+      // Clicking anywhere outside the item closes, like any lightbox: the dim area, and the
+      // layout boxes around the item, which are marked `data-viewer-backdrop`. The item, its
+      // controls, and the toolbar's buttons never close it.
+      onClick={(e) => {
+        const target = e.target as HTMLElement
+        if (target === e.currentTarget || target === frameRef.current || target.hasAttribute('data-viewer-backdrop')) close()
+      }}
       className="backdrop:bg-ink/85 m-0 h-full max-h-none w-full max-w-none overflow-y-auto overscroll-contain bg-transparent p-0"
     >
       {/* Scrolls only when fullscreen; otherwise the dialog is the one scroll container. */}
       <div ref={frameRef} className="min-h-full [&:fullscreen]:bg-ink [&:fullscreen]:overflow-y-auto">
-      <div className="sticky top-0 z-10 flex items-center justify-between gap-3 p-3 sm:p-4">
+      <div data-viewer-backdrop className="sticky top-0 z-10 flex items-center justify-between gap-3 p-3 sm:p-4">
         <p aria-live="polite" className="bg-background text-foreground min-w-0 truncate rounded-ui px-4 py-2 text-sm font-semibold tabular-nums shadow-lg">
           {counter}
           {srText && <span className="sr-only">: {srText}</span>}
@@ -217,14 +222,15 @@ export function ViewerStage({
   // measures against the screen, not against the image itself. Each item
   // centers its content within that width.
   return (
-    <div className={cn('grid w-full grid-cols-[minmax(0,1fr)]', className)}>
+    <div data-viewer-backdrop className={cn('grid w-full grid-cols-[minmax(0,1fr)]', className)}>
       {leaving !== null && (
-        <div key={`out-${leaving}`} aria-hidden className="viewer-leaving flex min-w-0 items-start justify-center [grid-area:1/1]">
+        <div key={`out-${leaving}`} data-viewer-backdrop aria-hidden className="viewer-leaving flex min-w-0 items-start justify-center [grid-area:1/1]">
           {render(leaving, true)}
         </div>
       )}
       <div
         key={`in-${index}`}
+        data-viewer-backdrop
         onAnimationEnd={(e) => e.target === e.currentTarget && setLeaving(null)}
         className={cn('relative flex min-w-0 items-start justify-center [grid-area:1/1]', direction && `viewer-blind-${direction}`)}
       >

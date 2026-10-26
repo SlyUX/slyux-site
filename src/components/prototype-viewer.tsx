@@ -91,7 +91,8 @@ function PrototypeStage({ prototype, index, onNavigate, hint }: { prototype: Pro
   }
 
   return (
-    <div className="mx-auto mb-10 flex w-full flex-col items-center gap-4 px-4 sm:px-6">
+    // Around the phone is backdrop: a click there closes, as in any lightbox (see ViewerDialog).
+    <div data-viewer-backdrop className="mx-auto mb-10 flex w-full flex-col items-center gap-4 px-4 sm:px-6">
       <PhoneFrame contentHeight={prototype.contentHeight}>
         {leaving !== null && <ScreenLayer key={`out-${leaving}`} screen={prototype.screens[leaving]} contentHeight={prototype.contentHeight} leaving />}
         {screen && (
@@ -109,7 +110,9 @@ function PrototypeStage({ prototype, index, onNavigate, hint }: { prototype: Pro
           />
         )}
       </PhoneFrame>
-      <p className="text-ink-foreground/80 text-center text-sm">{hint}</p>
+      <p data-viewer-backdrop className="text-ink-foreground/80 text-center text-sm">
+        {hint}
+      </p>
     </div>
   )
 }

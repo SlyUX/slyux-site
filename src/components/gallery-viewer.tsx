@@ -206,7 +206,8 @@ export function GalleryViewer({
             const it = items[i]
             return (
               <div
-                onClick={(e) => e.stopPropagation()}
+                // The gutter around the image is backdrop: a click there closes (see ViewerDialog).
+                data-viewer-backdrop
                 // Never wider than the image's real resolution allows, nor the content width.
                 style={{ width: it.view.displayWidth }}
                 className="mx-auto mb-10 box-content max-w-[calc(100%-2rem)] px-4 sm:max-w-[calc(100%-3rem)] sm:px-6 lg:max-w-6xl"
