@@ -43,11 +43,15 @@ export interface PrototypeScreen {
   image: { src: string; height: number }
   /** A full-length screen that scrolls, with the bands that stay put (phone points). */
   full?: { src: string; height: number; pinnedTop: number; pinnedBottom: number }
+  /** Draw the prototype's floating nav on top. */
+  floatingNav: boolean
   hotspots: PrototypeHotspot[]
 }
 
 export interface PrototypeView {
   title: string
+  /** A tab bar that floats over the content, in phone points under the status bar. */
+  nav?: { src: string; x: number; y: number; w: number; h: number }
   /** Height of the content area under the status bar, in phone points. */
   contentHeight: number
   screens: PrototypeScreen[]
@@ -103,6 +107,7 @@ export function buildPrototype(doc: PrototypeDoc | null | undefined): PrototypeV
       dark: topColor ? luminance(topColor) < 0.4 : false,
       image: { src: cropped(s.image, s.image.size, Math.round(status * perPt)), height: toPhone(s.image.size.height / perPt - status) },
       full,
+      floatingNav: !!s.showFloatingNav,
       hotspots: (s.hotspots ?? []).flatMap((h) => {
         const target = names.indexOf(stegaClean(h.target))
         if (target < 0) return []
@@ -124,5 +129,16 @@ export function buildPrototype(doc: PrototypeDoc | null | undefined): PrototypeV
     }
   })
   if (!screens.length) return undefined
-  return { title: doc.title, contentHeight: Math.max(...screens.map((s) => s.image.height)), screens }
+  const fn = doc.floatingNav
+  const nav =
+    fn?.image?.asset && hasSize(fn.image.size) && fn.width
+      ? {
+          src: urlFor(fn.image).width(Math.min(MAX_WIDTH, fn.image.size.width)).url(),
+          x: Math.round((fn.x ?? 0) * scale * 100) / 100,
+          y: Math.round(((fn.y ?? 0) - status) * scale * 100) / 100,
+          w: Math.round(fn.width * scale * 100) / 100,
+          h: Math.round(((fn.width * fn.image.size.height) / fn.image.size.width) * scale * 100) / 100,
+        }
+      : undefined
+  return { title: doc.title, nav, contentHeight: Math.max(...screens.map((s) => s.image.height)), screens }
 }

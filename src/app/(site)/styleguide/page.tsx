@@ -731,6 +731,7 @@ export default async function StyleguidePage() {
               'A case study that points to a prototype gets a “Try the prototype” button on the gallery showing its screens, and those screens open the prototype at themselves.',
               'Tap areas are real buttons with labels. Tapping outside them flashes them all, as the design tool does. Screens dissolve; ← / → still step through in order.',
               'Full-length screens scroll inside the phone, with the header and tab bar pinned.',
+              'A floating nav (a transparent PNG, set once per prototype) can sit on top of any screen, so content scrolls behind it, as the app’s floating tab bar does.',
             ]}
           >
             <div className="w-56">

@@ -43,6 +43,20 @@ export default defineType({
       validation: (rule) => rule.min(0),
     }),
     defineField({
+      name: 'floatingNav',
+      title: 'Floating nav',
+      type: 'object',
+      description:
+        'Optional: a tab bar that floats over the app, as a transparent PNG at the design’s scale. It sits on top of every screen with "Show the floating nav" on, so a scrolling screen’s content passes behind it.',
+      options: { collapsible: true, collapsed: true },
+      fields: [
+        defineField({ name: 'image', title: 'Image', type: 'image', description: 'A PNG with a transparent background.' }),
+        defineField({ name: 'x', title: 'Left', type: 'number', description: 'Where the image’s top-left corner sits, in points from the screen’s top-left (status bar included).' }),
+        defineField({ name: 'y', title: 'Top', type: 'number' }),
+        defineField({ name: 'width', title: 'Width', type: 'number', description: 'In points. The height follows the image.' }),
+      ],
+    }),
+    defineField({
       name: 'screens',
       title: 'Screens',
       type: 'array',
@@ -94,6 +108,12 @@ export default defineType({
               type: 'number',
               description: 'With a full-length screen: how much of the bottom stays put (a tab bar), in points.',
               hidden: ({ parent }) => !parent?.fullPage,
+            }),
+            defineField({
+              name: 'showFloatingNav',
+              title: 'Show the floating nav',
+              type: 'boolean',
+              description: 'Draws the floating nav on top. Use it when the screen image doesn’t include the nav, e.g. a full-length screen that scrolls behind it.',
             }),
             defineField({
               name: 'topColor',
