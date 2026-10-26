@@ -44,6 +44,10 @@
     --footer-muted on --footer ...........  7.90  (AAA)
     --pdf-foreground on --pdf ............  5.19  (AA) — the PDF badge (Acrobat-style red)
     --fox on --footer ....................  3.33  non-text only — the hover underline, never text
+    --foreground on --keyboard-key ....... 16.83  (AAA) — the prototype keyboard's letters
+    --foreground on --keyboard-key-alt ...  7.91  (AAA) — its shift, delete, 123, and return
+    --foreground on --keyboard ........... 11.79  (AAA) — its suggestions
+    --muted-foreground on --keyboard .....  4.99  (AA) — its emoji and dictation icons
 */
 :root {
   --background: #fafaf9;
@@ -73,6 +77,10 @@
   --project: #a8500f; /* burnt orange: warmer and darker than --primary, which reads as red */
   --project-foreground: #ffffff;
   --pdf-foreground: #ffffff;
+  /* Device chrome: the iPhone keyboard in prototypes, in iOS's light grays. */
+  --keyboard: #d5d8de;
+  --keyboard-key: #ffffff;
+  --keyboard-key-alt: #adb2bc;
 }
 
 @theme inline {
@@ -103,6 +111,9 @@
   --color-pdf-foreground: var(--pdf-foreground);
   --color-project: var(--project);
   --color-project-foreground: var(--project-foreground);
+  --color-keyboard: var(--keyboard);
+  --color-keyboard-key: var(--keyboard-key);
+  --color-keyboard-key-alt: var(--keyboard-key-alt);
 
   --font-sans: var(--font-geist);
   /* Corners. Every outermost element is 7px. An element nested a small inset

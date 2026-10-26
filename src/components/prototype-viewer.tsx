@@ -1,9 +1,9 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 
 import { preloadImage } from '@/components/blind-dialog'
-import { HomeIndicator, PhoneFrame, pt, StatusBar } from '@/components/phone-frame'
+import { HomeIndicator, Keyboard, keyboardHeight, PhoneFrame, pt, StatusBar } from '@/components/phone-frame'
 import { ViewerDialog, type GalleryLabels, type Viewer } from '@/components/viewer'
 import { PHONE, type PrototypeHotspot, type PrototypeScreen, type PrototypeView } from '@/lib/prototype'
 import { cn } from '@/lib/utils'
@@ -148,6 +148,14 @@ function ScreenLayer({
   onFocused?: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null)
+  const scroller = useRef<HTMLDivElement>(null)
+  // With the keyboard up, the screen ends at its top edge.
+  const kb = screen.keyboard ? keyboardHeight(screen.keyboard.suggestions.length > 0) : 0
+  const visible = contentHeight - kb
+  // A full-length screen with the keyboard up opens at its end, as a chat does: the latest message just above the field.
+  useLayoutEffect(() => {
+    if (kb && scroller.current) scroller.current.scrollTop = scroller.current.scrollHeight
+  }, [kb])
   useEffect(() => {
     if (leaving || !autoFocus) return
     ref.current?.focus({ preventScroll: true })
@@ -189,8 +197,11 @@ function ScreenLayer({
         style={{ left: pt(nav.x), top: pt(nav.y), width: pt(nav.w), height: pt(nav.h) }}
       />
     ) : null
-  const scrolling = full ? screen.hotspots.filter((h) => !h.fixed) : screen.hotspots
-  const pinned = full ? screen.hotspots.filter((h) => h.fixed) : []
+  // The pinned bottom (a message field) rides up on the keyboard, its tap areas with it; whatever the keyboard covers is gone.
+  const lift = (h: PrototypeHotspot) => (full && kb && h.y >= contentHeight - full.pinnedBottom - 1 ? { ...h, y: h.y - kb } : h)
+  const shown = (h: PrototypeHotspot) => h.y < visible
+  const scrolling = full ? screen.hotspots.filter((h) => !h.fixed) : screen.hotspots.filter(shown)
+  const pinned = full ? screen.hotspots.filter((h) => h.fixed).map(lift).filter(shown) : []
 
   return (
     <div
@@ -207,10 +218,10 @@ function ScreenLayer({
       <div className="absolute inset-x-0 top-0" style={{ height: pt(PHONE.safeTop), background: screen.topColor }} />
       <StatusBar dark={screen.dark} />
       {/* A tap that misses every link flashes them all. */}
-      <div className="absolute inset-x-0 overflow-hidden" style={{ top: pt(PHONE.safeTop), height: pt(contentHeight) }} onClick={onMiss}>
+      <div className="absolute inset-x-0 overflow-hidden" style={{ top: pt(PHONE.safeTop), height: pt(visible) }} onClick={onMiss}>
         {full ? (
           <>
-            <div className="absolute inset-0 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <div ref={scroller} className="absolute inset-0 overflow-y-auto overscroll-contain [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div className="relative" style={{ height: pt(full.height) }}>
                 {/* Plain <img>: sized by the phone, not by next/image. Its own header and tab bar are
                     clipped away: the pinned copies below stand in for them, so a bounce past either end
@@ -249,7 +260,13 @@ function ScreenLayer({
           </>
         )}
       </div>
-      <HomeIndicator dark={screen.dark} />
+      {screen.keyboard && (
+        // Decorative: a tap on it, like any tap off the links, flashes them.
+        <div onClick={onMiss}>
+          <Keyboard suggestions={screen.keyboard.suggestions} />
+        </div>
+      )}
+      <HomeIndicator dark={screen.keyboard ? false : screen.dark} />
     </div>
   )
 }

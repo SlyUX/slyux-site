@@ -36,7 +36,7 @@ const RELATED = `"relatedPicks": related[]->{${RELATED_CARD}},
 /** A clickable phone prototype (see schemaTypes/prototype.ts and components/prototype-viewer.tsx). */
 const PROTOTYPE = `_id,title,designWidth,statusBarHeight,
   floatingNav{x,y,width,image{asset,"size": asset->metadata.dimensions{width,height}}},
-  screens[]{_key,name,alt,topColor,pinnedTop,pinnedBottom,showFloatingNav,
+  screens[]{_key,name,alt,topColor,pinnedTop,pinnedBottom,showFloatingNav,showKeyboard,keyboardSuggestions,
     image{asset,"size": asset->metadata.dimensions{width,height}},
     fullPage{asset,"size": asset->metadata.dimensions{width,height}},
     hotspots[]{_key,label,target,x,y,width,height,fixed}}`

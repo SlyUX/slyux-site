@@ -6,7 +6,7 @@ import { Breadcrumb } from '@/components/breadcrumb'
 import { CaseStudyRow, CaseStudyTile, CreativeTile, lightboxItems, MetricStrip } from '@/components/content'
 import { Lightbox } from '@/components/lightbox'
 import { Rail } from '@/components/rail'
-import { HomeIndicator, PhoneFrame, pt, StatusBar } from '@/components/phone-frame'
+import { HomeIndicator, Keyboard, keyboardHeight, PhoneFrame, pt, StatusBar } from '@/components/phone-frame'
 import { ColorTokens, ContrastTable, type ContrastPair, type TokenGroup } from '@/components/styleguide/color-tokens'
 import { Specimen } from '@/components/styleguide/specimen'
 import { ButtonLink, PageHeader, Section, SectionHeading } from '@/components/ui'
@@ -96,6 +96,14 @@ const TOKENS: TokenGroup[] = [
         token: 'pdf',
         use: 'The document badge: the one red on the site, after Acrobat.',
       },
+    ],
+  },
+  {
+    name: 'Device',
+    tokens: [
+      { token: 'keyboard', use: 'The prototype keyboard, in iOS’s light gray.' },
+      { token: 'keyboard-key', use: 'Its letter keys and space bar.' },
+      { token: 'keyboard-key-alt', use: 'Its shift, delete, 123, and return keys, and the dividers between suggestions.' },
     ],
   },
 ]
@@ -208,6 +216,10 @@ const PAIRS: ContrastPair[] = [
     need: 'decorative',
   },
   { fg: 'white', bg: 'pdf', use: 'The document badge', need: 'text' },
+  { fg: 'foreground', bg: 'keyboard-key', use: 'Keyboard letters', need: 'text' },
+  { fg: 'foreground', bg: 'keyboard-key-alt', use: 'Keyboard shift, delete, 123, return', need: 'text' },
+  { fg: 'foreground', bg: 'keyboard', use: 'Keyboard suggestions', need: 'text' },
+  { fg: 'muted-foreground', bg: 'keyboard', use: 'Keyboard emoji and dictation icons', need: 'text' },
 ]
 
 const TYPE = [
@@ -732,24 +744,45 @@ export default async function StyleguidePage() {
               'Tap areas are real buttons with labels. Tapping outside them flashes them all, as the design tool does. Screens dissolve; ← / → still step through in order.',
               'Full-length screens scroll inside the phone, with the header and tab bar pinned.',
               'A floating nav (a transparent PNG, set once per prototype) can sit on top of any screen, so content scrolls behind it, as the app’s floating tab bar does.',
+              'A screen can show the keyboard (Show the keyboard, with up to three suggestions). The screen above it shortens: a full-length screen’s pinned bottom, such as a message field, sits on the keyboard, and the screen opens at its end, as a chat does.',
             ]}
           >
-            <div className="w-56">
-              <PhoneFrame contentHeight={780}>
-                <div className="absolute inset-0">
-                  <div className="bg-heading absolute inset-x-0 top-0" style={{ height: pt(PHONE.safeTop) }} />
-                  <StatusBar dark />
-                  <div className="bg-paper absolute inset-x-0 bottom-0 flex flex-col" style={{ top: pt(PHONE.safeTop), gap: pt(16), padding: pt(24) }}>
-                    <div className="bg-heading rounded-ui" style={{ height: pt(120) }} />
-                    <div className="bg-border rounded-ui" style={{ height: pt(18), width: '70%' }} />
-                    <div className="bg-border rounded-ui" style={{ height: pt(18), width: '90%' }} />
-                    <div className="bg-border rounded-ui" style={{ height: pt(18), width: '55%' }} />
-                    {/* A tap area, shown as it flashes when a tap misses. */}
-                    <div className="bg-primary/20 outline-primary rounded-ui mt-auto outline-2" style={{ height: pt(56) }} />
+            <div className="flex flex-wrap gap-6">
+              <div className="w-56">
+                <PhoneFrame contentHeight={780}>
+                  <div className="absolute inset-0">
+                    <div className="bg-heading absolute inset-x-0 top-0" style={{ height: pt(PHONE.safeTop) }} />
+                    <StatusBar dark />
+                    <div className="bg-paper absolute inset-x-0 bottom-0 flex flex-col" style={{ top: pt(PHONE.safeTop), gap: pt(16), padding: pt(24) }}>
+                      <div className="bg-heading rounded-ui" style={{ height: pt(120) }} />
+                      <div className="bg-border rounded-ui" style={{ height: pt(18), width: '70%' }} />
+                      <div className="bg-border rounded-ui" style={{ height: pt(18), width: '90%' }} />
+                      <div className="bg-border rounded-ui" style={{ height: pt(18), width: '55%' }} />
+                      {/* A tap area, shown as it flashes when a tap misses. */}
+                      <div className="bg-primary/20 outline-primary rounded-ui mt-auto outline-2" style={{ height: pt(56) }} />
+                    </div>
+                    <HomeIndicator dark={false} />
                   </div>
-                  <HomeIndicator dark={false} />
-                </div>
-              </PhoneFrame>
+                </PhoneFrame>
+              </div>
+              <div className="w-56">
+                <PhoneFrame contentHeight={780}>
+                  <div className="absolute inset-0">
+                    <StatusBar dark={false} />
+                    <div
+                      className="bg-paper absolute inset-x-0 flex flex-col justify-end"
+                      style={{ top: pt(PHONE.safeTop), height: pt(780 - keyboardHeight(true)), gap: pt(12), padding: pt(16) }}
+                    >
+                      <div className="bg-heading rounded-ui self-start" style={{ height: pt(56), width: '70%' }} />
+                      <div className="bg-surface rounded-ui self-end" style={{ height: pt(40), width: '55%' }} />
+                      {/* The message field, riding on the keyboard. */}
+                      <div className="border-border rounded-full border-2" style={{ height: pt(40) }} />
+                    </div>
+                    <Keyboard suggestions={['“Des”', 'Despite', 'Design']} />
+                    <HomeIndicator dark={false} />
+                  </div>
+                </PhoneFrame>
+              </div>
             </div>
           </Specimen>
         </div>
